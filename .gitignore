@@ -1,2 +1,6 @@
 .sass-cache
 *.css.map
+*.swp
+composer.phar
+vendor/
+.idea/

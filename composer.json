@@ -1,0 +1,15 @@
+{
+	"autoload": {
+		"psr-0": {
+			"relive" : "src/api/"
+		}
+	},
+    "require": {
+        "slim/slim": "^2.6",
+        "dogancelik/slim-json": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*",
+        "phpunit/dbunit": ">=1.2"
+    }
+}
