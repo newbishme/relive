@@ -4,4 +4,3 @@ require_once 'relive/App.php';
 
 $app = new \relive\App();
 $app->run();
-
