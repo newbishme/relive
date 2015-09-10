@@ -1,8 +1,11 @@
 {
 	"autoload": {
 		"psr-0": {
-			"relive" : "src/api/"
-		}
+			"relive" : "app/api/"
+		},
+        "files": [ "app/api/dbconfig.php" ],
+        "classmap": [ "app/api/relive/models/" ]
+
 	},
     "require": {
         "slim/slim": "*",

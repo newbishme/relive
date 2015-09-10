@@ -12,7 +12,7 @@ eventName varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 caption varchar(255) CHARACTER SET utf8 COLLATE utf8_bin,
 longitude decimal(10 , 6),
 latitude decimal(10 , 6),
-rankPoints int(11),
+rankPoints int(11) DEFAULT 0,
 PRIMARY KEY (eventId)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
@@ -98,7 +98,7 @@ latitude decimal(10 , 6),
 longitude decimal(10 , 6),
 caption VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin,
 providerId int(11) NOT NULL,
-rankPoints int(11),
+rankPoints int(11) DEFAULT 0,
 PRIMARY KEY (postId)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
