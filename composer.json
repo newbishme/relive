@@ -6,7 +6,9 @@
 	},
     "require": {
         "slim/slim": "^2.6",
-        "dogancelik/slim-json": "dev-master"
+        "dogancelik/slim-json": "dev-master",
+        "cosenary/instagram" : "dev-master",
+         "j7mbo/twitter-api-php": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
