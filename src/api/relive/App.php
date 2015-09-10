@@ -47,12 +47,17 @@ class App {
 
     private function addDefaultRoutes() {
         $app = $this->app;
-        $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
-        $app->group('/api', function() use ($app) {
-            $app->get('', function () use ($app) {
+        //$app->response->headers->set('Access-Control-Allow-Origin', '*');
+
+        //  http://relive.space/api
+        $app->group('', function() use ($app) {
+
+            //  GET: /api/
+            $app->get('/', function() use ($app) {
                 $app->render(200, ['Status' => 'Running']);
             });
+
         });
     }
 
