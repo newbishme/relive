@@ -2,6 +2,15 @@
 
 Install Composer and PHP library dependencies.
 
-$ curl -sS https://getcomposer.org/installer | php
+``` sh
+curl -sS https://getcomposer.org/installer | php
+./composer.phar install
+```
 
-$ ./composer.phar install
+Install more dependencies using npm.
+
+``` sh
+cd src
+npm install
+```
+
