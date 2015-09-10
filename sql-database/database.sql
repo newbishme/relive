@@ -1,11 +1,13 @@
 /* SQLEditor (MySQL (2))*/
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+
 CREATE TABLE events
 (
-eventId int(11) NOT NULL AUTO_INCREMENT,
-dateAdded DATETIME NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
-startDate DATETIME,
-endDate DATETIME,
+`eventId` int(11) NOT NULL AUTO_INCREMENT,
+`dateAdded` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+startDate datetime,
+endDate datetime,
 eventName varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 caption varchar(255) CHARACTER SET utf8 COLLATE utf8_bin,
 longitude decimal(10 , 6),
@@ -18,8 +20,8 @@ CREATE TABLE crawljobs
 (
 crawlerId INTEGER NOT NULL AUTO_INCREMENT,
 eventId int(11) NOT NULL,
-startDate DATETIME NOT NULL,
-endDate DATETIME NOT NULL,
+startDate datetime NOT NULL,
+endDate datetime NOT NULL,
 hashtags VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 keywords VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 longitude decimal(10 , 6) NOT NULL,
@@ -89,7 +91,7 @@ PRIMARY KEY (relationId)
 CREATE TABLE posts
 (
 postId int(11) NOT NULL AUTO_INCREMENT,
-datetime DATETIME NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+datetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 postURL VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 author VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 latitude decimal(10 , 6),
@@ -103,14 +105,14 @@ PRIMARY KEY (postId)
 CREATE TABLE searchentries
 (
 searchId int(11) NOT NULL AUTO_INCREMENT,
-datetime DATETIME NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+datetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 searchKey VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 PRIMARY KEY (searchId)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 ALTER TABLE eventhashtagrelationships ADD UNIQUE( `eventId`, `hashtagId`);
 
-ALTER TABLE posthashtagrelationships ADD UNIQUE( `eventId`, `hashtagId`);
+ALTER TABLE posthashtagrelationships ADD UNIQUE( `postId`, `hashtagId`);
 
 ALTER TABLE posteventrelationships ADD UNIQUE( `eventId`, `postId`);
 

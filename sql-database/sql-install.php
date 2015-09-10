@@ -10,12 +10,23 @@ echo "Building SQL Database from 'database.sql'";
 
 try{
     // db connection
+
+	  $now = new DateTime();
+	  $mins = $now->getOffset() / 60;
+	  $sgn = ($mins < 0 ? -1 : 1);
+	  $mins = abs($mins);
+	  $hrs = floor($mins / 60);
+	  $mins -= $hrs * 60;
+	  $offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
+
 	$mysqli = new mysqli($host, $user, $password, $dbname, $port);
 	mysqli_set_charset($mysqli,'utf8');
 	if($mysqli->connect_errno){
 		throw new Exception("Connection Failed: [".$mysqli->connect_errno. "] : ".$mysqli->connect_error );
 		exit();
 	}
+
+	$mysqli->multi_query("SET time_zone='$offset';");
 
     // read file.
     // This file has multiple sql statements.
@@ -42,7 +53,7 @@ try{
 		$sqlCount++;
         // load the next result set into mysqli's active buffer. if this fails the $mysqli->error, $mysqli->errno will have appropriate error info.
 		if($mysqli->next_result() == false){
-			throw new Exception("File:  , Query#[".$sqlCount."], Error No: [".$mysqli->errno."]: '".$mysqli->error."' }");
+			throw new Exception("File:  , Query#[".$sqlCount."], Error No: [".$mysqli->info.$mysqli->errno."]: '".$mysqli->error."' }");
 		}
 	}
 	echo $sqlCount . "Completed\n";
