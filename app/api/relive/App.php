@@ -2,8 +2,9 @@
 
 namespace relive;
 
-use \Slim\Slim;
-use \SlimJson\Middleware;
+use relive\models;
+use Slim\Slim;
+use SlimJson\Middleware;
 /**
  * Class App
  *
@@ -56,6 +57,10 @@ class App {
             //  GET: /api/
             $app->get('/', function() use ($app) {
                 $app->render(200, ['Status' => 'Running']);
+            });
+
+            $app->get('/events', function() use ($app) {
+                
             });
 
         });
