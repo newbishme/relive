@@ -1,8 +1,41 @@
-// Initialize your app
-var myApp = new Framework7();
+// Determine device OS
+var isAndroid = Framework7.prototype.device.android === true;
+var isIos = Framework7.prototype.device.ios === true;
 
 // Export selectors engine
 var $$ = Dom7;
+
+// Include appropriate CSS files in app, depending on device
+if (isAndroid) {
+    $$('head').append(
+        '<link rel="stylesheet" href="css/framework7.material.min.css">' +
+        '<link rel="stylesheet" href="css/framework7.material.colors.min.css">' +
+        '<link rel="stylesheet" href="css/my-app.material.css">'
+    );
+}
+else {
+    $$('head').append(
+        '<link rel="stylesheet" href="css/framework7.ios.min.css">' +
+        '<link rel="stylesheet" href="css/framework7.ios.colors.min.css">' +
+        '<link rel="stylesheet" href="css/my-app.ios.css">'
+    );
+}
+
+// Change "Through" type navbar layout to "Fixed" in Material theme for Android
+if (isAndroid) {
+    // Change class
+    $$('.view.navbar-through').removeClass('navbar-through').addClass('navbar-fixed');
+    // And move Navbar into Page
+    $$('.view .navbar').prependTo('.view .page');
+}
+
+
+
+// Initialize your app
+var myApp = new Framework7({
+    // Enable Material theme for Android device only
+    material: isAndroid ? true : false,
+});
 
 // Add view
 var mainView = myApp.addView('.view-main', {
