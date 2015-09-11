@@ -8,16 +8,16 @@ var $$ = Dom7;
 // Include appropriate CSS files in app, depending on device
 if (isAndroid) {
     $$('head').append(
-        '<link rel="stylesheet" href="css/framework7.material.min.css">' +
-        '<link rel="stylesheet" href="css/framework7.material.colors.min.css">' +
-        '<link rel="stylesheet" href="css/my-app.material.css">'
+        '<link rel="stylesheet" href="assets/css/framework7.material.min.css">' +
+        '<link rel="stylesheet" href="assets/css/framework7.material.colors.min.css">' +
+        '<link rel="stylesheet" href="assets/css/my-app.material.css">'
     );
 }
 else {
     $$('head').append(
-        '<link rel="stylesheet" href="css/framework7.ios.min.css">' +
-        '<link rel="stylesheet" href="css/framework7.ios.colors.min.css">' +
-        '<link rel="stylesheet" href="css/my-app.ios.css">'
+        '<link rel="stylesheet" href="assets/css/framework7.ios.min.css">' +
+        '<link rel="stylesheet" href="assets/css/framework7.ios.colors.min.css">' +
+        '<link rel="stylesheet" href="assets/css/my-app.ios.css">'
     );
 }
 
