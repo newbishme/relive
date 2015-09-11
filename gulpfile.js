@@ -14,7 +14,7 @@ var gulp = require('gulp'),
     },
 
     output = {
-      'images': 'app/frontend/assets/images',
+      'images': 'app/frontend/assets/img',
       'stylesheets': 'app/frontend/assets/stylesheets',
       'javascript': 'app/frontend/assets/javascript'
     };
