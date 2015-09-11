@@ -1,0 +1,29 @@
+$primaryColour: #374F59;
+$linkColor: #1B5DC8;
+
+body {
+	font-family: Oxygen, Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+p {
+	font-size: 1.1em;
+}
+
+a {
+	color: $linkColor;
+}
+
+.center.sliding {
+	font-weight: 700;
+	color: white;
+}
+
+.navbar {
+	background: $primaryColour;
+	a.link, i {
+		color: white;
+		&:hover {
+			color: grey;
+		}
+	}
+}

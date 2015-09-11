@@ -21,6 +21,8 @@ else {
     );
 }
 
+$$('head').append('<link rel="stylesheet" href="assets/stylesheets/relive.min.css">');
+
 // Change "Through" type navbar layout to "Fixed" in Material theme for Android
 if (isAndroid) {
     // Change class
