@@ -2,12 +2,6 @@
 var isAndroid = Framework7.prototype.device.android === true;
 var isIos = Framework7.prototype.device.ios === true;
 
-// Set Template7 global devices flags
-Template7.global = {
-    android: isAndroid,
-    ios: isIos
-};
-
 // Export selectors engine
 var $$ = Dom7;
 
@@ -15,7 +9,6 @@ var $$ = Dom7;
 if (isAndroid) {
     $$('head').append(
         '<link rel="stylesheet" href="css/framework7.material.min.css">' +
-        '<link rel="stylesheet" href="css/framework7.material.rtl.min.css">' +
         '<link rel="stylesheet" href="css/framework7.material.colors.min.css">' +
         '<link rel="stylesheet" href="css/my-app.material.css">'
     );
@@ -23,7 +16,6 @@ if (isAndroid) {
 else {
     $$('head').append(
         '<link rel="stylesheet" href="css/framework7.ios.min.css">' +
-        '<link rel="stylesheet" href="css/framework7.ios.rtl.min.css">' +
         '<link rel="stylesheet" href="css/framework7.ios.colors.min.css">' +
         '<link rel="stylesheet" href="css/my-app.ios.css">'
     );
@@ -43,8 +35,6 @@ if (isAndroid) {
 var myApp = new Framework7({
     // Enable Material theme for Android device only
     material: isAndroid ? true : false,
-    // Enable Template7 pages
-    template7Pages: true
 });
 
 // Add view
