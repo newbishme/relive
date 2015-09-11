@@ -11,8 +11,8 @@
         "slim/slim": "*",
         "dogancelik/slim-json": "dev-master",
         "cosenary/instagram" : "dev-master",
-         "j7mbo/twitter-api-php": "dev-master",
-         "illuminate/database": "*"
+         "illuminate/database": "*",
+		"abraham/twitteroauth": "^0.6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
