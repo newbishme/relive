@@ -30,6 +30,7 @@
     <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-144x144.png">
     <meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#374f59">
+    <link rel="apple-touch-startup-image" href="/assets/img/relive-startup.png">
   </head>
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
