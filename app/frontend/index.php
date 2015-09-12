@@ -68,6 +68,9 @@
         <div class="pages navbar-through">
             <div class="page with-subnavbar" data-page="home">
 
+              <!-- Searchbar overlay -->
+              <div class="searchbar-overlay"></div>
+
               <div class="page-content">
                 <p>The most awesome space to relive your moments</p>
 
