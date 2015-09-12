@@ -116,20 +116,24 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
 });
 
 // Handle form ajax actions
-$$('form.ajax-submit').on('submitted', function (e) {
+$$(document).on('submitted', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
   // Clear form, hide panel
+  console.log('form successfully submitted');
   console.log(data);
 });
 
-$$('form.ajax-submit').on('beforeSubmit', function (e) {
-  // Turn hashtag into a comma delimited string
-  console.log(e.detail.data);
+$$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  // Clear form, hide panel
+  console.log('beforeSubmit callback');
+  console.log(data);
 });
 
-$$('form.ajax-submit').on('submitError', function (e) {
-  // Prompt user about error
+$$(document).on('submitError', 'form.ajax-submit', function (e) {
+  console.log('Error on submit');
 });
 
 // Initialize the app
