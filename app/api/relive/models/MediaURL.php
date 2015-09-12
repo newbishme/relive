@@ -17,6 +17,6 @@ class MediaURL extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function media() {
-		return $this->belongsTo('relive\Media');
+		return $this->belongsTo('relive\models\Media');
 	}
 }
