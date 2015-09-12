@@ -10,7 +10,12 @@ curl -sS https://getcomposer.org/installer | php
 Install more dependencies using npm.
 
 ``` sh
-cd src
 npm install
 ```
 
+Auto compress stylesheets, javascript and images.
+
+```sh
+gulp
+gulp build // force compress
+```
