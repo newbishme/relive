@@ -120,10 +120,12 @@ $$('form.ajax-submit').on('submitted', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
   // Clear form, hide panel
+  console.log(data);
 });
 
 $$('form.ajax-submit').on('beforeSubmit', function (e) {
   // Turn hashtag into a comma delimited string
+  console.log(e.detail.data);
 });
 
 $$('form.ajax-submit').on('submitError', function (e) {
