@@ -104,7 +104,7 @@
         <schema><![CDATA[]]></schema>
         <tableType><![CDATA[InnoDB]]></tableType>
         <location>
-            <x>86.00</x>
+            <x>84.00</x>
             <y>71.00</y>
         </location>
         <size>
@@ -812,7 +812,7 @@ c28tYTSGhoY=
         <windowHeight><![CDATA[732.000000]]></windowHeight>
         <windowLocationX><![CDATA[34.000000]]></windowLocationX>
         <windowLocationY><![CDATA[40.000000]]></windowLocationY>
-        <windowScrollOrigin><![CDATA[{5, 1.5}]]></windowScrollOrigin>
+        <windowScrollOrigin><![CDATA[{0, 0}]]></windowScrollOrigin>
         <windowWidth><![CDATA[1233.000000]]></windowWidth>
     </SQLDocumentInfo>
     <AllowsIndexRenamingOnInsert><![CDATA[1]]></AllowsIndexRenamingOnInsert>
