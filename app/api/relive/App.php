@@ -58,7 +58,11 @@ class App {
             $app->get('/', function() use ($app) {
                 $app->render(200, ['Status' => 'Running']);
             });
+            $app->get('', function() use ($app) {
+                $app->render(200, ['Status' => 'Running']);
+            });
 
+            
             $app->get('/events', function() use ($app) {
                 
             });
