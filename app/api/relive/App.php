@@ -55,7 +55,7 @@ class App {
         $app->group('', function() use ($app) {
 
             //  GET: /api
-            $app->get('', function() use ($app) {
+            $app->get('/', function() use ($app) {
                 $app->render(200, ['Status' => 'Running']);
             });
 
