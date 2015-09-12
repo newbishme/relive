@@ -34,7 +34,7 @@
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
-            <div class="center sliding" id="page-title">relive</div>
+            <div class="center sliding">relive</div>
             <div class="right">
               <a href="#" class="link icon-only open-panel"><i class="icon ion-ios-more"></i></a>
             </div>
@@ -57,29 +57,31 @@
 
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
-            <div class="page with-subnavbar" data-page="home">
+          <div class="page with-subnavbar" data-page="home">
+            <!-- Searchbar overlay -->
+            <div class="searchbar-overlay"></div>
 
-              <!-- Searchbar overlay -->
-              <div class="searchbar-overlay"></div>
-
-              <div class="page-content">
+            <div class="page-content">
+              <div class="content-block">
                 <p>The most awesome space to relive your moments</p>
+              </div>
+                
+              <div id="home-landing-events"></div>
+              
+              <script id="homeTemplate" type="text/template7">
+                {{eventName}}
+              </script>
 
-                <div id="home-landing-events"></div>
-                <script id="homeTemplate" type="text/template7">
-                  {{eventName}}
-                </script>
-
-                <!-- Link to another page -->
+              <!-- Link to another page -->
+              <div class="content-block">
                 <div class="row no-gutter">
-                  <div class="col col-5"></div>
-                  <div class="col col-90">
+                  <div class="col col-auto">
                     <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
                   </div>
-                  <div class="col col-5"></div>
                 </div>
               </div>
             </div>
+          </div>
         </div>
 
 

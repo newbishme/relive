@@ -24,7 +24,7 @@ a {
 
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
-	a.link, i {
+	a, i {
 		color: white;
 		&:hover {
 			color: grey;
