@@ -138,7 +138,7 @@ class App {
                         $app->delete('/:hashtag', function($event_id, $hashtag) use ($app) {
                         });
                     });
-                }
+                });
             });
         });
     }
