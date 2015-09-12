@@ -27,7 +27,8 @@ class EventController extends Controller {
 
 			foreach($hashtags as $tag) {
 				$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
-				//$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->id, 'hashtag_id' => $hashtag->hashtag_id]);
+				$hashtag = \relive\models\Hashtag::where('hashtag', $tag)->first();
+				$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->id, 'hashtag_id' => $hashtag->hashtag_id]);
 			}
 			$app->render(200, $event->toArray());
 		} catch (\Exception $e) {
