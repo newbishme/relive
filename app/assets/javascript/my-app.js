@@ -115,5 +115,20 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
   }
 });
 
+// Handle form ajax actions
+$$('form.ajax-submit').on('submitted', function (e) {
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  // Clear form, hide panel
+});
+
+$$('form.ajax-submit').on('beforeSubmit', function (e) {
+  // Turn hashtag into a comma delimited string
+});
+
+$$('form.ajax-submit').on('submitError', function (e) {
+  // Prompt user about error
+});
+
 // Initialize the app
 myApp.init();
