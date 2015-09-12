@@ -9,7 +9,7 @@ $linkColor: #1B5DC8;
   transform: translateY(-50%);
 }
 
-body, h1, h2, h3, h4, h5, h6  {
+body, h1, h2, h3, h4, h5, h6 {
 	font-family: Oxygen, Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -30,7 +30,7 @@ a {
 }
 
 .center.sliding {
-	font-weight: 700;
+	font-family: 'Patua One', Oxygen, Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 }
 
@@ -47,6 +47,10 @@ a {
 			color: grey;
 		}
 	}
+}
+
+.searchbar .searchbar-cancel {
+	font-size: 15px;
 }
 
 .event-card {

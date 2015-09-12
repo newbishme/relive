@@ -8,15 +8,15 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
 
     input = {
-      'images': 'app/frontend/src/images/**/*',
-      'stylesheets': 'app/frontend/src/stylesheets/**/*.scss',
-      'javascript': 'app/frontend/src/javascript/**/*.js'
+      'images': 'app/src/images/**/*',
+      'stylesheets': 'app/src/stylesheets/**/*.scss',
+      'javascript': 'app/src/javascript/**/*.js'
     },
 
     output = {
-      'images': 'app/frontend/assets/img',
-      'stylesheets': 'app/frontend/assets/stylesheets',
-      'javascript': 'app/frontend/assets/javascript'
+      'images': 'app/assets/img',
+      'stylesheets': 'app/assets/stylesheets',
+      'javascript': 'app/assets/javascript'
     };
 
 gulp.task('build', ['build-css', 'build-js', 'compress-images']);
