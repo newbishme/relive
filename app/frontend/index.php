@@ -13,6 +13,19 @@
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
+
+    <!-- Panel overlay app when opened -->
+    <div class="panel-overlay"></div>
+
+    <!-- Panel View Left -->
+    <div class="panel panel-left panel-cover">
+      <div class="view panel-view">
+        <div class="content-block">
+          <p>Left panel content</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Views -->
     <div class="views">
       <!-- Your main view, should have "view-main" class -->
@@ -28,16 +41,21 @@
 
 
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-        <div class="pages navbar-through toolbar-through">
-          <!-- Page, "data-page" contains page name -->
-          <div data-page="index" class="page">
-            <!-- Scrollable page content -->
-            <div class="page-content">
-              <p>The most awesome space to relive your moments</p>
-              <!-- Link to another page -->
-              <a href="form.html">Make a Reel</a>
+        <div class="pages navbar-through">
+            <div class="page" data-page="home">
+              <div class="page-content">
+                <p>The most awesome space to relive your moments</p>
+
+                <div id="home-landing-events"></div>
+                <script id="homeTemplate" type="text/template7">
+                  {{eventName}}
+                </script>
+
+                <!-- Link to another page -->
+                <a href="form.html">Make a Reel</a>
+                <a href="#" data-panel="left" class="open-panel">Open left panel</a>
+              </div>
             </div>
-          </div>
         </div>
 
 
