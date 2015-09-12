@@ -12,8 +12,8 @@ class EventController extends Controller {
         $jsonData = $app->request->getBody();
         //$allPostVars = json_decode($jsonData,true);
         $allPostVars = $app->request->post();
-        $eventName = @$allPostVars['eventName']?@$allPostVars['eventName']:NULL;
-        $hashtags = @$allPostVars['hashtags']?split(",",$allPostVars['hashtags']):[];	
+        $eventName = @$allPostVars['relive-event-name']?@$allPostVars['relive-event-name']:NULL;
+        $hashtags = @$allPostVars['relive-hashtags']?$allPostVars['relive-hashtags']:[];	
 
         if (is_null($eventName)||strlen($eventName)==0||count($hashtags)==0) {
         	$app->render(400, ['Status' => 'Invalid input.' ]);
@@ -32,7 +32,6 @@ class EventController extends Controller {
 			}
 			$app->render(200, $event->toArray());
 		} catch (\Exception $e) {
-			print $e;
 			$app->render(500, ['Status' => 'An error occurred.' ]);
 		}
 
