@@ -6,3 +6,4 @@ vendor/
 .idea/
 src/node_modules
 *.log
+composer.lock
