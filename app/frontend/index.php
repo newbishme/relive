@@ -65,19 +65,23 @@
               <div class="page-content">
                 <p>The most awesome space to relive your moments</p>
 
-                <div id="home-landing-events"></div>
-                <script id="homeTemplate" type="text/template7">
-                  {{eventName}}
-                </script>
-
-                <!-- Link to another page -->
-                <div class="row no-gutter">
-                  <div class="col col-5"></div>
-                  <div class="col col-90">
-                    <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
+                <!-- Hidden by default, this will appear when search results is empty -->
+                <div class="content-block searchbar-not-found">
+                  <!-- Make a Reel CTA -->
+                  <div class="row no-gutter">
+                    <div class="col col-5"></div>
+                    <div class="col col-90">
+                      <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
+                    </div>
+                    <div class="col col-5"></div>
                   </div>
-                  <div class="col col-5"></div>
                 </div>
+
+                <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
+                <!-- <script id="homeTemplate" type="text/template7">
+                  {{eventName}}
+                </script> -->
+
               </div>
             </div>
         </div>

@@ -32,8 +32,8 @@ if (isAndroid) {
 }
 
 
-var homeTemplate = $$('#homeTemplate').html();
-var compiledHomeTemplate = Template7.compile(homeTemplate);
+// var homeTemplate = $$('#homeTemplate').html();
+// var compiledHomeTemplate = Template7.compile(homeTemplate);
 
 // Initialize your app
 var myApp = new Framework7({
@@ -55,19 +55,70 @@ var mainView = myApp.addView('.view-main', {
 myApp.onPageInit('home', function (page) {
 
   // Render landing page template for events
-  var context = {
-    eventName: 'Hello world'
-  };
-  var homeHTML = compiledHomeTemplate(template7Data);
-  $$('div#home-landing-events').html(homeHTML);
+  // var context = {
+  //   eventName: 'Hello world'
+  // };
+  // var homeHTML = compiledHomeTemplate(template7Data);
+  // $$('div#home-landing-events').html(homeHTML);
 
 });
 
 
 // Initialize Search bar
-myApp.searchbar('.searchbar', {
-  customSearch: true//, // Custom search functionality like calling external API with search results
-  //onSearch: someFunction(), onEnable: someFunction(), onDisable: function(), onClear: function()
+var eventsSearchbar = myApp.searchbar('.searchbar', {
+  searchList: '.list-block-search',
+  searchIn: '.card-header'
+});
+
+// Initialize Virtual List
+var eventsList = myApp.virtualList('div#home-landing-events', {
+  items: [
+    {
+      title: "Event 1",
+      image: "http://lorempixel.com/1000/600/nature/3/"
+    },
+    {
+      title: "Event 2",
+      image: "http://lorempixel.com/1000/600/nature/3/"
+    },
+    {
+      title: "Event 3",
+      image: "http://lorempixel.com/1000/600/nature/3/"
+    },
+    {
+      title: "Event 4",
+      image: "http://lorempixel.com/1000/600/nature/3/"
+    },
+    {
+      title: "Event 5",
+      image: "http://lorempixel.com/1000/600/nature/3/"
+    }
+  ],
+  template: '<li class="item-content">' +
+              '<div class="item-inner">' +
+                '<div class="card event-card-header-img">' +
+                  '<div style="background-image:url({{image}})" valign="bottom" class="card-header color-white no-border">{{title}}</div>' +
+                  '<div class="card-content">' +
+                    '<div class="card-content-inner">' +
+                      '<p class="color-gray">Posted on Instagram by quanyang' +
+                      '<p>Quisque eget vestibulum nulla. Quisque quis dui quis ex ultricies efficitur vitae non felis. Phasellus quis nibh hendrerit...</p>' +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="card-footer"><a href="#" class="link">View Event</a>' +
+                '</div>' +
+              '</div>' +
+            '</li>',
+
+  height: 700,
+  searchAll: function (query, items) {
+    var foundItems = [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+        foundItems.push(i);
+      }
+    }
+    return foundItems;
+  }
 });
 
 // Initialize the app
