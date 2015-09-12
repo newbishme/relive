@@ -9,6 +9,7 @@ class EventHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'eventhashtagrelationships';
+	protected $fillable = array('hashtag_id','event_id');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -17,10 +18,10 @@ class EventHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function hashtag() {
-		return $this->belongsTo('relive\Hashtag');
+		return $this->belongsTo('relive\models\Hashtag','hashtag_id','hashtag_id');
 	}
 
 	public function event() {
-		return $this->belongsTo('relive\Event');
+		return $this->belongsTo('relive\models\Event');
 	}
 }

@@ -4,7 +4,7 @@
 			"relive" : "app/api/"
 		},
         "files": [ "app/api/dbconfig.php" ],
-        "classmap": [ "app/api/relive/models/" ]
+        "classmap": [ "app/api/relive/models/","app/api/relive/controllers/" ]
 
 	},
     "require": {

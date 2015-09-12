@@ -18,18 +18,18 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	protected $hidden = array('rankPoints');
 
 	public function provider() {
-		return $this->belongsTo('relive\Provider');
+		return $this->belongsTo('relive\models\Provider');
 	}
 
 	public function media() {
-		return $this->hasOne('relive\Media');
+		return $this->hasOne('relive\models\Media');
 	}
 
 	public function posteventrelationship() {
-		return $this->hasMany('relive\PostEventRelationship');
+		return $this->hasMany('relive\models\PostEventRelationship');
 	}
 
 	public function posthashtagrelationship() {
-		return $this->hasMany('relive\PostHashtagRelationship');
+		return $this->hasMany('relive\models\PostHashtagRelationship');
 	}
 }
