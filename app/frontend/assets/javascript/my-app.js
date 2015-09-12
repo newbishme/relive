@@ -96,7 +96,7 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
   ],
   template: '<li class="event-card">' +
               '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-                '<h2>{{title}}</h2>' +
+                '<h1>{{title}}</h1>' +
               '</div>' +
               '<div class="event-card-footer">' +
                 '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
