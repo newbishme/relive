@@ -15,4 +15,12 @@ class Media extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+
+	public function mediaURLs() {
+		return $this->hasMany('relive\MediaURL');
+	}
+
+	public function post() {
+		return $this->belongsTo('relive\Post');
+	}
 }

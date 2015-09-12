@@ -15,4 +15,8 @@ class CrawlJob extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+
+	public function event() {
+		return $this->belongsTo('relive\Event');
+	}
 }

@@ -15,4 +15,12 @@ class Hashtag extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+
+	public function posthashtagrelationship() {
+		return $this->hasMany('relive\PostHashtagRelationship');
+	}
+
+	public function eventhashtagrelationship() {
+		return $this->hasMany('relive\EventHashtagRelationship');
+	}
 }

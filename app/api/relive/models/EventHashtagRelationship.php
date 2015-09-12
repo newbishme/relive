@@ -15,4 +15,12 @@ class EventHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+
+	public function hashtag() {
+		return $this->belongsTo('relive\Hashtag');
+	}
+
+	public function event() {
+		return $this->belongsTo('relive\Event');
+	}
 }

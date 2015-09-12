@@ -16,4 +16,13 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 * @var array
 	 */
 	protected $hidden = array('rankPoints');
+
+
+	public function eventhashtagrelationship() {
+		return $this->hasMany('relive\EventHashtagRelationship');
+	}
+
+	public function posteventrelationship() {
+		return $this->hasMany('relive\PostEventRelationship');
+	}
 }

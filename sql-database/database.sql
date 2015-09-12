@@ -4,7 +4,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE events
 (
-`eventId` int(11) NOT NULL AUTO_INCREMENT,
+`event_id` int(11) NOT NULL AUTO_INCREMENT,
 `dateAdded` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 startDate datetime,
 endDate datetime,
@@ -13,13 +13,13 @@ caption varchar(255) CHARACTER SET utf8 COLLATE utf8_bin,
 longitude decimal(10 , 6),
 latitude decimal(10 , 6),
 rankPoints int(11) DEFAULT 0,
-PRIMARY KEY (eventId)
+PRIMARY KEY (event_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE crawljobs
 (
-crawlerId INTEGER NOT NULL AUTO_INCREMENT,
-eventId int(11) NOT NULL,
+crawler_id INTEGER NOT NULL AUTO_INCREMENT,
+event_id int(11) NOT NULL,
 startDate datetime NOT NULL,
 endDate datetime NOT NULL,
 hashtags VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -27,111 +27,111 @@ keywords VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 longitude decimal(10 , 6) NOT NULL,
 latitude decimal(10 , 6) NOT NULL,
 isActive BOOLEAN NOT NULL DEFAULT 1,
-PRIMARY KEY (crawlerId)
+PRIMARY KEY (crawler_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE hashtags
 (
-hashtagId int(11) NOT NULL AUTO_INCREMENT,
+hashtag_id int(11) NOT NULL AUTO_INCREMENT,
 hashtag VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL UNIQUE,
-PRIMARY KEY (hashtagId)
+PRIMARY KEY (hashtag_id)
 );
 
 CREATE TABLE eventhashtagrelationships
 (
-relationId int(11) NOT NULL AUTO_INCREMENT,
-eventId int(11) NOT NULL,
-hashtagId int(11) NOT NULL,
-PRIMARY KEY (relationId)
+relation_id int(11) NOT NULL AUTO_INCREMENT,
+event_id int(11) NOT NULL,
+hashtag_id int(11) NOT NULL,
+PRIMARY KEY (relation_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE mediaurls
 (
-mediaURLId int(11) NOT NULL AUTO_INCREMENT,
-mediaId int(11) NOT NULL,
+mediaurl_id int(11) NOT NULL AUTO_INCREMENT,
+media_id int(11) NOT NULL,
 width int(11) NOT NULL DEFAULT 0,
 height int(11) NOT NULL DEFAULT 0,
 sizes ENUM('low_resolution','standard_resolution','thumbnail','small','medium','thumb','large'),
-PRIMARY KEY (mediaURLId)
+PRIMARY KEY (mediaurl_id)
 );
 
 CREATE TABLE medias
 (
-mediaId int(11) NOT NULL AUTO_INCREMENT,
-postId int(11) NOT NULL,
+media_id int(11) NOT NULL AUTO_INCREMENT,
+post_id int(11) NOT NULL,
 type ENUM('photo','video'),
-PRIMARY KEY (mediaId)
+PRIMARY KEY (media_id)
 );
 
 CREATE TABLE posthashtagrelationships
 (
-relationId int(11) NOT NULL AUTO_INCREMENT,
-postId int(11) NOT NULL,
-hashtagId int(11) NOT NULL,
-PRIMARY KEY (relationId)
+relation_id int(11) NOT NULL AUTO_INCREMENT,
+post_id int(11) NOT NULL,
+hashtag_id int(11) NOT NULL,
+PRIMARY KEY (relation_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE providers
 (
-providerId int(11) NOT NULL AUTO_INCREMENT,
+provider_id int(11) NOT NULL AUTO_INCREMENT,
 providerName varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 providerSite varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-PRIMARY KEY (providerId)
+PRIMARY KEY (provider_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE posteventrelationships
 (
-relationId int(11) NOT NULL AUTO_INCREMENT,
-eventId int(11) NOT NULL,
-postId int(11) NOT NULL,
+relation_id int(11) NOT NULL AUTO_INCREMENT,
+event_id int(11) NOT NULL,
+post_id int(11) NOT NULL,
 isFiltered BOOLEAN DEFAULT 0,
-PRIMARY KEY (relationId)
+PRIMARY KEY (relation_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE posts
 (
-postId int(11) NOT NULL AUTO_INCREMENT,
+post_id int(11) NOT NULL AUTO_INCREMENT,
 datetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 postURL VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 author VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 latitude decimal(10 , 6),
 longitude decimal(10 , 6),
 caption VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin,
-providerId int(11) NOT NULL,
+provider_id int(11) NOT NULL,
 rankPoints int(11) DEFAULT 0,
-PRIMARY KEY (postId)
+PRIMARY KEY (post_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE searchentries
 (
-searchId int(11) NOT NULL AUTO_INCREMENT,
+search_id int(11) NOT NULL AUTO_INCREMENT,
 datetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 searchKey VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-PRIMARY KEY (searchId)
+PRIMARY KEY (search_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
 
-ALTER TABLE eventhashtagrelationships ADD UNIQUE( `eventId`, `hashtagId`);
+ALTER TABLE eventhashtagrelationships ADD UNIQUE( `event_id`, `hashtag_id`);
 
-ALTER TABLE posthashtagrelationships ADD UNIQUE( `postId`, `hashtagId`);
+ALTER TABLE posthashtagrelationships ADD UNIQUE( `post_id`, `hashtag_id`);
 
-ALTER TABLE posteventrelationships ADD UNIQUE( `eventId`, `postId`);
+ALTER TABLE posteventrelationships ADD UNIQUE( `event_id`, `post_id`);
 
-ALTER TABLE crawljobs ADD FOREIGN KEY eventId_idxfk (eventId) REFERENCES events (eventId);
+ALTER TABLE crawljobs ADD FOREIGN KEY event_id_idxfk (event_id) REFERENCES events (event_id);
 
-ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY eventId_idxfk_1 (eventId) REFERENCES events (eventId);
+ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY event_id_idxfk_1 (event_id) REFERENCES events (event_id);
 
-ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY hashtagId_idxfk (hashtagId) REFERENCES hashtags (hashtagId);
+ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk (hashtag_id) REFERENCES hashtags (hashtag_id);
 
-ALTER TABLE mediaurls ADD FOREIGN KEY postId_idxfk_1 (mediaId) REFERENCES medias (mediaId);
+ALTER TABLE mediaurls ADD FOREIGN KEY post_id_idxfk_1 (media_id) REFERENCES medias (media_id);
 
-ALTER TABLE medias ADD FOREIGN KEY postId_idxfk_1 (postId) REFERENCES posts (postId);
+ALTER TABLE medias ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id);
 
-ALTER TABLE posthashtagrelationships ADD FOREIGN KEY postId_idxfk (postId) REFERENCES posts (postId);
+ALTER TABLE posthashtagrelationships ADD FOREIGN KEY post_id_idxfk (post_id) REFERENCES posts (post_id);
 
-ALTER TABLE posthashtagrelationships ADD FOREIGN KEY hashtagId_idxfk_1 (hashtagId) REFERENCES hashtags (hashtagId);
+ALTER TABLE posthashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk_1 (hashtag_id) REFERENCES hashtags (hashtag_id);
 
-ALTER TABLE posteventrelationships ADD FOREIGN KEY eventId_idxfk_2 (eventId) REFERENCES events (eventId);
+ALTER TABLE posteventrelationships ADD FOREIGN KEY event_id_idxfk_2 (event_id) REFERENCES events (event_id);
 
-ALTER TABLE posteventrelationships ADD FOREIGN KEY postId_idxfk_1 (postId) REFERENCES posts (postId);
+ALTER TABLE posteventrelationships ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id);
 
-ALTER TABLE posts ADD FOREIGN KEY providerId_idxfk (providerId) REFERENCES providers (providerId);
+ALTER TABLE posts ADD FOREIGN KEY provider_id_idxfk (provider_id) REFERENCES providers (provider_id);

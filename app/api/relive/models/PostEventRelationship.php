@@ -15,4 +15,12 @@ class PostEventRelationship extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+
+	public function post() {
+		return $this->belongsTo('relive\Post');
+	}
+
+	public function event() {
+		return $this->belongsTo('relive\Event');
+	}
 }
