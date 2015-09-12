@@ -75,23 +75,23 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
   items: [
     {
       title: "Event 1",
-      image: "http://lorempixel.com/1000/600/nature/3/"
+      image: "http://lorempixel.com/600/400/nature/1/"
     },
     {
       title: "Event 2",
-      image: "http://lorempixel.com/1000/600/nature/3/"
+      image: "http://lorempixel.com/600/400/nature/2/"
     },
     {
       title: "Event 3",
-      image: "http://lorempixel.com/1000/600/nature/3/"
+      image: "http://lorempixel.com/600/400/nature/3/"
     },
     {
       title: "Event 4",
-      image: "http://lorempixel.com/1000/600/nature/3/"
+      image: "http://lorempixel.com/600/400/nature/4/"
     },
     {
       title: "Event 5",
-      image: "http://lorempixel.com/1000/600/nature/3/"
+      image: "http://lorempixel.com/600/400/nature/5/"
     }
   ],
   template: '<li class="event-card">' +
