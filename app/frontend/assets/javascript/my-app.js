@@ -98,12 +98,6 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
               '<div class="item-inner">' +
                 '<div class="card event-card-header-img">' +
                   '<div style="background-image:url({{image}})" valign="bottom" class="card-header color-white no-border">{{title}}</div>' +
-                  '<div class="card-content">' +
-                    '<div class="card-content-inner">' +
-                      '<p class="color-gray">Posted on Instagram by quanyang' +
-                      '<p>Quisque eget vestibulum nulla. Quisque quis dui quis ex ultricies efficitur vitae non felis. Phasellus quis nibh hendrerit...</p>' +
-                    '</div>' +
-                  '</div>' +
                   '<div class="card-footer"><a href="#" class="link">View Event</a>' +
                 '</div>' +
               '</div>' +
