@@ -44,7 +44,7 @@
               <div class="subnavbar-search">
                 <form class="searchbar">
                   <div class="searchbar-input">
-                    <input type="search" placeholder="Find an event to relive">
+                    <input type="search" placeholder="Look for an event to relive">
                     <a href="#" class="searchbar-clear"></a>
                   </div>
                   <a href="#" class="searchbar-cancel">Cancel</a>
@@ -71,7 +71,13 @@
                 </script>
 
                 <!-- Link to another page -->
-                <a href="form.html">Make a Reel</a>
+                <div class="row no-gutter">
+                  <div class="col col-5"></div>
+                  <div class="col col-90">
+                    <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
+                  </div>
+                  <div class="col col-5"></div>
+                </div>
               </div>
             </div>
         </div>
