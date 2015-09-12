@@ -34,18 +34,9 @@
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
-            <div class="left">
-              <a href="#" class="link icon-only">
-                <i class="icon icon-back"></i>
-              </a>
-            </div>
-
             <div class="center sliding" id="page-title">relive</div>
-
             <div class="right">
-              <a href="#" class="link icon-only">
-                <i class="icon icon-bars"></i>
-              </a>
+              <a href="#" class="link icon-only open-panel"><i class="icon ion-ios-more"></i></a>
             </div>
 
             <!-- Sub navbar -->
@@ -81,7 +72,6 @@
 
                 <!-- Link to another page -->
                 <a href="form.html">Make a Reel</a>
-                <a href="#" data-panel="left" class="open-panel">Open left panel</a>
               </div>
             </div>
         </div>

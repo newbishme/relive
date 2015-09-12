@@ -48,7 +48,7 @@ var myApp = new Framework7({
 
 // Add view
 var mainView = myApp.addView('.view-main', {
-    dynamicNavbar: false
+    dynamicNavbar: true
 });
 
 // Callbacks to run specific code for specific pages, for example for Home data page:
