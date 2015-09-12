@@ -77,7 +77,7 @@ class App {
                 });
 
                 // Post /api/event
-                $app->post('', function() use ($app,$itemController) {
+                $app->post('', function() use ($app) {
                     $jsonData = $app->request->getBody();
                     $allPostVars = json_decode($jsonData,true);
 
@@ -103,10 +103,10 @@ class App {
                 });
 
                 // Route /api/event/:event_id
-                $app->group('/:event_id', function() use ($app,$itemController) {
+                $app->group('/:event_id', function() use ($app) {
 
                     //  Get /api/event/:event_id
-                    $app->get('', function($event_id) use ($app,$itemController) {
+                    $app->get('', function($event_id) use ($app) {
                         //return event with id = :event_id
                     });
 
