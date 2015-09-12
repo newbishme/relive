@@ -34,7 +34,6 @@ class EventController extends Controller {
 		} catch (\Exception $e) {
 			$app->render(500, ['Status' => 'An error occurred.' ]);
 		}
-
 	}
 
 };

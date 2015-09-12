@@ -53,7 +53,7 @@ class App {
     private function addDefaultRoutes() {
         $app = $this->app;
 
-        //$app->response->headers->set('Access-Control-Allow-Origin', '*');
+        $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
         //  http://relive.space/api
         $app->group('', function() use ($app) {
