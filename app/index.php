@@ -41,7 +41,7 @@
     <div class="panel panel-left panel-cover">
       <div class="view panel-view">
         <div class="content-block">
-          <p>Left panel content</p>
+          <p><a href="form.html">Make a Reel</a></p>
         </div>
       </div>
     </div>

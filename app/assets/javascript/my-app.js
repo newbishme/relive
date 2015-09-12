@@ -75,7 +75,9 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
   items: [
     {
       title: "Event 1",
-      image: "http://lorempixel.com/600/400/nature/1/"
+      image: "http://lorempixel.com/600/400/nature/1/",
+      author: "Author 1",
+      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
     },
     {
       title: "Event 2",
@@ -94,14 +96,50 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
       image: "http://lorempixel.com/600/400/nature/5/"
     }
   ],
-  template: '<li class="event-card">' +
-              '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-                '<h1>{{title}}</h1>' +
-              '</div>' +
-              '<div class="event-card-footer">' +
-                '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
-              '</div>' +
-            '</li>',
+  template:
+
+  // text post template
+
+  // '<li class="text post">' +
+  //   '<div class="post-data-origin-wrapper">' +
+  //     '<div class="post-data">' +
+  //       '<div class="post-author">{{author}}</div>' +
+  //       '<blockquote class="post-content">{{content}}</blockquote>' +
+  //     '</div>' +
+  //     '<div class="post-origin">' +
+  //       '<i class="icon ion-social-instagram-outline"></i>' +
+  //     '</div>' +
+  //   '</div>' +
+  // '</li>',
+
+
+  // image post template
+
+  '<li class="image post">' +
+    '<div style="background-image: url({{image}})" class="post-img">' +
+    '</div>' +
+    '<div class="post-data-origin-wrapper">' +
+      '<div class="post-data">' +
+        '<div class="post-author">{{author}}</div>' +
+        '<div class="post-content">{{content}}</div>' +
+      '</div>' +
+      '<div class="post-origin">' +
+        '<i class="icon ion-social-instagram-outline"></i>' +
+      '</div>' +
+    '</div>' +
+  '</li>',
+
+
+  // event card template
+
+  // '<li class="event-card">' +
+  //             '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
+  //               '<h1>{{title}}</h1>' +
+  //             '</div>' +
+  //             '<div class="event-card-footer">' +
+  //               '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+  //             '</div>' +
+  //           '</li>',
 
   height: 700,
   searchAll: function (query, items) {
@@ -113,6 +151,31 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
     }
     return foundItems;
   }
+});
+
+// Handle form ajax actions
+$$(document).on('submitted', 'form.ajax-submit', function (e) {
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  // Clear form, hide panel
+  console.log('form successfully submitted');
+  console.log(data);
+  mainView.router.back();
+});
+
+$$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  // Clear form, hide panel
+  console.log('beforeSubmit callback');
+  console.log(data);
+});
+
+$$(document).on('submitError', 'form.ajax-submit', function (e) {
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  console.log('Error on submit!!!!');
+  console.log(xhr);
 });
 
 // Initialize the app
