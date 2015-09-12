@@ -9,6 +9,7 @@ class MediaURL extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'mediaurls';
+	protected  $primaryKey = 'mediaurl_id';
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.

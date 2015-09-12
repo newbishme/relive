@@ -9,6 +9,7 @@ class CrawlJob extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'crawljobs';
+	protected  $primaryKey = 'crawler_id';
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.

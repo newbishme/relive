@@ -9,6 +9,7 @@ class Hashtag extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'hashtags';
+	protected  $primaryKey = 'hashtag_id';
 	protected $fillable = array('hashtag');
 	public $timestamps = false;
 	/**
@@ -22,6 +23,6 @@ class Hashtag extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function eventhashtagrelationship() {
-		return $this->hasMany('relive\models\EventHashtagRelationship');
+		return $this->hasMany('relive\models\EventHashtagRelationship','hashtag_id','hashtag_id');
 	}
 }

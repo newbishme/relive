@@ -9,6 +9,7 @@ class PostEventRelationship extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'posteventrelationships';
+	protected  $primaryKey = 'relation_id';
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
