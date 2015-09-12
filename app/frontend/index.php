@@ -34,15 +34,40 @@
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
-            <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+            <div class="left">
+              <a href="#" class="link icon-only">
+                <i class="icon icon-back"></i>
+              </a>
+            </div>
+
             <div class="center sliding" id="page-title">relive</div>
+
+            <div class="right">
+              <a href="#" class="link icon-only">
+                <i class="icon icon-bars"></i>
+              </a>
+            </div>
+
+            <!-- Sub navbar -->
+            <div class="subnavbar">
+              <div class="subnavbar-search">
+                <form class="searchbar">
+                  <div class="searchbar-input">
+                    <input type="search" placeholder="Find an event to relive">
+                    <a href="#" class="searchbar-clear"></a>
+                  </div>
+                  <a href="#" class="searchbar-cancel">Cancel</a>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
 
 
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
-            <div class="page" data-page="home">
+            <div class="page with-subnavbar" data-page="home">
+
               <div class="page-content">
                 <p>The most awesome space to relive your moments</p>
 

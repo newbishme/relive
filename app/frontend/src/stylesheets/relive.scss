@@ -13,12 +13,16 @@ a {
 	color: $linkColor;
 }
 
+.statusbar-overlay {
+	background: $primaryColour;
+}
+
 .center.sliding {
 	font-weight: 700;
 	color: white;
 }
 
-.navbar {
+.navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
 	a.link, i {
 		color: white;

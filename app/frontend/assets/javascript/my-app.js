@@ -63,5 +63,12 @@ myApp.onPageInit('home', function (page) {
 
 });
 
+
+// Initialize Search bar
+myApp.searchbar('.searchbar', {
+  customSearch: true//, // Custom search functionality like calling external API with search results
+  //onSearch: someFunction(), onEnable: someFunction(), onDisable: function(), onClear: function()
+});
+
 // Initialize the app
 myApp.init();
