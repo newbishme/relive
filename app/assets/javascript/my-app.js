@@ -97,9 +97,9 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
     }
   ],
   template:
-  
+
   // text post template
-  
+
   // '<li class="text post">' +
   //   '<div class="post-data-origin-wrapper">' +
   //     '<div class="post-data">' +
@@ -111,10 +111,10 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
   //     '</div>' +
   //   '</div>' +
   // '</li>',
-   
-   
+
+
   // image post template
-  
+
   '<li class="image post">' +
     '<div style="background-image: url({{image}})" class="post-img">' +
     '</div>' +
@@ -128,10 +128,10 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
       '</div>' +
     '</div>' +
   '</li>',
-  
-  
+
+
   // event card template
-  
+
   // '<li class="event-card">' +
   //             '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
   //               '<h1>{{title}}</h1>' +
@@ -160,6 +160,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   // Clear form, hide panel
   console.log('form successfully submitted');
   console.log(data);
+  mainView.router.back();
 });
 
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
@@ -171,7 +172,10 @@ $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
 });
 
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
-  console.log('Error on submit');
+  var xhr = e.detail.xhr;
+  var data = e.detail.data;
+  console.log('Error on submit!!!!');
+  console.log(xhr);
 });
 
 // Initialize the app
