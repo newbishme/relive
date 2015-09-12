@@ -9,6 +9,7 @@ class Hashtag extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'hashtags';
+	protected $fillable = array('hashtag');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -17,10 +18,10 @@ class Hashtag extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function posthashtagrelationship() {
-		return $this->hasMany('relive\PostHashtagRelationship');
+		return $this->hasMany('relive\models\PostHashtagRelationship');
 	}
 
 	public function eventhashtagrelationship() {
-		return $this->hasMany('relive\EventHashtagRelationship');
+		return $this->hasMany('relive\models\EventHashtagRelationship');
 	}
 }

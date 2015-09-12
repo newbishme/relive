@@ -46,6 +46,10 @@ class App {
         )));
     }
 
+    function test() {
+
+    }
+
     private function addDefaultRoutes() {
         $app = $this->app;
 
@@ -66,7 +70,6 @@ class App {
             });            
 
             $app->group('/event', function() use ($app) {
-
                 // Get /api/event{?startAt,limit,orderBy}
                 $app->get('', function() use ($app) {
                     $allGetVars = $app->request->get();
@@ -77,13 +80,7 @@ class App {
                 });
 
                 // Post /api/event
-                $app->post('', function() use ($app) {
-                    $jsonData = $app->request->getBody();
-                    $allPostVars = json_decode($jsonData,true);
-
-                    $eventName = $allPostVars['eventName'];
-                    $hashtags = $allPostVars['hashtags'];
-                });
+                $app->post('', 'relive\controllers\EventController::create');
 
                 //  Get /api/event/indexes
                 $app->get('/indexes', function() use ($app) {

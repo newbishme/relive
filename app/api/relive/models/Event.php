@@ -15,14 +15,24 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('rankPoints');
+	protected $appends = ['hashtags'];
+	protected $hidden = array('rankPoints','eventhashtagrelationship');
 
 
 	public function eventhashtagrelationship() {
-		return $this->hasMany('relive\EventHashtagRelationship');
+		return $this->hasMany('relive\models\EventHashtagRelationship');
 	}
 
 	public function posteventrelationship() {
-		return $this->hasMany('relive\PostEventRelationship');
+		return $this->hasMany('relive\models\PostEventRelationship');
+	}
+
+	public function getHashtagsAttribute() {
+		$hashtags = [];
+
+		foreach($this->eventhashtagrelationship as $relationship) {
+			array_push($hashtags, $relationship->hashtag->hashtag);
+		}
+		return $hashtags;
 	}
 }

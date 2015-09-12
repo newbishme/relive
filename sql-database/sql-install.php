@@ -6,7 +6,7 @@ $user 		= "root";
 $password = getenv('MYSQL_PASSWORD');
 $dbname   = getenv('MYSQL_DATABASE');
 
-echo "Building SQL Database from 'database.sql'";
+echo "Building SQL Database from 'database.sql'\n";
 
 try{
     // db connection
@@ -59,5 +59,5 @@ try{
 	echo $sqlCount . "Completed\n";
 }
 catch(Exception $e){
-	echo $e->getMessage(). " <pre>".$e->getTraceAsString()."</pre>";
+	echo $e->getMessage(). " \n".$e->getTraceAsString()."";
 }

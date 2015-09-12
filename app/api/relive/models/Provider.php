@@ -17,6 +17,6 @@ class Provider extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function posts() {
-		return $this->hasMany('relive\Post');
+		return $this->hasMany('relive\models\Post');
 	}
 }

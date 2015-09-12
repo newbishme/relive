@@ -17,10 +17,10 @@ class Media extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function mediaURLs() {
-		return $this->hasMany('relive\MediaURL');
+		return $this->hasMany('relive\models\MediaURL');
 	}
 
 	public function post() {
-		return $this->belongsTo('relive\Post');
+		return $this->belongsTo('relive\models\Post');
 	}
 }
