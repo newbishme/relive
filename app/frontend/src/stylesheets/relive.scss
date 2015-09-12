@@ -1,6 +1,14 @@
 $primaryColour: #374F59;
 $linkColor: #1B5DC8;
 
+@mixin vertical-align($position: relative) {
+  position: $position;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 body {
 	font-family: Oxygen, Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -22,6 +30,11 @@ a {
 	color: white;
 }
 
+.content-block-title {
+	letter-spacing: 1px;
+	margin-top: 30px;
+}
+
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
 	a, i {
@@ -32,8 +45,38 @@ a {
 	}
 }
 
-.event-card-header-img .card-header {
-  height: 40vw;
-  background-size: cover;
-  background-position: center;
-}
+.event-card {
+  	border-bottom: 20px solid #EFEFF4;
+	.event-card-header-img {
+		height: 150px;
+		background-size: cover;
+		background-position: center;
+		
+		h2 {
+			position: absolute;
+  			top: 40%;
+  			left: 50%;
+			color: white;
+			margin: 0;
+			transform: translate(-50%, -50%);
+		}
+	}
+	
+	.event-card-footer {
+		padding: 5px 20px;
+		height: 25px;
+		.link {
+			@include vertical-align();
+			font-size: 12px;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			vertical-align: bottom;
+			&.right {
+				float: right;
+			}
+			i {
+				margin-left: 10px;
+			}
+		}
+	}
+} 

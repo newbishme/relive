@@ -63,7 +63,9 @@
               <div class="searchbar-overlay"></div>
 
               <div class="page-content">
-                <p>The most awesome space to relive your moments</p>
+                <!--<div class="content-block">
+                  <p>The most awesome space to relive your moments</p>
+                </div>-->
 
                 <!-- Hidden by default, this will appear when search results is empty -->
                 <div class="content-block searchbar-not-found">
@@ -77,6 +79,7 @@
                   </div>
                 </div>
 
+                <div class="content-block-title">Trending events</div>
                 <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
                 <!-- <script id="homeTemplate" type="text/template7">
                   {{eventName}}

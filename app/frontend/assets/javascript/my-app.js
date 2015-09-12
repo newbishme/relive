@@ -94,12 +94,12 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
       image: "http://lorempixel.com/1000/600/nature/3/"
     }
   ],
-  template: '<li class="item-content">' +
-              '<div class="item-inner">' +
-                '<div class="card event-card-header-img">' +
-                  '<div style="background-image:url({{image}})" valign="bottom" class="card-header color-white no-border">{{title}}</div>' +
-                  '<div class="card-footer"><a href="#" class="link">View Event</a>' +
-                '</div>' +
+  template: '<li class="event-card">' +
+              '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
+                '<h2>{{title}}</h2>' +
+              '</div>' +
+              '<div class="event-card-footer">' +
+                '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
               '</div>' +
             '</li>',
 
