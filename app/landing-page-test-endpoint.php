@@ -1,18 +1,26 @@
 <?php
 
 $start = 1;
-$end = 10;
+$currentLastEntry = 10;
 
-$items = array();
+$lastRecord = $_GET['lastEventId'];
 
-for ($i = $start; $i < $end; $i++)
-{
-  $items[] = array(
-            'id'=>"".$i,
-            'title'=>'Event '.$i,
-            'image'=>'http://lorempixel.com/600/400/nature/'.$i
-    );
+if ($start >= $currentLastEntry) {
+   echo '';
+} else {
+  $start = $lastRecord + 1;
+  $items = array();
+
+  for ($i = $start; $i <= $currentLastEntry; $i++)
+  {
+    $items[] = array(
+              'id'=>"".$i,
+              'title'=>'Event '.$i,
+              'image'=>'http://lorempixel.com/600/400/nature/'.$i
+      );
+  }
+  echo json_encode($items, JSON_UNESCAPED_SLASHES);
+
 }
-echo json_encode($items, JSON_UNESCAPED_SLASHES);
 
 ?>
