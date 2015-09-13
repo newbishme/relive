@@ -140,7 +140,8 @@ myApp.onPageInit('events', function (page) {
     },
     {
       title: "Post 2",
-      image: "http://lorempixel.com/600/400/nature/2/"
+      author: "Author 2",
+      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
     },
     {
       title: "Post 3",
@@ -161,30 +162,18 @@ myApp.onPageInit('events', function (page) {
       items: posts,
       template:
 
-      // text post template
-
-      // '<li class="text post">' +
-      //   '<div class="post-data-origin-wrapper">' +
-      //     '<div class="post-data">' +
-      //       '<div class="post-author">{{author}}</div>' +
-      //       '<blockquote class="post-content">{{content}}</blockquote>' +
-      //     '</div>' +
-      //     '<div class="post-origin">' +
-      //       '<i class="icon ion-social-instagram-outline"></i>' +
-      //     '</div>' +
-      //   '</div>' +
-      // '</li>',
-
-
-      // image post template
-
-      '<li class="image post">' +
-        '<div style="background-image: url({{image}})" class="post-img">' +
-        '</div>' +
+      '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
+        '{{#if image}}' +
+        '<div style="background-image: url({{image}})" class="post-img"></div>' +
+        '{{/if}}' +
         '<div class="post-data-origin-wrapper">' +
           '<div class="post-data">' +
             '<div class="post-author">{{author}}</div>' +
+            '{{#if image}}' +
             '<div class="post-content">{{content}}</div>' +
+            '{{else}}' +
+            '<blockquote class="post-content">{{content}}</blockquote>' +
+            '{{/if}}' +
           '</div>' +
           '<div class="post-origin">' +
             '<i class="icon ion-social-instagram-outline"></i>' +

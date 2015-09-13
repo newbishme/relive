@@ -153,12 +153,8 @@
                 <!-- Hidden by default, this will appear when search results is empty -->
                 <div class="content-block searchbar-not-found">
                   <!-- Make a Reel CTA -->
-                  <div class="row no-gutter">
-                    <div class="col col-5"></div>
-                    <div class="col col-90">
-                      <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
-                    </div>
-                    <div class="col col-5"></div>
+                  <div class="content-block">
+                    <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
                   </div>
                 </div>
 
