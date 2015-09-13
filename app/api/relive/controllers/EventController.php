@@ -145,6 +145,7 @@ class EventController extends Controller {
 					$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
 				}
 			}
+			\relive\Crawlers\CreationCrawler::initialCrawl($event);
 			echo json_encode($event, JSON_UNESCAPED_SLASHES);
 		} catch (\Exception $e) {
 			$app->render(500, ['Status' => 'An error occurred.' ]);
