@@ -14,6 +14,6 @@ $startTime = time();
 foreach ($jobs as $job) {
 	$event = \relive\models\Event::find($job->event_id);
 	foreach ($event->getHashtagsAttribute as $hashtag) {
-		TwitterCrawler->recentCrawl($startTime, $hashtag);
+		$twitter->recentCrawl($startTime, $hashtag);
 	}
 }
