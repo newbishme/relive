@@ -32,13 +32,6 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
-$$(document).on('ajaxStart', function (e) {
-    myApp.showIndicator();
-});
-$$(document).on('ajaxComplete', function () {
-    myApp.hideIndicator();
-});
-
 // Callbacks to run specific code for specific pages, for example for Home data page:
 myApp.onPageInit('home', function (page) {
   // TODO Get events from local cache, if not found, get from server
@@ -101,7 +94,7 @@ myApp.onPageInit('home', function (page) {
 
   $$.ajax({
     type:'GET',
-    url:'recent-events-test-endpoint.php',
+    url:'https://relive.space/api/event/recent',
     dataType:'json',
     success:function(data){
       if (data !== '') {
@@ -123,7 +116,7 @@ myApp.onPageInit('home', function (page) {
 
   $$.ajax({
     type:'GET',
-    url:'recent-events-test-endpoint.php',
+    url:'https://relive.space/api/event/trending',
     dataType:'json',
     success:function(data){
       if (data !== '') {
@@ -247,6 +240,17 @@ myApp.onPageInit('event', function (page) {
       }); // End infinite scroll
     }, 3000);
   }
+});
+
+
+// Initialize form page to have ajax indicator
+myApp.onPageInit('form', function (e) {
+  $$(document).on('ajaxStart', function (e) {
+      myApp.showIndicator();
+  });
+  $$(document).on('ajaxComplete', function () {
+      myApp.hideIndicator();
+  });
 });
 
 

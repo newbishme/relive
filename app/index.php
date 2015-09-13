@@ -29,11 +29,11 @@
           <div id="side-nav-recent-events"></div>
           <script id="sideNavRecentEventTemplate" type="text/template7">
             <li>
-              <a href="event.php?id={{id}}" class="item-link close-panel">
+              <a href="event.php?id={{event_id}}" class="item-link close-panel">
                 <div class="item-content">
                   <div class="item-media"><i class="icon ion-android-time"></i></div>
                   <div class="item-inner">
-                    <div class="item-title">{{title}}</div>
+                    <div class="item-title">{{eventName}}</div>
                   </div>
                 </div>
               </a>
@@ -47,11 +47,11 @@
           <div id="side-nav-trending-events"></div>
           <script id="sideNavTrendingEventTemplate" type="text/template7">
             <li>
-              <a href="event.php?id={{id}}" class="item-link close-panel">
+              <a href="event.php?id={{event_id}}" class="item-link close-panel">
                 <div class="item-content">
                   <div class="item-media"><i class="icon ion-android-time"></i></div>
                   <div class="item-inner">
-                    <div class="item-title">{{title}}</div>
+                    <div class="item-title">{{eventName}}</div>
                   </div>
                 </div>
               </a>
