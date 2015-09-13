@@ -58,33 +58,13 @@ $$(document).on('ajaxComplete', function () {
 myApp.onPageInit('home', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var events = [];
-  events = [
-    {
-      id:    "1",
-      title: "Event 1",
-      image: "http://lorempixel.com/600/400/nature/1/",
-    },
-    {
-      id:    "2",
-      title: "Event 2",
-      image: "http://lorempixel.com/600/400/nature/2/"
-    },
-    {
-      id:    "3",
-      title: "Event 3",
-      image: "http://lorempixel.com/600/400/nature/3/"
-    },
-    {
-      id:    "4",
-      title: "Event 4",
-      image: "http://lorempixel.com/600/400/nature/4/"
-    },
-    {
-      id:    "5",
-      title: "Event 5",
-      image: "http://lorempixel.com/600/400/nature/5/"
-    }
-  ];
+
+  for (var i = 1; i < 10; i++) {
+    var id = i;
+    var title = "Event " + i;
+    var image = "http://lorempixel.com/600/400/nature/" + i + "/";
+    events.push({"id":id,"title":title,"image":image});
+  }
 
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
@@ -122,31 +102,14 @@ myApp.onPageInit('home', function (page) {
 myApp.onPageInit('event', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
-  posts = [
-    {
-      title: "Post 1",
-      image: "http://lorempixel.com/600/400/nature/1/",
-      author: "Author 1",
-      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
-    },
-    {
-      title: "Post 2",
-      author: "Author 2",
-      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
-    },
-    {
-      title: "Post 3",
-      image: "http://lorempixel.com/600/400/nature/3/"
-    },
-    {
-      title: "Post 4",
-      image: "http://lorempixel.com/600/400/nature/4/"
-    },
-    {
-      title: "Post 5",
-      image: "http://lorempixel.com/600/400/nature/5/"
-    }
-  ];
+
+  for (var i = 1; i < 10; i++) {
+    var title = "Event " + i;
+    var image = "http://lorempixel.com/600/400/nature/" + i + "/";
+    var author = "Author " + i;
+    var content = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.";
+    posts.push({"title":title,"image":image,"author":author,"content":content});
+  }
 
   // Initialize Virtual List
   var eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
