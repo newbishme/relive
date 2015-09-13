@@ -177,3 +177,29 @@ form .item-content {
   width:34px;
   height:34px;
 }
+
+
+.item-content.hashtags {
+	display: flex;
+	flex-flow: wrap row;
+	justify-content: flex-start;
+	&.hidden {
+		display: none;
+	}
+	.hashtag {
+		cursor: pointer;
+		font-size: 14px;
+		margin: 10px 15px 5px 0;
+		padding: 6px 12px;
+		border-radius: 5px;
+		color: white;
+		background-color: $primaryColour;
+		font-weight: 700;
+		i {
+			padding-left: 20px;
+		}
+		&:hover {
+			color: #ccc;
+		}
+	}
+}

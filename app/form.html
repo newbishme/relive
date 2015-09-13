@@ -16,15 +16,15 @@
     <!-- Scrollable page content-->
     <div class="page-content">
       <form action="https://relive.space/api/event" method="POST" class="ajax-submit" id="create-reel-form">
-        <div class="content-block-title">Event Name</div>
+        <div class="content-block-title" id="event-name-header">Event Name</div>
         <div class="list-block">
           <ul>
             <li>
               <div class="item-content">
-                <div class="item-media"><i class="icon ion-edit"></i></div>
+                <div class="item-media" id="event-name-input-icon"><i class="icon ion-edit"></i></div>
                 <div class="item-inner">
                   <div class="item-input">
-                    <input type="text" placeholder="Your event name" name="relive-event-name"/>
+                    <input class="event-name-input" type="text" placeholder="Your event name" name="relive-event-name"/>
                   </div>
                 </div>
               </div>
@@ -32,10 +32,25 @@
           </ul>
         </div>
 
-        <div class="content-block-title">Hashtag</div>
+        <div class="content-block-title" id="hashtags-header">Hashtag</div>
         <div class="list-block">
           <ul>
             <li>
+              <div class="item-content hashtags hidden">
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-media" id="hashtags-input-icon"><i class="icon ion-pound"></i></div>
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input class="hashtags-input" type="text" placeholder="Add hashtags linked to this event" name="relive-hashtags[]"/>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <!--<li>
               <div class="item-content">
                 <div class="item-media"><i class="icon ion-pound"></i></div>
                 <div class="item-inner">
@@ -77,18 +92,7 @@
                   </div>
                 </div>
               </div>
-            </li>
-
-            <li>
-              <div class="item-content">
-                <div class="item-media"><i class="icon ion-pound"></i></div>
-                <div class="item-inner">
-                  <div class="item-input">
-                    <input type="text" placeholder="Hashtag linked to this event" name="relive-hashtags[]"/>
-                  </div>
-                </div>
-              </div>
-            </li>
+            </li>-->
           </ul>
         </div>
 

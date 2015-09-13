@@ -191,6 +191,56 @@ myApp.onPageInit('event', function (page) {
 
 });
 
+myApp.onPageInit('form', function (page) {
+  var hasNoName = false;
+  var maxHashtags = 5;
+  var hashtags = [];
+  
+  $$('.event-name-input').on('focusout', function(e) {
+    if (e.srcElement.value.length === 0) {
+      hasNoName = true;
+      $$('#event-name-header').html("Please give your event a name").addClass("color-red");
+      $$('#event-name-input-icon').addClass("color-red");
+    }
+  });
+  
+  $$('.event-name-input').on('keypress', function(e) {
+    if (hasNoName) {
+      if (e.srcElement.value.length > 0) {
+        hasNoName = false;
+        $$('#event-name-header').html("Event Name").removeClass("color-red");
+        $$('#event-name-input-icon').removeClass("color-red");
+      }
+    }
+  });
+  
+  $$('.hashtags-input').on('keypress', function(e) {
+    if (e.keyCode === 32) { // spacebar
+      var inputHashtagsArr = e.srcElement.value.split(" ");
+      var returnHashtags = "";
+      for (var i in inputHashtagsArr) {
+        var hashtag = inputHashtagsArr[i].replace('#', '');
+        
+        if (hashtag.length > 0 && 
+            hashtags.length <= maxHashtags && 
+            hashtags.indexOf(hashtag) === -1) {
+          $$('.hashtags').removeClass('hidden');
+
+          hashtags.push(hashtag);
+          $$('.hashtags').append(
+            '<div class="hashtag">#' +
+              hashtag + '<i class="icon ion-close"></i>' +
+            '</div>'
+          );
+        } else {
+          returnHashtags += hashtag + " ";
+        }
+      }
+      $$(this).val(returnHashtags.trim());
+      console.log(hashtags);
+    }
+  });
+});
 
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
