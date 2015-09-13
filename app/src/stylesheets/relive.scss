@@ -21,6 +21,14 @@ a {
 	color: $linkColor;
 }
 
+.preloader {
+	background-image: url(../img/preloader.svg); 	
+}
+
+.preloader-indicator-modal {
+	background: none;
+}
+
 .list-block ul {
 	background-color: #EFEFF4;
 }
