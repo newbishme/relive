@@ -186,8 +186,8 @@ myApp.onPageInit('event', function (page) {
             items: posts,
             template:
 
-            '<li class="{{#if media.data.0.mediaURL}}image{{else}}text{{/if}} post">' +
-              '{{#if media.data.0.mediaURL}}' +
+            '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
+              '{{#if media}}' +
               '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
@@ -237,7 +237,7 @@ myApp.onPageInit('event', function (page) {
             } else {
               eventPostsList.appendItems(data);
               eventPostsList.update();
-              lastLoadedIndex += data.length-1;
+              lastLoadedIndex += data.length;
             }
           }
         }); // End AJAX
