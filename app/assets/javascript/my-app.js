@@ -25,7 +25,8 @@ var myApp = new Framework7({
     dynamicNavbar: false,
     domCache: true,
     uniqueHistory: true,
-    preloadPreviousPage: true
+    preloadPreviousPage: true,
+    pushState: true
 });
 
 // Add view
@@ -153,7 +154,8 @@ myApp.onPageInit('home', function (page) {
       }); // End ajax
     }, 2000);
   });
-
+  
+  mainView.router.refreshPage();
 });
 
 myApp.onPageInit('event', function (page) {
@@ -185,14 +187,14 @@ myApp.onPageInit('event', function (page) {
             items: posts,
             template:
 
-            '<li class="{{#if media.data.0.mediaURL}}image{{else}}text{{/if}} post">' +
-              '{{#if media.data.0.mediaURL}}' +
+            '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
+              '{{#if media}}' +
               '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
                   '<div class="post-author">{{author}}</div>' +
-                  '{{#if image}}' +
+                  '{{#if media}}' +
                   '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
                   '<blockquote class="post-content">{{caption}}</blockquote>' +
@@ -236,7 +238,7 @@ myApp.onPageInit('event', function (page) {
             } else {
               eventPostsList.appendItems(data);
               eventPostsList.update();
-              lastLoadedIndex += data.length-1;
+              lastLoadedIndex += data.length;
             }
           }
         }); // End AJAX
@@ -379,7 +381,8 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   };
   var options = {
       url: 'event.php',
-      query: query
+      query: query,
+      pushState: true
   };
   mainView.router.load(options);
 });
