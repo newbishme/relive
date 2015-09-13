@@ -38,9 +38,11 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 		$mediaURL = "";
 		foreach($posts as $post) {
 			//$post->media->data[0]->mediaURL;
-			$mediaData = $post->media->data;
-			if (count($mediaData) > 0) {
-				$mediaURL = $mediaData[0]->mediaURL;
+			if ($post->media) {
+				$mediaData = $post->media->data;
+				if (count($mediaData) > 0) {
+					$mediaURL = $mediaData[0]->mediaURL;
+				}
 			}
 		}
 		return $mediaURL;
