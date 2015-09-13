@@ -335,6 +335,7 @@ myApp.onPageInit('form', function (page) {
           $$('.hashtags').append(
             '<div class="hashtag" id="ht' + id + '">#' +
               hashtag + '<i class="icon ion-close"></i>' +
+              '<input style="display:none;" value="' + hashtag + '" type="text" name="relive-hashtags[]"/>' +
             '</div>'
           );
 
