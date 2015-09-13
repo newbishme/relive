@@ -40,6 +40,7 @@
     <link href="/relive-startup.png" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" rel="apple-touch-startup-image">
   </head>
   <body>
+    <?php include_once "googleanalytics.php" ?>
     <div class="statusbar-overlay"></div>
     <div class="panel-overlay"></div>
 
