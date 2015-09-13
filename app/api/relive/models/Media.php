@@ -10,6 +10,7 @@ class Media extends \Illuminate\Database\Eloquent\Model {
 	 */
 	protected $table = 'medias';
 	protected  $primaryKey = 'media_id';
+	protected $fillable = array('post_id', 'type');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
