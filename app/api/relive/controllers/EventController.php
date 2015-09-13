@@ -11,12 +11,12 @@ class EventController extends Controller {
 		$app = \Slim\Slim::getInstance();
 
 		$allGetVars = $app->request->get();
-        $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $startAt = @$allGetVars['startAt']? intval($allGetVars['startAt']): 0;
         $limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
         //either dateAdded or startDate
         $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "startDate";
 
-        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($limit, FILTER_VALIDATE_INT)) {
+        if (!filter_var($limit, FILTER_VALIDATE_INT)) {
         	$app->render(400, ['Status' => 'Invalid input.' ]);
         	return;
         }
@@ -25,7 +25,7 @@ class EventController extends Controller {
         	$orderBy = "startDate";
         }
 
-        $event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt-1)->take($limit)->get()->toArray();
+        $event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt)->take($limit)->get()->toArray();
         echo json_encode($event, JSON_UNESCAPED_SLASHES);
 	}
 
@@ -118,8 +118,17 @@ class EventController extends Controller {
 	public static function getSearchIndexes() {
 		//return eventname/media/hashtags
 		$app = \Slim\Slim::getInstance();
+		$allGetVars = $app->request->get();
+		$startAt = @$allGetVars['startAt']? intval($allGetVars['startAt']): 0;
 
-		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->get()->toArray();
+
+		$count = \relive\models\SearchIndex::count();
+		if ($startAt >= $count) {
+			echo json_encode([]);
+			return;
+		}
+		$limit = $count-$startAt;
+		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->orderBy('event_id','desc')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($indexes, JSON_UNESCAPED_SLASHES);
 	}
 
