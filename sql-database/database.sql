@@ -49,6 +49,7 @@ CREATE TABLE mediaurls
 (
 mediaurl_id int(11) NOT NULL AUTO_INCREMENT,
 media_id int(11) NOT NULL,
+mediaURL varchar(255) NOT NULL,
 width int(11) NOT NULL DEFAULT 0,
 height int(11) NOT NULL DEFAULT 0,
 sizes ENUM('low_resolution','standard_resolution','thumbnail','small','medium','thumb','large'),
