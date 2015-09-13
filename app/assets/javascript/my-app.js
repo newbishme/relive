@@ -58,6 +58,7 @@ $$(document).on('ajaxComplete', function () {
 myApp.onPageInit('home', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var events = [];
+  var lastEventId = 0;
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -95,14 +96,39 @@ myApp.onPageInit('home', function (page) {
   $$.ajax({
     type:'GET',
     url:'landing-page-test-endpoint.php',
+    data:{"lastEventId":lastEventId},
     dataType:'json',
     success:function(data){
       if (data !== '') {
         eventsList.appendItems(data);
         eventsList.update();
+        lastEventId += data.length;
       }
     } // End ajax success
   }); // End ajax
+
+  // Initialize Pull to refresh
+  var ptrContent = $$('.pull-to-refresh-content');
+
+  ptrContent.on('refresh', function (e) {
+    setTimeout(function () {
+      // Load more events if connected to internet
+      $$.ajax({
+        type:'GET',
+        url:'landing-page-test-endpoint.php',
+        data:{"lastEventId":lastEventId},
+        dataType:'json',
+        success:function(data){
+          if (data !== '') {
+            eventsList.appendItems(data);
+            eventsList.update();
+            lastEventId += data.length;
+          }
+          myApp.pullToRefreshDone();
+        } // End ajax success
+      }); // End ajax
+    }, 2000);
+  });
 
 });
 
