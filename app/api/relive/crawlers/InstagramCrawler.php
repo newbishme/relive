@@ -12,7 +12,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         $this->instagram = new Instagram(array(
             'apiKey'      => getenv('INSTAGRAM_CLIENT_ID'),
             'apiSecret'   => getenv('INSTAGRAM_CLIENT_SECRET'),
-            'apiCallback' => 'http://relive.local/api/crawl/instagram/callback'
+            'apiCallback' => 'http://relive.space/'
         ));
         $access_token = getenv('INSTAGRAM_ACCESS_TOKEN');
         $this->instagram->setAccessToken($access_token);
