@@ -48,8 +48,10 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 	}
 
     private function createPost($event, $status) {
+        $datetime = new DateTime();
+        $datetime->setTimestamp(strtotime($status->created_at));
         $post = \relive\models\Post::firstOrCreate([
-            'datetime'=>DateTime::setTimestamp(strtotime($status->created_at)),
+            'datetime'=>$datetime,
             'postURL'=>"https://twitter.com/statuses/" . $status->id_str,
             'author'=>$status->user->screen_name,
             'caption'=>$status->text,

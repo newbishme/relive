@@ -16,6 +16,6 @@ foreach ($jobs as $job) {
 	$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
 	foreach ($hashtagRelationships as $hashtagRelationship) {
 		$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
-		$twitter->recentCrawl($startTime, $hashtag);
+		$twitter->recentCrawl($startTime, $hashtag->hashtag);
 	}
 }
