@@ -18,10 +18,10 @@ class PostEventRelationship extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function post() {
-		return $this->belongsTo('relive\models\Post');
+		return $this->belongsTo('relive\models\Post','post_id','post_id');
 	}
 
 	public function event() {
-		return $this->belongsTo('relive\models\Event');
+		return $this->belongsTo('relive\models\Event','event_id','event_id');
 	}
 }

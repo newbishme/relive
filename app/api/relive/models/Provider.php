@@ -18,6 +18,6 @@ class Provider extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function posts() {
-		return $this->hasMany('relive\models\Post');
+		return $this->hasMany('relive\models\Post','provider_id','provider_id');
 	}
 }
