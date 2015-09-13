@@ -53,7 +53,7 @@ form .item-content {
 
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
-	a, i {
+	a, i, .back.link {
 		color: white;
 		&:hover {
 			color: grey;
@@ -168,13 +168,13 @@ form .item-content {
 }
 
 .infinite-scroll-preloader {
-  margin-top:-20px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-.infinite-scroll-preloader .preloader {
-  width:34px;
-  height:34px;
+	margin-top:-20px;
+	margin-bottom: 10px;
+	text-align: center;
+	.preloader {
+		width:34px;
+		height:34px;
+	}
 }
 
 
