@@ -31,10 +31,6 @@ if (isAndroid) {
     $$('.view .navbar').prependTo('.view .page');
 }
 
-
-// var homeTemplate = $$('#homeTemplate').html();
-// var compiledHomeTemplate = Template7.compile(homeTemplate);
-
 // Initialize your app
 var myApp = new Framework7({
     init: false,
@@ -60,14 +56,6 @@ $$(document).on('ajaxComplete', function () {
 
 // Callbacks to run specific code for specific pages, for example for Home data page:
 myApp.onPageInit('home', function (page) {
-
-  // Render landing page template for events
-  // var context = {
-  //   eventName: 'Hello world'
-  // };
-  // var homeHTML = compiledHomeTemplate(template7Data);
-  // $$('div#home-landing-events').html(homeHTML);
-
   // TODO Get events from local cache, if not found, get from server
   var events = [];
   events = [
