@@ -10,6 +10,7 @@ class PostEventRelationship extends \Illuminate\Database\Eloquent\Model {
 	 */
 	protected $table = 'posteventrelationships';
 	protected  $primaryKey = 'relation_id';
+	protected $fillable = array('event_id', 'post_id', 'isFiltered');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.

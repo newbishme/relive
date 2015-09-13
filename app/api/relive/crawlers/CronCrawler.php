@@ -13,7 +13,9 @@ $startTime = time();
 
 foreach ($jobs as $job) {
 	$event = \relive\models\Event::find($job->event_id);
-	foreach ($event->getHashtagsAttribute as $hashtag) {
+	$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
+	foreach ($hashtagRelationships as $hashtagRelationship) {
+		$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
 		$twitter->recentCrawl($startTime, $hashtag);
 	}
 }

@@ -20,12 +20,12 @@ CREATE TABLE crawljobs
 (
 crawler_id INTEGER NOT NULL AUTO_INCREMENT,
 event_id int(11) NOT NULL,
-startDate datetime NOT NULL,
-endDate datetime NOT NULL,
-hashtags VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-keywords VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-longitude decimal(10 , 6) NOT NULL,
-latitude decimal(10 , 6) NOT NULL,
+startDate datetime NULL,
+endDate datetime NULL,
+hashtags VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+keywords VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+longitude decimal(10 , 6) NULL,
+latitude decimal(10 , 6) NULL,
 isActive BOOLEAN NOT NULL DEFAULT 1,
 PRIMARY KEY (crawler_id)
 ) ENGINE=InnoDB CHARACTER SET=utf8 COLLATE=utf8_general_ci;
