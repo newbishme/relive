@@ -28,7 +28,10 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#374f59">
-    <link rel="apple-touch-startup-image" href="/relive-startup.png">
+    <link href="/relive-startup.png"
+      media="(device-width: 375px) and (device-height: 667px)
+             and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image">
   </head>
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
