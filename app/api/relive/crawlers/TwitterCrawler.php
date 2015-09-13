@@ -58,7 +58,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             'provider_id'=>$this->provider->provider_id
         ]);
 
-        if (!is_null($status->entities->media)) {
+        if (isset($status->entities->media)) {
             foreach($status->entities->media as $twitter_media) {
                 $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
                 $this->createMediaUrls($media->media_id, $twitter_media);
