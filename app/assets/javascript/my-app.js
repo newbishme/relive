@@ -185,9 +185,9 @@ myApp.onPageInit('event', function (page) {
             items: posts,
             template:
 
-            '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
-              '{{#if image}}' +
-              '<div style="background-image: url({{image}})" class="post-img"></div>' +
+            '<li class="{{#if media.data.0.mediaURL}}image{{else}}text{{/if}} post">' +
+              '{{#if media.data.0.mediaURL}}' +
+              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
@@ -210,7 +210,7 @@ myApp.onPageInit('event', function (page) {
 
 
             height: function (post) {
-              if (post.image) return 500;
+              if (post.media) return 500;
               else return 200;
             }
         }); // End virtualList initialization
