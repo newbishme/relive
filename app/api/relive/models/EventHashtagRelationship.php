@@ -23,6 +23,6 @@ class EventHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function event() {
-		return $this->belongsTo('relive\models\Event');
+		return $this->belongsTo('relive\models\Event','event_id','event_id');
 	}
 }

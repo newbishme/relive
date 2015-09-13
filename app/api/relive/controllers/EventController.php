@@ -7,12 +7,88 @@ class EventController extends Controller {
 	public function __construct() {
 	}
 
+	public static function getEvents() {
+		$app = \Slim\Slim::getInstance();
+
+		$allGetVars = $app->request->get();
+        $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
+        //either dateAdded or startDate
+        $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "startDate";
+
+        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($limit, FILTER_VALIDATE_INT)) {
+        	$app->render(400, ['Status' => 'Invalid input.' ]);
+        	return;
+        }
+
+        if ($orderBy != "dateAdded") {
+        	$orderBy = "startDate";
+        }
+
+        $app->render(200,\relive\models\Event::orderBy($orderBy,'desc')->skip($startAt-1)->take($limit)->get()->toArray());        
+	}
+
+	public static function getPostsForEvent($event_id) {
+		$app = \Slim\Slim::getInstance();
+        //return all post
+        $allGetVars = $app->request->get();
+        //default startAt = 0, limit = 15
+        $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
+
+        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($event_id, FILTER_VALIDATE_INT)) {
+        	$app->render(400, ['Status' => 'Invalid event id.' ]);
+        	return;
+        }
+
+        if ($orderBy != "post_id") {
+        	$orderBy = "datetime";
+        }
+
+        $event = \relive\models\Event::find($event_id);
+       	if ($event) {
+       		$app->render(200,$event->toArray()['posts']);
+       	} else {
+       		$app->render(404, ['Status','Event not found.']);
+       	}
+	}
+
+	public static function getHashtagForEvent($event_id) {
+		$app = \Slim\Slim::getInstance();
+
+        if (!filter_var($event_id, FILTER_VALIDATE_INT)) {
+        	$app->render(400, ['Status' => 'Invalid event id.' ]);
+        	return;
+        }
+       	$event = \relive\models\Event::find($event_id);
+       	if ($event) {
+       		$app->render(200,$event->toArray()['hashtags']);
+       	} else {
+       		$app->render(404, ['Status','Event not found.']);
+       	}
+	}
+
+	public static function getEventWithId($event_id) {
+		$app = \Slim\Slim::getInstance();
+
+        if (!filter_var($event_id, FILTER_VALIDATE_INT)) {
+        	$app->render(400, ['Status' => 'Invalid event id.' ]);
+        	return;
+        }
+       	$event = \relive\models\Event::find($event_id);
+       	if ($event) {
+       		$app->render(200,$event->toArray());
+       	} else {
+       		$app->render(404, ['Status','Event not found.']);
+       	}
+	}
+
 	public static function getTrendingEvents() {
 		$app = \Slim\Slim::getInstance();
         $allGetVars = $app->request->get();
         $limit = @$allGetVars['limit']? $allGetVars['limit']: 5;
 
-        if (!is_int(intval($limit))) {
+        if (!filter_var($limit, FILTER_VALIDATE_INT)) {
         	$app->render(400, ['Status' => 'Invalid input.' ]);
         	return;
         }
@@ -25,7 +101,7 @@ class EventController extends Controller {
         $allGetVars = $app->request->get();
         $limit = @$allGetVars['limit']? $allGetVars['limit']: 5;
 
-        if (!is_int(intval($limit))) {
+        if (!filter_var($limit, FILTER_VALIDATE_INT)) {
         	$app->render(400, ['Status' => 'Invalid input.' ]);
         	return;
         }
@@ -37,7 +113,7 @@ class EventController extends Controller {
 		//return eventname/media/hashtags
 		$app = \Slim\Slim::getInstance();
 
-		$app->render(200,\relive\models\SearchIndex::all()->toArray());
+		$app->render(200,\relive\models\Event::select('event_id','eventName')->get()->toArray());
 	}
 
 	public static function create() {
@@ -69,4 +145,24 @@ class EventController extends Controller {
 		}
 	}
 
+	public static function addHashtagToEvent($event_id) {
+		$app = \Slim\Slim::getInstance();
+
+        $allPostVars = $app->request->post();
+        $hashtag = @$allPostVars['hashtag']?trim($allPostVars['hashtag']):NULL;
+
+        if (!filter_var($event_id, FILTER_VALIDATE_INT)||is_null($hashtag)||strlen($hashtag)>255||empty($hashtag)) {
+        	$app->render(400, ['Status' => 'Invalid input.' ]);
+        	return;
+        }
+
+       	$event = \relive\models\Event::find($event_id);
+       	$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $hashtag]);
+		$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
+       	if ($event) {
+       		$app->render(200,$event->toArray());
+       	} else {
+       		$app->render(404, ['Status','Event not found.']);
+       	}
+	}
 };

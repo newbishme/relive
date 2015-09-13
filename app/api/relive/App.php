@@ -64,21 +64,12 @@ class App {
             });
 
             $app->group('/hashtag', function() use ($app) {
-                $app->get('/:hashtag', function($hashtag) use ($app) {
-                    //return all events related to $hashtag
-                });
+                //get events related to hashtag
+                $app->get('/:hashtag', 'relive\controllers\HashtagController::getEventWithHashtag');
             });            
-
             $app->group('/event', function() use ($app) {
                 // Get /api/event{?startAt,limit,orderBy}
-                $app->get('', function() use ($app) {
-                    $allGetVars = $app->request->get();
-                    //default startAt = 0, limit = 15
-                    $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 0;
-                    $limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
-                    $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "startDate";
-                });
-
+                $app->get('', 'relive\controllers\EventController::getEvents');
                 // Post /api/event
                 $app->post('', 'relive\controllers\EventController::create');
                 //  Get /api/event/indexes
@@ -87,43 +78,23 @@ class App {
                 $app->get('/recent', 'relive\controllers\EventController::getRecentEvents');
                 //  Get /api/event/trending
                 $app->get('/trending', 'relive\controllers\EventController::getTrendingEvents');
-
-                
                 // Route /api/event/:event_id
                 $app->group('/:event_id', function() use ($app) {
-
                     //  Get /api/event/:event_id
-                    $app->get('', function($event_id) use ($app) {
-                        //return event with id = :event_id
-                    });
-
+                    $app->get('', 'relive\controllers\EventController::getEventWithId');
                     // Route /api/event/:event_id/post
                     $app->group('/post', function() use ($app) {
-                        // Get {startAt,orderBY}
-                        $app->get('', function($event_id) use ($app) {
-                            //return all post
-                            $allGetVars = $app->request->get();
-                            //default startAt = 0, limit = 15
-                            $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 0;
-                            $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
-                        });
+                        // Get {startAt,orderBy}
+                        $app->get('', 'relive\controllers\EventController::getPostsForEvent');
                     });
-
                     // Route /api/event/:event_id/hashtag
                     $app->group('/hashtag', function() use ($app) {
                         // Get
-                        $app->get('', function($event_id) use ($app) {
-                        });
-
+                        $app->get('', 'relive\controllers\EventController::getHashtagforEvent');
                         // Post
-                        $app->post('', function($event_id) use ($app) {
-                            $allPostVars = $app->request->post();
-                            $message = @$allPostVars['hashtag']?$allPostVars['hashtag']:""; 
-                        });
-
+                        $app->post('', 'relive\controllers\EventController::addHashtagToEvent');
                         // Delete
-                        $app->delete('/:hashtag', function($event_id, $hashtag) use ($app) {
-                        });
+                        //$app->delete('/:hashtag',);
                     });
                 });
             });
