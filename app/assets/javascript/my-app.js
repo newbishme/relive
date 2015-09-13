@@ -1,41 +1,26 @@
-// Determine device OS
-var isAndroid = Framework7.prototype.device.android === true;
-var isIos = Framework7.prototype.device.ios === true;
-
 // Export selectors engine
 var $$ = Dom7;
 
-// Include appropriate CSS files in app, depending on device
-if (isAndroid) {
-    $$('head').append(
-        '<link rel="stylesheet" href="assets/stylesheets/framework7.material.min.css">' +
-        '<link rel="stylesheet" href="assets/stylesheets/framework7.material.colors.min.css">' +
-        '<link rel="stylesheet" href="assets/stylesheets/my-app.material.css">'
-    );
-}
-else {
-    $$('head').append(
-        '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.min.css">' +
-        '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.colors.min.css">' +
-        '<link rel="stylesheet" href="assets/stylesheets/my-app.ios.css">'
-    );
-}
-
-$$('head').append('<link rel="stylesheet" href="assets/stylesheets/relive.min.css">');
+$$('head').append(
+    '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.min.css">' +
+    '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.colors.min.css">' +
+    '<link rel="stylesheet" href="assets/stylesheets/my-app.ios.css">' +
+    '<link rel="stylesheet" href="assets/stylesheets/relive.min.css">'
+);
 
 // Change "Through" type navbar layout to "Fixed" in Material theme for Android
-if (isAndroid) {
-    // Change class
-    $$('.view.navbar-through').removeClass('navbar-through').addClass('navbar-fixed');
-    // And move Navbar into Page
-    $$('.view .navbar').prependTo('.view .page');
-}
+// if (isAndroid) {
+//     // Change class
+//     $$('.view.navbar-through').removeClass('navbar-through').addClass('navbar-fixed');
+//     // And move Navbar into Page
+//     $$('.view .navbar').prependTo('.view .page');
+// }
 
 // Initialize your app
 var myApp = new Framework7({
     init: false,
     template7Pages: true, //enable Template7 rendering for pages
-    material: isAndroid ? true : false,
+    // material: isAndroid ? true : false,
     dynamicNavbar: false,
     domCache: true,
     uniqueHistory: true,
