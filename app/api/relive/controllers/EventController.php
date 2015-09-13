@@ -48,7 +48,7 @@ class EventController extends Controller {
 
         $event = \relive\models\Event::find($event_id);
        	if ($event) {
-       		$posts = array_slice($event->toArray()['posts'],$startAt, $limit);
+       		$posts = array_slice($event->toArray()['posts'],$startAt-1, $limit);
        		$app->render(200,$posts);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
