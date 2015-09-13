@@ -74,8 +74,6 @@ myApp.onPageInit('home', function (page) {
     {
       title: "Event 1",
       image: "http://lorempixel.com/600/400/nature/1/",
-      author: "Author 1",
-      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
     },
     {
       title: "Event 2",
@@ -100,50 +98,16 @@ myApp.onPageInit('home', function (page) {
       items: events,
       template:
 
-      // text post template
-
-      // '<li class="text post">' +
-      //   '<div class="post-data-origin-wrapper">' +
-      //     '<div class="post-data">' +
-      //       '<div class="post-author">{{author}}</div>' +
-      //       '<blockquote class="post-content">{{content}}</blockquote>' +
-      //     '</div>' +
-      //     '<div class="post-origin">' +
-      //       '<i class="icon ion-social-instagram-outline"></i>' +
-      //     '</div>' +
-      //   '</div>' +
-      // '</li>',
-
-
-      // image post template
-
-      '<li class="image post">' +
-        '<div style="background-image: url({{image}})" class="post-img">' +
+      '<li class="event-card">' +
+        '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
+          '<h1>{{title}}</h1>' +
         '</div>' +
-        '<div class="post-data-origin-wrapper">' +
-          '<div class="post-data">' +
-            '<div class="post-author">{{author}}</div>' +
-            '<div class="post-content">{{content}}</div>' +
-          '</div>' +
-          '<div class="post-origin">' +
-            '<i class="icon ion-social-instagram-outline"></i>' +
-          '</div>' +
+        '<div class="event-card-footer">' +
+          '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
-
-      // event card template
-
-      // '<li class="event-card">' +
-      //             '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-      //               '<h1>{{title}}</h1>' +
-      //             '</div>' +
-      //             '<div class="event-card-footer">' +
-      //               '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
-      //             '</div>' +
-      //           '</li>',
-
-      height: 700,  // FIXME should be calculate actual fixed height of event cards FIXME
+      height: 212,
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
