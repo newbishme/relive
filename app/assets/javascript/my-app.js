@@ -211,15 +211,6 @@ myApp.onPageInit('event', function (page) {
             height: function (post) {
               if (post.image) return 500;
               else return 200;
-            },
-            searchAll: function (query, items) {
-              var foundItems = [];
-              for (var i = 0; i < items.length; i++) {
-                if (items[i].eventName.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-                  foundItems.push(i);
-                }
-              }
-              return foundItems;
             }
         }); // End virtualList initialization
       } // End Success
