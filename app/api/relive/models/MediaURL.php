@@ -16,6 +16,7 @@ class MediaURL extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
+	protected $hidden = array('mediaurl_id','media_id');	
 
 	public function media() {
 		return $this->belongsTo('relive\models\Media','media_id','media_id');

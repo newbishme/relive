@@ -25,7 +25,8 @@ class EventController extends Controller {
         	$orderBy = "startDate";
         }
 
-        $app->render(200,\relive\models\Event::orderBy($orderBy,'desc')->skip($startAt-1)->take($limit)->get()->toArray());        
+        $event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt-1)->take($limit)->get()->toArray();
+        echo json_encode($event, JSON_UNESCAPED_SLASHES);
 	}
 
 	public static function getPostsForEvent($event_id) {
@@ -49,7 +50,7 @@ class EventController extends Controller {
         $event = \relive\models\Event::find($event_id);
        	if ($event) {
        		$posts = array_slice($event->toArray()['posts'],$startAt-1, $limit);
-       		$app->render(200,$posts);
+       		echo json_encode($posts, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
        	}
@@ -64,7 +65,8 @@ class EventController extends Controller {
         }
        	$event = \relive\models\Event::find($event_id);
        	if ($event) {
-       		$app->render(200,$event->toArray()['hashtags']);
+       		$hashtags = $event->toArray()['hashtags'];
+       		echo json_encode($hashtags, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
        	}
@@ -79,7 +81,7 @@ class EventController extends Controller {
         }
        	$event = \relive\models\Event::find($event_id);
        	if ($event) {
-       		$app->render(200,$event->toArray());
+       		echo json_encode($event, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
        	}
@@ -95,7 +97,8 @@ class EventController extends Controller {
         	return;
         }
 
-		$app->render(200,\relive\models\Event::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
+		$events = \relive\models\Event::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
 	public static function getRecentEvents() {
@@ -108,14 +111,16 @@ class EventController extends Controller {
         	return;
         }
 
-		$app->render(200,\relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
+		$events = \relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
 	public static function getSearchIndexes() {
 		//return eventname/media/hashtags
 		$app = \Slim\Slim::getInstance();
 
-		$app->render(200,\relive\models\SearchIndex::select('event_id','eventName')->get()->toArray());
+		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->get()->toArray();
+		echo json_encode($indexes, JSON_UNESCAPED_SLASHES);
 	}
 
 	public static function create() {
@@ -140,9 +145,8 @@ class EventController extends Controller {
 					$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
 				}
 			}
-			$app->render(200, $event->toArray());
+			echo json_encode($event, JSON_UNESCAPED_SLASHES);
 		} catch (\Exception $e) {
-			print $e;
 			$app->render(500, ['Status' => 'An error occurred.' ]);
 		}
 	}
@@ -162,7 +166,7 @@ class EventController extends Controller {
        	$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $hashtag]);
 		$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
        	if ($event) {
-       		$app->render(200,$event->toArray());
+       		echo json_encode($event, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
        	}

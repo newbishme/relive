@@ -39,15 +39,12 @@ class App {
     }
 
     private function setupMiddleWare() {
+        $this->app->contentType('application/json');
         $this->app->add(new Middleware(array(
             'json.status' => false,
             'json.override_error' => true,
             'json.override_notfound' => true
         )));
-    }
-
-    function test() {
-
     }
 
     private function addDefaultRoutes() {

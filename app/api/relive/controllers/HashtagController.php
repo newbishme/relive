@@ -18,7 +18,8 @@ class HashtagController extends Controller {
 		$hashtag = \relive\models\Hashtag::where('hashtag',$hashtag)->get();
 
 		if (count($hashtag)>0) {
-			$app->render(200, $hashtag->first()->toArray());
+			$hashtagobj = $hashtag->first()->toArray();
+			echo json_encode($hashtagobj, JSON_UNESCAPED_SLASHES);
 		} else {
 			$app->render(404, ['Status','Hashtag not found.']);
 		}
