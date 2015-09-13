@@ -84,14 +84,8 @@ class App {
                     $app->get('', 'relive\controllers\EventController::getEventWithId');
                     // Route /api/event/:event_id/post
                     $app->group('/post', function() use ($app) {
-                        // Get {startAt,orderBY}
-                        $app->get('', function($event_id) use ($app) {
-                            //return all post
-                            $allGetVars = $app->request->get();
-                            //default startAt = 0, limit = 15
-                            $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 0;
-                            $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
-                        });
+                        // Get {startAt,orderBy}
+                        $app->get('', 'relive\controllers\EventController::getPostsForEvent');
                     });
                     // Route /api/event/:event_id/hashtag
                     $app->group('/hashtag', function() use ($app) {

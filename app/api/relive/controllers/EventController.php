@@ -28,6 +28,31 @@ class EventController extends Controller {
         $app->render(200,\relive\models\Event::orderBy($orderBy,'desc')->skip($startAt-1)->take($limit)->get()->toArray());        
 	}
 
+	public static function getPostsForEvent($event_id) {
+		$app = \Slim\Slim::getInstance();
+        //return all post
+        $allGetVars = $app->request->get();
+        //default startAt = 0, limit = 15
+        $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
+
+        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($event_id, FILTER_VALIDATE_INT)) {
+        	$app->render(400, ['Status' => 'Invalid event id.' ]);
+        	return;
+        }
+
+        if ($orderBy != "post_id") {
+        	$orderBy = "datetime";
+        }
+
+        $event = \relive\models\Event::find($event_id);
+       	if ($event) {
+       		$app->render(200,$event->toArray()['posts']);
+       	} else {
+       		$app->render(404, ['Status','Event not found.']);
+       	}
+	}
+
 	public static function getHashtagForEvent($event_id) {
 		$app = \Slim\Slim::getInstance();
 
