@@ -23,7 +23,7 @@ a {
 }
 
 .preloader {
-	background-image: url(../img/preloader.svg); 	
+	background-image: url(../img/preloader.svg);
 }
 
 .preloader-indicator-modal {
@@ -79,7 +79,10 @@ form .item-content {
 		height: 150px;
 		background-size: cover;
 		background-position: center;
+    display: -webkit-flex;
 		display: flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
 		align-items: center;
 		justify-content: center;
 
