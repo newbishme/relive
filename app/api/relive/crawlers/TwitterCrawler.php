@@ -106,7 +106,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         }
     }
 
-    public function recentCrawl($keyword){
+    public function recentCrawl($startTime, $keyword){
         $twitter = $this->twitter;
         $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'recent'));
         $response = $twitter->getLastBody();
@@ -114,7 +114,11 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         while ($twitter->getLastHttpCode() == 200 && $response->search_metadata->count > 0 && $repeat > 0) {
             $statuses = $response->statuses;
             foreach ($statuses as $status) {
-                $this->createPost($event, $status);
+                if (strtotime($status->created_at) >= $startTime - 600) {
+                    $this->createPost($event, $status);       
+                } else {
+                    return;
+                }
             }
             $twitter->get("search/tweets", array(
                 'q' => $keyword,

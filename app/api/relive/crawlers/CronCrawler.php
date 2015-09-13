@@ -8,4 +8,12 @@ use \relive\Crawlers\InstagramCrawler;
 $twitter = TwitterCrawler::getInstance();
 $instagram = InstagramCrawler::getInstance();
 
-// Crawl using a cronjob
+$jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->get();
+$startTime = time();
+
+foreach ($jobs as $job) {
+	$event = \relive\models\Event::find($job->event_id);
+	foreach ($event->getHashtagsAttribute as $hashtag) {
+		TwitterCrawler->recentCrawl($startTime, $hashtag);
+	}
+}
