@@ -17,7 +17,7 @@ class Media extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('media_id','mediaURLs');
+	protected $hidden = array('media_id','mediaURLs','post_id');
 	protected $appends = ['data'];
 
 	public function mediaURLs() {
