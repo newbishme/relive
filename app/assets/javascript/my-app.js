@@ -141,7 +141,7 @@ myApp.onPageInit('home', function (page) {
       $$.ajax({
         type:'GET',
         url:'https://relive.space/api/event/indexes',
-        data:{"lastEventId":lastEventId},
+        data:{"startAt":lastEventId},
         dataType:'json',
         success:function(data){
           if (data !== '') {
@@ -154,7 +154,7 @@ myApp.onPageInit('home', function (page) {
       }); // End ajax
     }, 2000);
   });
-  
+
   mainView.router.refreshPage();
 });
 
