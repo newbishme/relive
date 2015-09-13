@@ -18,10 +18,10 @@ class PostHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 */
 
 	public function post() {
-		return $this->belongsTo('relive\models\Post');
+		return $this->belongsTo('relive\models\Post','post_id','post_id');
 	}
 
 	public function hashtag() {
-		return $this->belongsTo('relive\models\Hashtag');
+		return $this->belongsTo('relive\models\Hashtag','hashtag_id','hashtag_id');
 	}
 }

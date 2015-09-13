@@ -45,10 +45,10 @@ myApp.onPageInit('home', function (page) {
       // event card template
       '<li class="event-card">' +
         '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-          '<h1>{{title}}</h1>' +
+          '<h1>{{eventName}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="event.php?id={{id}}&name={{title}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -56,7 +56,7 @@ myApp.onPageInit('home', function (page) {
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
-          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+          if (items[i].eventName.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
             foundItems.push(i);
           }
         }
@@ -73,7 +73,7 @@ myApp.onPageInit('home', function (page) {
   // Load more events if connected to internet
   $$.ajax({
     type:'GET',
-    url:'landing-page-test-endpoint.php',
+    url:'https://relive.space/api/event/indexes',
     data:{"lastEventId":lastEventId},
     dataType:'json',
     success:function(data){
@@ -174,7 +174,7 @@ myApp.onPageInit('event', function (page) {
 
     $$.ajax({
       type:'GET',
-      url:'infinite-scroll-test.php?id='+pageId,
+      url:'https://relive.space/api/event/'+pageId+'/post',
       data:{"lastRec":lastLoadedIndex+1},
       dataType:'json',
       success:function(data) {
@@ -192,13 +192,17 @@ myApp.onPageInit('event', function (page) {
                 '<div class="post-data">' +
                   '<div class="post-author">{{author}}</div>' +
                   '{{#if image}}' +
-                  '<div class="post-content">{{content}}</div>' +
+                  '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
-                  '<blockquote class="post-content">{{content}}</blockquote>' +
+                  '<blockquote class="post-content">{{caption}}</blockquote>' +
                   '{{/if}}' +
                 '</div>' +
                 '<div class="post-origin">' +
+                  '{{#if provider_id}}' +
                   '<i class="icon ion-social-instagram-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
                 '</div>' +
               '</div>' +
             '</li>',
@@ -207,15 +211,6 @@ myApp.onPageInit('event', function (page) {
             height: function (post) {
               if (post.image) return 500;
               else return 200;
-            },
-            searchAll: function (query, items) {
-              var foundItems = [];
-              for (var i = 0; i < items.length; i++) {
-                if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-                  foundItems.push(i);
-                }
-              }
-              return foundItems;
             }
         }); // End virtualList initialization
       } // End Success
@@ -229,7 +224,7 @@ myApp.onPageInit('event', function (page) {
         loading = true;
         $$.ajax({
           type:'GET',
-          url:'infinite-scroll-test.php?id='+pageId,
+          url:'https://relive.space/api/event/'+pageId+'/post',
           data:{"lastRec":lastLoadedIndex+1},
           dataType:'json',
           success:function(data){
@@ -274,7 +269,7 @@ myApp.onPageInit('form', function (page) {
       $$('#event-name-input-icon').addClass("color-red");
     }
   });
-  
+
   $$('.event-name-input').on('keypress', function(e) {
     if (hasNoName) {
       if (e.srcElement.value.length > 0) {
@@ -375,12 +370,17 @@ myApp.onPageInit('form', function (page) {
 
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
-  var xhr = e.detail.xhr;
-  var data = e.detail.data;
   // Clear form, hide panel
-  console.log('form successfully submitted');
-  console.log(data);
-  mainView.router.back();
+  var eventDetails = JSON.parse(e.detail.data);
+  var query = {
+    id: eventDetails.event_id,
+    name: eventDetails.eventName
+  };
+  var options = {
+      url: 'event.php',
+      query: query
+  };
+  mainView.router.load(options);
 });
 
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
@@ -394,8 +394,10 @@ $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
-  console.log('Error on submit!!!!');
-  console.log(xhr);
+  myApp.addNotification({
+        title: 'Unsuccessful submission',
+        message: 'There was a problem sending your request to the server.'
+  });
 });
 
 // Initialize the app
