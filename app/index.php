@@ -40,10 +40,8 @@
     <link href="apple-touch-startup-image-320x460.png" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" rel="apple-touch-startup-image">
   </head>
   <body>
-    <!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <?php include_once "googleanalytics.php" ?>
     <div class="statusbar-overlay"></div>
-
-    <!-- Panel overlay app when opened -->
     <div class="panel-overlay"></div>
 
     <!-- Panel View Left -->
@@ -52,6 +50,102 @@
         <div class="content-block">
           <p><a href="form.html">Make a Reel</a></p>
         </div>
+      </div>
+    </div>
+
+
+    <div class="panel panel-left panel-cover layout-dark">
+      <div class="content-block-title">Relive</div>
+      <div class="content-block">
+        <p>The most convenient space to find, create, and view past events.</a></p>
+      </div>
+      <div class="content-block-title">Recent events</div>
+      <div class="list-block">
+        <ul>
+          <li><a href="forms.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-android-time"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Recent event 1</div>
+                </div>
+              </div></a></li>
+          <li><a href="list-view.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-android-time"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Recent event 2</div>
+                </div>
+              </div></a></li>
+          <li><a href="media-lists.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-android-time"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Recent event 3</div>
+                </div>
+              </div></a></li>
+          <li><a href="modals.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-android-time"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Recent event 4</div>
+                </div>
+              </div></a></li>
+          <li><a href="bars.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-android-time"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Recent event 5</div>
+                </div>
+              </div></a></li>
+        </ul>
+      </div>
+      <div class="content-block-title">Trending events</div>
+      <div class="list-block">
+        <ul>
+          <li><a href="forms.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Trending event 1</div>
+                </div>
+              </div></a></li>
+          <li><a href="list-view.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Trending event 2</div>
+                </div>
+              </div></a></li>
+          <li><a href="media-lists.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Trending event 3</div>
+                </div>
+              </div></a></li>
+          <li><a href="modals.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Trending event 4</div>
+                </div>
+              </div></a></li>
+          <li><a href="bars.html" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">Trending event 5</div>
+                </div>
+              </div></a></li>
+        </ul>
+      </div>
+      <div class="content-block-title">Can't find your event?</div>
+      <div class="row no-gutter">
+        <div class="col col-5"></div>
+        <div class="col col-90">
+          <a href="form.html" class="button button-fill button-big color-orange close-panel">Make a Reel</a>
+        </div>
+        <div class="col col-5"></div>
       </div>
     </div>
 
