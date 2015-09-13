@@ -9,7 +9,7 @@ class CreationCrawler extends \relive\Crawlers\Crawler {
 	public static function initialCrawl ($event) {
 		$twitterCrawler = TwitterCrawler::getInstance();
 		//$instagramCrawler = InstagramCrawler::getInstance();
-		$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
+		$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $event->event_id)->get();
 		foreach ($hashtagRelationships as $hashtagRelationship) {
 			$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
 			$twitterCrawler->popularCrawl($event, $hashtag->hashtag);
