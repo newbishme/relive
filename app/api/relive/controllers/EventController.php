@@ -34,9 +34,10 @@ class EventController extends Controller {
         $allGetVars = $app->request->get();
         //default startAt = 0, limit = 15
         $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
         $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
 
-        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($event_id, FILTER_VALIDATE_INT)) {
+        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($event_id, FILTER_VALIDATE_INT)|| !filter_var($limit, FILTER_VALIDATE_INT)) {
         	$app->render(400, ['Status' => 'Invalid event id.' ]);
         	return;
         }
@@ -47,7 +48,8 @@ class EventController extends Controller {
 
         $event = \relive\models\Event::find($event_id);
        	if ($event) {
-       		$app->render(200,$event->toArray()['posts']);
+       		$posts = array_slice($event->toArray()['posts'],$startAt, $limit);
+       		$app->render(200,$posts);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
        	}
@@ -113,7 +115,7 @@ class EventController extends Controller {
 		//return eventname/media/hashtags
 		$app = \Slim\Slim::getInstance();
 
-		$app->render(200,\relive\models\Event::select('event_id','eventName')->get()->toArray());
+		$app->render(200,\relive\models\SearchIndex::select('event_id','eventName')->get()->toArray());
 	}
 
 	public static function create() {
