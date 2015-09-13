@@ -37,7 +37,7 @@
     <link href="https://placehold.it/750x1294" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <link href="https://placehold.it/640x1096" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <link href="https://placehold.it/640x920" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
-    <link href="https://placehold.it/320x460" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" rel="apple-touch-startup-image">
+    <link href="/relive-startup.png" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" rel="apple-touch-startup-image">
   </head>
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
