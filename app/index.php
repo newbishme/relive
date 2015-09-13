@@ -24,7 +24,7 @@
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
       <div class="content-block-title">Recent events</div>
-      <div class="list-block">
+      <div class="list-block list-block-recent-events">
         <ul>
           <li><a href="forms.html" class="item-link close-panel">
               <div class="item-content">

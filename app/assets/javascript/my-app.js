@@ -124,82 +124,84 @@ myApp.onPageInit('event', function (page) {
   var loading = false;
   var lastLoadedIndex = 0;
 
-  $$.ajax({
-    type:'GET',
-    url:'infinite-scroll-test.php',
-    data:{"lastRec":lastLoadedIndex+1},
-    dataType:'json',
-    success:function(data) {
-      posts = data;
-      lastLoadedIndex += posts.length;
-      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: posts,
-          template:
+  if (page.query.id != null) {
+    var pageId = page.query.id;
 
-          '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
-            '{{#if image}}' +
-            '<div style="background-image: url({{image}})" class="post-img"></div>' +
-            '{{/if}}' +
-            '<div class="post-data-origin-wrapper">' +
-              '<div class="post-data">' +
-                '<div class="post-author">{{author}}</div>' +
-                '{{#if image}}' +
-                '<div class="post-content">{{content}}</div>' +
-                '{{else}}' +
-                '<blockquote class="post-content">{{content}}</blockquote>' +
-                '{{/if}}' +
+    $$.ajax({
+      type:'GET',
+      url:'infinite-scroll-test.php?id='+pageId,
+      data:{"lastRec":lastLoadedIndex+1},
+      dataType:'json',
+      success:function(data) {
+        posts = data;
+        lastLoadedIndex += posts.length;
+        eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+            items: posts,
+            template:
+
+            '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
+              '{{#if image}}' +
+              '<div style="background-image: url({{image}})" class="post-img"></div>' +
+              '{{/if}}' +
+              '<div class="post-data-origin-wrapper">' +
+                '<div class="post-data">' +
+                  '<div class="post-author">{{author}}</div>' +
+                  '{{#if image}}' +
+                  '<div class="post-content">{{content}}</div>' +
+                  '{{else}}' +
+                  '<blockquote class="post-content">{{content}}</blockquote>' +
+                  '{{/if}}' +
+                '</div>' +
+                '<div class="post-origin">' +
+                  '<i class="icon ion-social-instagram-outline"></i>' +
+                '</div>' +
               '</div>' +
-              '<div class="post-origin">' +
-                '<i class="icon ion-social-instagram-outline"></i>' +
-              '</div>' +
-            '</div>' +
-          '</li>',
+            '</li>',
 
 
-          height: function (post) {
-            if (post.image) return 500;
-            else return 200;
-          },
-          searchAll: function (query, items) {
-            var foundItems = [];
-            for (var i = 0; i < items.length; i++) {
-              if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-                foundItems.push(i);
+            height: function (post) {
+              if (post.image) return 500;
+              else return 200;
+            },
+            searchAll: function (query, items) {
+              var foundItems = [];
+              for (var i = 0; i < items.length; i++) {
+                if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+                  foundItems.push(i);
+                }
               }
+              return foundItems;
             }
-            return foundItems;
+        }); // End virtualList initialization
+      } // End Success
+    }); // End AJAX
+
+    setTimeout(function() {
+      loading = false;
+
+      $$('.infinite-scroll').on('infinite', function() {
+        if (loading) return;
+        loading = true;
+        $$.ajax({
+          type:'GET',
+          url:'infinite-scroll-test.php?id='+pageId,
+          data:{"lastRec":lastLoadedIndex+1},
+          dataType:'json',
+          success:function(data){
+            loading = false;
+            if (data === '') {
+              //  Nothing to load, detach infinite scroll events
+              myApp.detachInfiniteScroll(".infinite-scroll");
+            } else {
+              eventPostsList.appendItems(data);
+              eventPostsList.update();
+              lastLoadedIndex += data.length-1;
+            }
           }
-      });
-    }
-  });
-
-  setTimeout(function() {
-    loading = false;
-
-    $$('.infinite-scroll').on('infinite', function() {
-      if (loading) return;
-      loading = true;
-      $$.ajax({
-        type:'GET',
-        url:'infinite-scroll-test.php',
-        data:{"lastRec":lastLoadedIndex+1},
-        dataType:'json',
-        success:function(data){
-          loading = false;
-          if (data === '') {
-            //  Nothing to load, detach infinite scroll events
-            myApp.detachInfiniteScroll(".infinite-scroll");
-          } else {
-            eventPostsList.appendItems(data);
-            eventPostsList.update();
-            lastLoadedIndex += data.length-1;
-          }
-        }
-      }); // End AJAX
-    }); // End infinite scroll
-  }, 3000);
-
-
+        }); // End AJAX
+      }); // End infinite scroll
+    }, 3000);
+  }
 });
 
 
