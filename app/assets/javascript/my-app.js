@@ -264,7 +264,7 @@ myApp.onPageInit('form', function (page) {
   var hasNoName = false;
   var maxHashtags = 5;
   var hashtags = [];
-  
+
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
       hasNoName = true;
@@ -272,7 +272,7 @@ myApp.onPageInit('form', function (page) {
       $$('#event-name-input-icon').addClass("color-red");
     }
   });
-  
+
   $$('.event-name-input').on('keypress', function(e) {
     if (hasNoName) {
       if (e.srcElement.value.length > 0) {
@@ -282,16 +282,16 @@ myApp.onPageInit('form', function (page) {
       }
     }
   });
-  
+
   $$('.hashtags-input').on('keypress', function(e) {
     if (e.keyCode === 32) { // spacebar
       var inputHashtagsArr = e.srcElement.value.split(" ");
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace('#', '');
-        
-        if (hashtag.length > 0 && 
-            hashtags.length <= maxHashtags && 
+
+        if (hashtag.length > 0 &&
+            hashtags.length <= maxHashtags &&
             hashtags.indexOf(hashtag) === -1) {
           $$('.hashtags').removeClass('hidden');
 
@@ -313,12 +313,20 @@ myApp.onPageInit('form', function (page) {
 
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
-  var xhr = e.detail.xhr;
-  var data = e.detail.data;
   // Clear form, hide panel
   console.log('form successfully submitted');
-  console.log(data);
-  mainView.router.back();
+  console.log(e.detail.data);
+
+  var query = {
+    id: e.detail.data.event_id
+  };
+
+  var options = {
+      url: 'event.php',
+      query: query
+  };
+
+  mainView.router.load(options);
 });
 
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
@@ -332,8 +340,10 @@ $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
-  console.log('Error on submit!!!!');
-  console.log(xhr);
+  myApp.addNotification({
+        title: 'Unsuccessful submission',
+        message: 'There was a problem sending your request to the server.'
+  });
 });
 
 // Initialize the app
