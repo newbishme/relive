@@ -17,7 +17,7 @@ class EventController extends Controller {
         	return;
         }
 
-		$app->render(200,\relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
+		$app->render(200,\relive\models\Event::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
 	}
 
 	public static function getRecentEvents() {
