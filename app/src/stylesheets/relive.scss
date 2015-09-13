@@ -74,14 +74,13 @@ form .item-content {
 		height: 150px;
 		background-size: cover;
 		background-position: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
 		h1 {
-			position: absolute;
-  			top: 40%;
-  			left: 50%;
 			color: white;
 			margin: 0;
-			transform: translate(-50%, -50%);
 		}
 	}
 
@@ -176,4 +175,30 @@ form .item-content {
 .infinite-scroll-preloader .preloader {
   width:34px;
   height:34px;
+}
+
+
+.item-content.hashtags {
+	display: flex;
+	flex-flow: wrap row;
+	justify-content: flex-start;
+	&.hidden {
+		display: none;
+	}
+	.hashtag {
+		cursor: pointer;
+		font-size: 14px;
+		margin: 10px 15px 5px 0;
+		padding: 6px 12px;
+		border-radius: 5px;
+		color: white;
+		background-color: $primaryColour;
+		font-weight: 700;
+		i {
+			padding-left: 20px;
+		}
+		&:hover {
+			color: #ccc;
+		}
+	}
 }
