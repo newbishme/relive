@@ -48,7 +48,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 	}
 
     private function createPost($event, $status) {
-        $datetime = new DateTime();
+        $datetime = new \DateTime();
         $datetime->setTimestamp(strtotime($status->created_at));
         $post = \relive\models\Post::firstOrCreate([
             'datetime'=>$datetime,
