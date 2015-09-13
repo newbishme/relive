@@ -8,9 +8,15 @@
 
 <div class="pages navbar-through">
   <div data-page="event" class="page">
-    <div class="page-content">
-      <div class="content-block-title">Here are some memories from this event</div>
+    <div class="page-content infinite-scroll">
+      <div class="content-block">
+        <p>Here are some memories from this event.</p>
+      </div>
       <div class="list-block virtual-list"></div>
+      <!-- Preloader -->
+      <div class="infinite-scroll-preloader">
+        <div class="preloader"></div>
+      </div>
     </div>
   </div>
 </div>

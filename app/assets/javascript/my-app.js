@@ -102,53 +102,86 @@ myApp.onPageInit('home', function (page) {
 myApp.onPageInit('event', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
+  var eventPostsList;
+  var loading = false;
+  var lastLoadedIndex = 0;
 
-  for (var i = 1; i < 10; i++) {
-    var title = "Event " + i;
-    var image = "http://lorempixel.com/600/400/nature/" + i + "/";
-    var author = "Author " + i;
-    var content = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.";
-    posts.push({"title":title,"image":image,"author":author,"content":content});
-  }
+  $$.ajax({
+    type:'GET',
+    url:'infinite-scroll-test.php',
+    data:{"lastRec":lastLoadedIndex+1},
+    dataType:'json',
+    success:function(data) {
+      posts = data;
+      lastLoadedIndex += posts.length;
+      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+          items: posts,
+          template:
 
-  // Initialize Virtual List
-  var eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-      items: posts,
-      template:
-
-      '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
-        '{{#if image}}' +
-        '<div style="background-image: url({{image}})" class="post-img"></div>' +
-        '{{/if}}' +
-        '<div class="post-data-origin-wrapper">' +
-          '<div class="post-data">' +
-            '<div class="post-author">{{author}}</div>' +
+          '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
             '{{#if image}}' +
-            '<div class="post-content">{{content}}</div>' +
-            '{{else}}' +
-            '<blockquote class="post-content">{{content}}</blockquote>' +
+            '<div style="background-image: url({{image}})" class="post-img"></div>' +
             '{{/if}}' +
-          '</div>' +
-          '<div class="post-origin">' +
-            '<i class="icon ion-social-instagram-outline"></i>' +
-          '</div>' +
-        '</div>' +
-      '</li>',
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}</div>' +
+                '{{#if image}}' +
+                '<div class="post-content">{{content}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{content}}</blockquote>' +
+                '{{/if}}' +
+              '</div>' +
+              '<div class="post-origin">' +
+                '<i class="icon ion-social-instagram-outline"></i>' +
+              '</div>' +
+            '</div>' +
+          '</li>',
 
-      height: function (post) {
-        if (post.image) return 500;
-        else return 200;
-      },
-      searchAll: function (query, items) {
-        var foundItems = [];
-        for (var i = 0; i < items.length; i++) {
-          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-            foundItems.push(i);
+
+          height: function (post) {
+            if (post.image) return 500;
+            else return 200;
+          },
+          searchAll: function (query, items) {
+            var foundItems = [];
+            for (var i = 0; i < items.length; i++) {
+              if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+                foundItems.push(i);
+              }
+            }
+            return foundItems;
+          }
+      });
+    }
+  });
+
+  setTimeout(function() {
+    loading = false;
+
+    $$('.infinite-scroll').on('infinite', function() {
+      if (loading) return;
+      loading = true;
+      $$.ajax({
+        type:'GET',
+        url:'infinite-scroll-test.php',
+        data:{"lastRec":lastLoadedIndex+1},
+        dataType:'json',
+        success:function(data){
+          loading = false;
+          if (data === '') {
+            //  Nothing to load, detach infinite scroll events
+            myApp.detachInfiniteScroll(".infinite-scroll");
+          } else {
+            eventPostsList.appendItems(data);
+            eventPostsList.update();
+            lastLoadedIndex += data.length-1;
           }
         }
-        return foundItems;
-      }
-  });
+      }); // End AJAX
+    }); // End infinite scroll
+  }, 3000);
+
+
 });
 
 
