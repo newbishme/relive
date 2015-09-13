@@ -34,11 +34,11 @@ class EventController extends Controller {
         //return all post
         $allGetVars = $app->request->get();
         //default startAt = 0, limit = 15
-        $startAt = @$allGetVars['startAt']? $allGetVars['startAt']: 1;
+        $startAt = @$allGetVars['startAt']? intval($allGetVars['startAt']): 0;
         $limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
         $orderBy = @$allGetVars['orderBy']? $allGetVars['orderBy']: "datetime";
 
-        if (!filter_var($startAt, FILTER_VALIDATE_INT) || !filter_var($event_id, FILTER_VALIDATE_INT)|| !filter_var($limit, FILTER_VALIDATE_INT)) {
+        if (!filter_var($event_id, FILTER_VALIDATE_INT)|| !filter_var($limit, FILTER_VALIDATE_INT)) {
         	$app->render(400, ['Status' => 'Invalid event id.' ]);
         	return;
         }
@@ -49,7 +49,7 @@ class EventController extends Controller {
 
         $event = \relive\models\Event::find($event_id);
        	if ($event) {
-			$posts = $event->with('posteventrelationship')->join('posteventrelationships','events.event_id','=','posteventrelationships.event_id')->join('posts','posts.post_id','=','posteventrelationships.post_id')->skip($startAt-1)->take($limit)->get()->first()->posts;
+       		$posts = array_slice($event->toArray()['posts'],$startAt, $limit);
        		echo json_encode($posts, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
