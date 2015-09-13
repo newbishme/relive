@@ -92,6 +92,51 @@ myApp.onPageInit('home', function (page) {
     } // End ajax success
   }); // End ajax
 
+
+  // Initialize Side Nav Recent events
+  var recentEventTemplate = $$('#sideNavRecentEventTemplate').html();
+  var compiledRecentEventTemplate = Template7.compile(recentEventTemplate);
+  var recentEvents = [];
+  var recentHtml = '';
+
+  $$.ajax({
+    type:'GET',
+    url:'recent-events-test-endpoint.php',
+    dataType:'json',
+    success:function(data){
+      if (data !== '') {
+        recentEvents = data;
+        for (var i = 0; i < recentEvents.length; i++) {
+          recentHtml = recentHtml.concat(compiledRecentEventTemplate(recentEvents[i]));
+        }
+        $$('div#side-nav-recent-events').html(recentHtml);
+      }
+    } // End ajax success
+  }); // End ajax
+
+
+  // Initialize Side Nav Recent events
+  var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
+  var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
+  var trendingEvents = [];
+  var trendingHtml = '';
+
+  $$.ajax({
+    type:'GET',
+    url:'recent-events-test-endpoint.php',
+    dataType:'json',
+    success:function(data){
+      if (data !== '') {
+        trendingEvents = data;
+        for (var i = 0; i < trendingEvents.length; i++) {
+          trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+        }
+        $$('div#side-nav-trending-events').html(trendingHtml);
+      }
+    } // End ajax success
+  }); // End ajax
+
+
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
 
