@@ -45,10 +45,10 @@ myApp.onPageInit('home', function (page) {
       // event card template
       '<li class="event-card">' +
         '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-          '<h1>{{title}}</h1>' +
+          '<h1>{{eventName}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="event.php?id={{id}}&name={{title}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -56,7 +56,7 @@ myApp.onPageInit('home', function (page) {
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
-          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+          if (items[i].eventName.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
             foundItems.push(i);
           }
         }
@@ -73,7 +73,7 @@ myApp.onPageInit('home', function (page) {
   // Load more events if connected to internet
   $$.ajax({
     type:'GET',
-    url:'landing-page-test-endpoint.php',
+    url:'https://relive.space/api/event/indexes',
     data:{"lastEventId":lastEventId},
     dataType:'json',
     success:function(data){
@@ -174,7 +174,7 @@ myApp.onPageInit('event', function (page) {
 
     $$.ajax({
       type:'GET',
-      url:'infinite-scroll-test.php?id='+pageId,
+      url:'https://relive.space/api/event/'+pageId+'/post',
       data:{"lastRec":lastLoadedIndex+1},
       dataType:'json',
       success:function(data) {
@@ -192,13 +192,17 @@ myApp.onPageInit('event', function (page) {
                 '<div class="post-data">' +
                   '<div class="post-author">{{author}}</div>' +
                   '{{#if image}}' +
-                  '<div class="post-content">{{content}}</div>' +
+                  '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
-                  '<blockquote class="post-content">{{content}}</blockquote>' +
+                  '<blockquote class="post-content">{{caption}}</blockquote>' +
                   '{{/if}}' +
                 '</div>' +
                 '<div class="post-origin">' +
+                  '{{#if provider_id}}' +
                   '<i class="icon ion-social-instagram-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
                 '</div>' +
               '</div>' +
             '</li>',
@@ -207,15 +211,6 @@ myApp.onPageInit('event', function (page) {
             height: function (post) {
               if (post.image) return 500;
               else return 200;
-            },
-            searchAll: function (query, items) {
-              var foundItems = [];
-              for (var i = 0; i < items.length; i++) {
-                if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-                  foundItems.push(i);
-                }
-              }
-              return foundItems;
             }
         }); // End virtualList initialization
       } // End Success
@@ -229,7 +224,7 @@ myApp.onPageInit('event', function (page) {
         loading = true;
         $$.ajax({
           type:'GET',
-          url:'infinite-scroll-test.php?id='+pageId,
+          url:'https://relive.space/api/event/'+pageId+'/post',
           data:{"lastRec":lastLoadedIndex+1},
           dataType:'json',
           success:function(data){
@@ -260,15 +255,132 @@ myApp.onPageInit('form', function (e) {
   });
 });
 
+myApp.onPageInit('form', function (page) {
+  var hasNoName = false;
+  var hasHashtagError = false;
+  var maxHashtags = 5;
+  var hashtags = [];
+  var id = 1;
+  
+  $$('.event-name-input').on('focusout', function(e) {
+    if (e.srcElement.value.length === 0) {
+      hasNoName = true;
+      $$('#event-name-header').html("Please give your event a name").addClass("color-red");
+      $$('#event-name-input-icon').addClass("color-red");
+    }
+  });
+
+  $$('.event-name-input').on('keypress', function(e) {
+    if (hasNoName) {
+      if (e.srcElement.value.length > 0) {
+        hasNoName = false;
+        $$('#event-name-header').html("Event Name").removeClass("color-red");
+        $$('#event-name-input-icon').removeClass("color-red");
+      }
+    }
+  });
+  
+  $$('.hashtags-input').on('focusout', function(e) {
+    if (hashtags.length === 0) {
+      addHashtagError("Please add at least 1 hashtag");
+    } else {
+      removeHashtagError();
+    }
+  });
+  
+  function addHashtagError(errorMessage) {
+    if (!hasHashtagError) {
+      $$('#hashtags-header').html(errorMessage).addClass("color-red");
+      $$('#hashtags-input-icon').addClass("color-red");
+    }
+  };
+  
+  function removeHashtagError() {
+    hasHashtagError = false;
+    updateHashtagTitle();
+    $$('#hashtags-header').removeClass("color-red");
+    $$('#hashtags-input-icon').removeClass("color-red");
+  };
+  
+  function updateHashtagTitle() {
+    var numHashtagsLeft = maxHashtags - hashtags.length;
+    if (numHashtagsLeft > 1) {
+      $$('#hashtags-header').html("You can add " + numHashtagsLeft + " more hashtags");
+    } else if (numHashtagsLeft === 1) {
+      $$('#hashtags-header').html("You can add " + numHashtagsLeft + " more hashtag");
+    } else {
+      $$('#hashtags-header').html("You're done!");
+    }
+  }
+  
+  $$('.hashtags-input').on('keypress', function(e) {
+    if (e.keyCode === 32) { // spacebar
+      var inputHashtagsArr = e.srcElement.value.split(" ");
+      var returnHashtags = "";
+      for (var i in inputHashtagsArr) {
+        var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
+        
+        if (hashtag.length === 0) {
+        } else if (contains(hashtags, hashtag)) {
+          addHashtagError("You've added this hashtag before");
+        } else if (hashtags.length === maxHashtags) {
+          addHashtagError("You can only add 5 hashtags");
+        } else {
+          $$('.hashtags').removeClass('hidden');
+          
+          hashtags.push(hashtag);
+          $$('.hashtags').append(
+            '<div class="hashtag" id="ht' + id + '">#' +
+              hashtag + '<i class="icon ion-close"></i>' +
+            '</div>'
+          );
+          
+          removeHashtagError();
+          
+          $$('#ht' + id).on('click', function(e) {
+            var toBeDeleted = $$(this)[0].innerText.replace('#', '');
+            hashtags.splice(hashtags.indexOf(toBeDeleted), 1);
+            $$(this).remove();
+            updateHashtagTitle();
+            if (hashtags.length === 0) {
+              $$('.hashtags').addClass('hidden');
+              addHashtagError("Please add at least 1 hashtag");
+            }
+          });
+          
+          id++;
+          continue;
+        } 
+        
+        returnHashtags += hashtag + " ";
+      }
+      $$(this).val(returnHashtags.trim());
+    }
+    
+    function contains(array, str) {
+      for (var i in array) {
+        if (array[i].toLowerCase() === str.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
+    }
+  });
+});
 
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
-  var xhr = e.detail.xhr;
-  var data = e.detail.data;
   // Clear form, hide panel
-  console.log('form successfully submitted');
-  console.log(data);
-  mainView.router.back();
+  var eventDetails = JSON.parse(e.detail.data);
+  var query = {
+    id: eventDetails.event_id,
+    name: eventDetails.eventName
+  };
+  var options = {
+      url: 'event.php',
+      query: query
+  };
+  mainView.router.load(options);
 });
 
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
@@ -282,8 +394,10 @@ $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
-  console.log('Error on submit!!!!');
-  console.log(xhr);
+  myApp.addNotification({
+        title: 'Unsuccessful submission',
+        message: 'There was a problem sending your request to the server.'
+  });
 });
 
 // Initialize the app
