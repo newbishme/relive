@@ -72,7 +72,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
     private function createMediaUrls($media_id, $twitter_media) {
         if ($twitter_media->sizes->medium !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
-                'media_id'=>$media->media_id,
+                'media_id'=>$media_id,
                 'mediaURL'=>$twitter_media->media_url_https . ':medium',
                 'width'=>$twitter_media->sizes->medium->w,
                 'height'=>$twitter_media->sizes->medium->h,
@@ -81,7 +81,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         }
         if ($twitter_media->sizes->small !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
-                'media_id'=>$media->media_id,
+                'media_id'=>$media_id,
                 'mediaURL'=>$twitter_media->media_url_https . ':small',
                 'width'=>$twitter_media->sizes->small->w,
                 'height'=>$twitter_media->sizes->small->h,
@@ -90,7 +90,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         }
         if ($twitter_media->sizes->large !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
-                'media_id'=>$media->media_id,
+                'media_id'=>$media_id,
                 'mediaURL'=>$twitter_media->media_url_https . ':large',
                 'width'=>$twitter_media->sizes->large->w,
                 'height'=>$twitter_media->sizes->large->h,
@@ -99,7 +99,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         }
         if ($twitter_media->sizes->thumb !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
-                'media_id'=>$media->media_id,
+                'media_id'=>$media_id,
                 'mediaURL'=>$twitter_media->media_url_https . ':thumb',
                 'width'=>$twitter_media->sizes->thumb->w,
                 'height'=>$twitter_media->sizes->thumb->h,
