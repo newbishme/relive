@@ -139,7 +139,7 @@ myApp.onPageInit('home', function (page) {
       // Load more events if connected to internet
       $$.ajax({
         type:'GET',
-        url:'landing-page-test-endpoint.php',
+        url:'https://relive.space/api/event/indexes',
         data:{"lastEventId":lastEventId},
         dataType:'json',
         success:function(data){
@@ -185,9 +185,9 @@ myApp.onPageInit('event', function (page) {
             items: posts,
             template:
 
-            '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
-              '{{#if image}}' +
-              '<div style="background-image: url({{image}})" class="post-img"></div>' +
+            '<li class="{{#if media.data.0.mediaURL}}image{{else}}text{{/if}} post">' +
+              '{{#if media.data.0.mediaURL}}' +
+              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
@@ -210,7 +210,7 @@ myApp.onPageInit('event', function (page) {
 
 
             height: function (post) {
-              if (post.image) return 500;
+              if (post.media) return 500;
               else return 200;
             }
         }); // End virtualList initialization
@@ -262,7 +262,7 @@ myApp.onPageInit('form', function (page) {
   var maxHashtags = 5;
   var hashtags = [];
   var id = 1;
-  
+
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
       hasNoName = true;
@@ -280,7 +280,7 @@ myApp.onPageInit('form', function (page) {
       }
     }
   });
-  
+
   $$('.hashtags-input').on('focusout', function(e) {
     if (hashtags.length === 0) {
       addHashtagError("Please add at least 1 hashtag");
@@ -288,21 +288,21 @@ myApp.onPageInit('form', function (page) {
       removeHashtagError();
     }
   });
-  
+
   function addHashtagError(errorMessage) {
     if (!hasHashtagError) {
       $$('#hashtags-header').html(errorMessage).addClass("color-red");
       $$('#hashtags-input-icon').addClass("color-red");
     }
   };
-  
+
   function removeHashtagError() {
     hasHashtagError = false;
     updateHashtagTitle();
     $$('#hashtags-header').removeClass("color-red");
     $$('#hashtags-input-icon').removeClass("color-red");
   };
-  
+
   function updateHashtagTitle() {
     var numHashtagsLeft = maxHashtags - hashtags.length;
     if (numHashtagsLeft > 1) {
@@ -313,14 +313,14 @@ myApp.onPageInit('form', function (page) {
       $$('#hashtags-header').html("You're done!");
     }
   }
-  
+
   $$('.hashtags-input').on('keypress', function(e) {
     if (e.keyCode === 32) { // spacebar
       var inputHashtagsArr = e.srcElement.value.split(" ");
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
-        
+
         if (hashtag.length === 0) {
         } else if (contains(hashtags, hashtag)) {
           addHashtagError("You've added this hashtag before");
@@ -328,16 +328,16 @@ myApp.onPageInit('form', function (page) {
           addHashtagError("You can only add 5 hashtags");
         } else {
           $$('.hashtags').removeClass('hidden');
-          
+
           hashtags.push(hashtag);
           $$('.hashtags').append(
             '<div class="hashtag" id="ht' + id + '">#' +
               hashtag + '<i class="icon ion-close"></i>' +
             '</div>'
           );
-          
+
           removeHashtagError();
-          
+
           $$('#ht' + id).on('click', function(e) {
             var toBeDeleted = $$(this)[0].innerText.replace('#', '');
             hashtags.splice(hashtags.indexOf(toBeDeleted), 1);
@@ -348,16 +348,16 @@ myApp.onPageInit('form', function (page) {
               addHashtagError("Please add at least 1 hashtag");
             }
           });
-          
+
           id++;
           continue;
-        } 
-        
+        }
+
         returnHashtags += hashtag + " ";
       }
       $$(this).val(returnHashtags.trim());
     }
-    
+
     function contains(array, str) {
       for (var i in array) {
         if (array[i].toLowerCase() === str.toLowerCase()) {

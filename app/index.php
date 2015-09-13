@@ -113,7 +113,7 @@
                   </div>
                 </div>
 
-                <div class="content-block-title">Trending events</div>
+                <div class="content-block-title searchbar-found">Trending events</div>
                 <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
 
               </div>
