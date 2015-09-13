@@ -68,18 +68,9 @@ myApp.onPageInit('home', function (page) {
   // var homeHTML = compiledHomeTemplate(template7Data);
   // $$('div#home-landing-events').html(homeHTML);
 
-});
-
-
-// Initialize Search bar
-var eventsSearchbar = myApp.searchbar('.searchbar', {
-  searchList: '.list-block-search',
-  searchIn: '.card-header'
-});
-
-// Initialize Virtual List
-var eventsList = myApp.virtualList('div#home-landing-events', {
-  items: [
+  // TODO Get events from local cache, if not found, get from server
+  var events = [];
+  events = [
     {
       title: "Event 1",
       image: "http://lorempixel.com/600/400/nature/1/",
@@ -102,63 +93,160 @@ var eventsList = myApp.virtualList('div#home-landing-events', {
       title: "Event 5",
       image: "http://lorempixel.com/600/400/nature/5/"
     }
-  ],
-  template:
+  ];
 
-  // text post template
+  // Initialize Virtual List
+  var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+      items: events,
+      template:
 
-  // '<li class="text post">' +
-  //   '<div class="post-data-origin-wrapper">' +
-  //     '<div class="post-data">' +
-  //       '<div class="post-author">{{author}}</div>' +
-  //       '<blockquote class="post-content">{{content}}</blockquote>' +
-  //     '</div>' +
-  //     '<div class="post-origin">' +
-  //       '<i class="icon ion-social-instagram-outline"></i>' +
-  //     '</div>' +
-  //   '</div>' +
-  // '</li>',
+      // text post template
 
-
-  // image post template
-
-  '<li class="image post">' +
-    '<div style="background-image: url({{image}})" class="post-img">' +
-    '</div>' +
-    '<div class="post-data-origin-wrapper">' +
-      '<div class="post-data">' +
-        '<div class="post-author">{{author}}</div>' +
-        '<div class="post-content">{{content}}</div>' +
-      '</div>' +
-      '<div class="post-origin">' +
-        '<i class="icon ion-social-instagram-outline"></i>' +
-      '</div>' +
-    '</div>' +
-  '</li>',
+      // '<li class="text post">' +
+      //   '<div class="post-data-origin-wrapper">' +
+      //     '<div class="post-data">' +
+      //       '<div class="post-author">{{author}}</div>' +
+      //       '<blockquote class="post-content">{{content}}</blockquote>' +
+      //     '</div>' +
+      //     '<div class="post-origin">' +
+      //       '<i class="icon ion-social-instagram-outline"></i>' +
+      //     '</div>' +
+      //   '</div>' +
+      // '</li>',
 
 
-  // event card template
+      // image post template
 
-  // '<li class="event-card">' +
-  //             '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-  //               '<h1>{{title}}</h1>' +
-  //             '</div>' +
-  //             '<div class="event-card-footer">' +
-  //               '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
-  //             '</div>' +
-  //           '</li>',
+      '<li class="image post">' +
+        '<div style="background-image: url({{image}})" class="post-img">' +
+        '</div>' +
+        '<div class="post-data-origin-wrapper">' +
+          '<div class="post-data">' +
+            '<div class="post-author">{{author}}</div>' +
+            '<div class="post-content">{{content}}</div>' +
+          '</div>' +
+          '<div class="post-origin">' +
+            '<i class="icon ion-social-instagram-outline"></i>' +
+          '</div>' +
+        '</div>' +
+      '</li>',
 
-  height: 700,
-  searchAll: function (query, items) {
-    var foundItems = [];
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-        foundItems.push(i);
+
+      // event card template
+
+      // '<li class="event-card">' +
+      //             '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
+      //               '<h1>{{title}}</h1>' +
+      //             '</div>' +
+      //             '<div class="event-card-footer">' +
+      //               '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+      //             '</div>' +
+      //           '</li>',
+
+      height: 700,  // FIXME should be calculate actual fixed height of event cards FIXME
+      searchAll: function (query, items) {
+        var foundItems = [];
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+            foundItems.push(i);
+          }
+        }
+        return foundItems;
       }
-    }
-    return foundItems;
-  }
+  });
 });
+
+myApp.onPageInit('events', function (page) {
+
+  // Render landing page template for events
+  // var context = {
+  //   eventName: 'Hello world'
+  // };
+  // var homeHTML = compiledHomeTemplate(template7Data);
+  // $$('div#home-landing-events').html(homeHTML);
+
+  // TODO Get events from local cache, if not found, get from server
+  var posts = [];
+  posts = [
+    {
+      title: "Post 1",
+      image: "http://lorempixel.com/600/400/nature/1/",
+      author: "Author 1",
+      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+    },
+    {
+      title: "Post 2",
+      image: "http://lorempixel.com/600/400/nature/2/"
+    },
+    {
+      title: "Post 3",
+      image: "http://lorempixel.com/600/400/nature/3/"
+    },
+    {
+      title: "Post 4",
+      image: "http://lorempixel.com/600/400/nature/4/"
+    },
+    {
+      title: "Post 5",
+      image: "http://lorempixel.com/600/400/nature/5/"
+    }
+  ];
+
+  // Initialize Virtual List
+  var eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+      items: posts,
+      template:
+
+      // text post template
+
+      // '<li class="text post">' +
+      //   '<div class="post-data-origin-wrapper">' +
+      //     '<div class="post-data">' +
+      //       '<div class="post-author">{{author}}</div>' +
+      //       '<blockquote class="post-content">{{content}}</blockquote>' +
+      //     '</div>' +
+      //     '<div class="post-origin">' +
+      //       '<i class="icon ion-social-instagram-outline"></i>' +
+      //     '</div>' +
+      //   '</div>' +
+      // '</li>',
+
+
+      // image post template
+
+      '<li class="image post">' +
+        '<div style="background-image: url({{image}})" class="post-img">' +
+        '</div>' +
+        '<div class="post-data-origin-wrapper">' +
+          '<div class="post-data">' +
+            '<div class="post-author">{{author}}</div>' +
+            '<div class="post-content">{{content}}</div>' +
+          '</div>' +
+          '<div class="post-origin">' +
+            '<i class="icon ion-social-instagram-outline"></i>' +
+          '</div>' +
+        '</div>' +
+      '</li>',
+
+      height: 700,        // FIXME should be dynamic height, return X height if img post, return Y height if text post FIXME
+      searchAll: function (query, items) {
+        var foundItems = [];
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+            foundItems.push(i);
+          }
+        }
+        return foundItems;
+      }
+  });
+});
+
+// Initialize Search bar
+var eventsSearchbar = myApp.searchbar('.searchbar', {
+  searchList: '.list-block-search',
+  searchIn: '.card-header'
+});
+
 
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
