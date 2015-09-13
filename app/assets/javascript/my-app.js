@@ -247,22 +247,20 @@ myApp.onPageInit('event', function (page) {
 });
 
 
-// Initialize form page to have ajax indicator
-myApp.onPageInit('form', function (e) {
-  $$(document).on('ajaxStart', function (e) {
-      myApp.showIndicator();
-  });
-  $$(document).on('ajaxComplete', function () {
-      myApp.hideIndicator();
-  });
-});
-
+// Initialize form page
 myApp.onPageInit('form', function (page) {
   var hasNoName = false;
   var hasHashtagError = false;
   var maxHashtags = 5;
   var hashtags = [];
   var id = 1;
+
+  $$(document).on('ajaxStart', function () {
+      myApp.showIndicator();
+  });
+  $$(document).on('ajaxComplete', function () {
+      myApp.hideIndicator();
+  });
 
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
