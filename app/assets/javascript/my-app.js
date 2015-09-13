@@ -51,6 +51,13 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
+$$(document).on('ajaxStart', function (e) {
+    myApp.showIndicator();
+});
+$$(document).on('ajaxComplete', function () {
+    myApp.hideIndicator();
+});
+
 // Callbacks to run specific code for specific pages, for example for Home data page:
 myApp.onPageInit('home', function (page) {
 
