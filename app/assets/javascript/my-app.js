@@ -25,7 +25,8 @@ var myApp = new Framework7({
     dynamicNavbar: false,
     domCache: true,
     uniqueHistory: true,
-    preloadPreviousPage: true
+    preloadPreviousPage: true,
+    pushState: true
 });
 
 // Add view
@@ -379,7 +380,8 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   };
   var options = {
       url: 'event.php',
-      query: query
+      query: query,
+      pushState: true
   };
   mainView.router.load(options);
 });
