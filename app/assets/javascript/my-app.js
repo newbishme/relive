@@ -314,18 +314,15 @@ myApp.onPageInit('form', function (page) {
 // Handle form ajax actions
 $$(document).on('submitted', 'form.ajax-submit', function (e) {
   // Clear form, hide panel
-  console.log('form successfully submitted');
-  console.log(e.detail.data);
-
+  var eventDetails = JSON.parse(e.detail.data);
   var query = {
-    id: e.detail.data.event_id
+    id: eventDetails.event_id,
+    name: eventDetails.eventName
   };
-
   var options = {
       url: 'event.php',
       query: query
   };
-
   mainView.router.load(options);
 });
 
