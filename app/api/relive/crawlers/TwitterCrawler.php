@@ -55,12 +55,55 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             'caption'=>$status->text,
             'provider_id'=>$this->provider->provider_id
         ]);
+        foreach($status->entities->media as $twitter_media) {
+            $media = \relive\models\Media::create(['type'=>$twitter_media->type]);
+            $this->createMediaUrls($media->media_id, $twitter_media);
+        }
         $relationship = \relive\models\PostEventRelationship::firstOrCreate([
             'event_id'=>$event->event_id,
             'post_id'=>$post->post_id,
             'isFiltered'=>0
         ]);
         return $post;
+    }
+
+    private function createMediaUrls($media_id, $twitter_media) {
+        if ($twitter_media->sizes->medium !== null) {
+            $media_url = \relive\models\MediaURL::firstOrCreate([
+                'media_id'=>$media->media_id,
+                'mediaURL'=>$twitter_media->media_url_https . ':medium',
+                'width'=>$twitter_media->sizes->medium->w,
+                'height'=>$twitter_media->sizes->medium->h,
+                'sizes'=>'medium'
+            ]);
+        }
+        if ($twitter_media->sizes->small !== null) {
+            $media_url = \relive\models\MediaURL::firstOrCreate([
+                'media_id'=>$media->media_id,
+                'mediaURL'=>$twitter_media->media_url_https . ':small',
+                'width'=>$twitter_media->sizes->small->w,
+                'height'=>$twitter_media->sizes->small->h,
+                'sizes'=>'small'
+            ]);
+        }
+        if ($twitter_media->sizes->large !== null) {
+            $media_url = \relive\models\MediaURL::firstOrCreate([
+                'media_id'=>$media->media_id,
+                'mediaURL'=>$twitter_media->media_url_https . ':large',
+                'width'=>$twitter_media->sizes->large->w,
+                'height'=>$twitter_media->sizes->large->h,
+                'sizes'=>'large'
+            ]);
+        }
+        if ($twitter_media->sizes->thumb !== null) {
+            $media_url = \relive\models\MediaURL::firstOrCreate([
+                'media_id'=>$media->media_id,
+                'mediaURL'=>$twitter_media->media_url_https . ':thumb',
+                'width'=>$twitter_media->sizes->thumb->w,
+                'height'=>$twitter_media->sizes->thumb->h,
+                'sizes'=>'thumb'
+            ]);
+        }
     }
 
     public function recentCrawl($keyword){
