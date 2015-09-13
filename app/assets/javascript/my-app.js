@@ -45,10 +45,10 @@ myApp.onPageInit('home', function (page) {
       // event card template
       '<li class="event-card">' +
         '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-          '<h1>{{title}}</h1>' +
+          '<h1>{{eventName}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="event.php?id={{id}}&name={{title}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -56,7 +56,7 @@ myApp.onPageInit('home', function (page) {
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
-          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+          if (items[i].eventName.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
             foundItems.push(i);
           }
         }
@@ -73,7 +73,7 @@ myApp.onPageInit('home', function (page) {
   // Load more events if connected to internet
   $$.ajax({
     type:'GET',
-    url:'landing-page-test-endpoint.php',
+    url:'https://relive.space/api/event/indexes',
     data:{"lastEventId":lastEventId},
     dataType:'json',
     success:function(data){
@@ -174,7 +174,7 @@ myApp.onPageInit('event', function (page) {
 
     $$.ajax({
       type:'GET',
-      url:'infinite-scroll-test.php?id='+pageId,
+      url:'https://relive.space/api/event/'+pageId+'/post',
       data:{"lastRec":lastLoadedIndex+1},
       dataType:'json',
       success:function(data) {
@@ -192,13 +192,17 @@ myApp.onPageInit('event', function (page) {
                 '<div class="post-data">' +
                   '<div class="post-author">{{author}}</div>' +
                   '{{#if image}}' +
-                  '<div class="post-content">{{content}}</div>' +
+                  '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
-                  '<blockquote class="post-content">{{content}}</blockquote>' +
+                  '<blockquote class="post-content">{{caption}}</blockquote>' +
                   '{{/if}}' +
                 '</div>' +
                 '<div class="post-origin">' +
+                  '{{#if provider_id}}' +
                   '<i class="icon ion-social-instagram-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
                 '</div>' +
               '</div>' +
             '</li>',
@@ -211,7 +215,7 @@ myApp.onPageInit('event', function (page) {
             searchAll: function (query, items) {
               var foundItems = [];
               for (var i = 0; i < items.length; i++) {
-                if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+                if (items[i].eventName.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
                   foundItems.push(i);
                 }
               }
@@ -229,7 +233,7 @@ myApp.onPageInit('event', function (page) {
         loading = true;
         $$.ajax({
           type:'GET',
-          url:'infinite-scroll-test.php?id='+pageId,
+          url:'https://relive.space/api/event/'+pageId+'/post',
           data:{"lastRec":lastLoadedIndex+1},
           dataType:'json',
           success:function(data){
