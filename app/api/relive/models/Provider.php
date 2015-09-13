@@ -10,6 +10,7 @@ class Provider extends \Illuminate\Database\Eloquent\Model {
 	 */
 	protected $table = 'providers';
 	protected  $primaryKey = 'provider_id';
+	protected $fillable = array('providerName', 'providerSite');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
