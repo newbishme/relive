@@ -2,6 +2,7 @@
 var $$ = Dom7;
 
 $$('head').append(
+    '<link rel="stylesheet" href="assets/stylesheets/ionicons.min.css">' +
     '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.min.css">' +
     '<link rel="stylesheet" href="assets/stylesheets/framework7.ios.colors.min.css">' +
     '<link rel="stylesheet" href="assets/stylesheets/my-app.ios.css">' +
