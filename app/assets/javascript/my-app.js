@@ -58,39 +58,7 @@ $$(document).on('ajaxComplete', function () {
 myApp.onPageInit('home', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var events = [];
-  events = [
-    {
-      id:    "1",
-      title: "Event 1",
-      image: "http://lorempixel.com/600/400/nature/1/",
-    },
-    {
-      id:    "2",
-      title: "Event 2",
-      image: "http://lorempixel.com/600/400/nature/2/"
-    },
-    {
-      id:    "3",
-      title: "Event 3",
-      image: "http://lorempixel.com/600/400/nature/3/"
-    },
-    {
-      id:    "4",
-      title: "Event 4",
-      image: "http://lorempixel.com/600/400/nature/4/"
-    },
-    {
-      id:    "5",
-      title: "Event 5",
-      image: "http://lorempixel.com/600/400/nature/5/"
-    }
-  ];
-
-  // Initialize Search bar
-  var eventsSearchbar = myApp.searchbar('.searchbar', {
-    searchList: '.list-block-search',
-    searchIn: '.card-header'
-  });
+  var lastEventId = 0;
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -102,7 +70,7 @@ myApp.onPageInit('home', function (page) {
           '<h1>{{title}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="events.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -117,83 +85,136 @@ myApp.onPageInit('home', function (page) {
         return foundItems;
       }
   });
+
+  // Initialize Search bar
+  var eventsSearchbar = myApp.searchbar('.searchbar', {
+    searchList: '.list-block-search',
+    searchIn: '.card-header'
+  });
+
+  // Load more events if connected to internet
+  $$.ajax({
+    type:'GET',
+    url:'landing-page-test-endpoint.php',
+    data:{"lastEventId":lastEventId},
+    dataType:'json',
+    success:function(data){
+      if (data !== '') {
+        eventsList.appendItems(data);
+        eventsList.update();
+        lastEventId += data.length;
+      }
+    } // End ajax success
+  }); // End ajax
+
+  // Initialize Pull to refresh
+  var ptrContent = $$('.pull-to-refresh-content');
+
+  ptrContent.on('refresh', function (e) {
+    setTimeout(function () {
+      // Load more events if connected to internet
+      $$.ajax({
+        type:'GET',
+        url:'landing-page-test-endpoint.php',
+        data:{"lastEventId":lastEventId},
+        dataType:'json',
+        success:function(data){
+          if (data !== '') {
+            eventsList.appendItems(data);
+            eventsList.update();
+            lastEventId += data.length;
+          }
+          myApp.pullToRefreshDone();
+        } // End ajax success
+      }); // End ajax
+    }, 2000);
+  });
+
 });
 
-myApp.onPageInit('events', function (page) {
+myApp.onPageInit('event', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
-  posts = [
-    {
-      title: "Post 1",
-      image: "http://lorempixel.com/600/400/nature/1/",
-      author: "Author 1",
-      content: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
-    },
-    {
-      title: "Post 2",
-      image: "http://lorempixel.com/600/400/nature/2/"
-    },
-    {
-      title: "Post 3",
-      image: "http://lorempixel.com/600/400/nature/3/"
-    },
-    {
-      title: "Post 4",
-      image: "http://lorempixel.com/600/400/nature/4/"
-    },
-    {
-      title: "Post 5",
-      image: "http://lorempixel.com/600/400/nature/5/"
+  var eventPostsList;
+  var loading = false;
+  var lastLoadedIndex = 0;
+
+  $$.ajax({
+    type:'GET',
+    url:'infinite-scroll-test.php',
+    data:{"lastRec":lastLoadedIndex+1},
+    dataType:'json',
+    success:function(data) {
+      posts = data;
+      lastLoadedIndex += posts.length;
+      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+          items: posts,
+          template:
+
+          '<li class="{{#if image}}image{{else}}text{{/if}} post">' +
+            '{{#if image}}' +
+            '<div style="background-image: url({{image}})" class="post-img"></div>' +
+            '{{/if}}' +
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}</div>' +
+                '{{#if image}}' +
+                '<div class="post-content">{{content}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{content}}</blockquote>' +
+                '{{/if}}' +
+              '</div>' +
+              '<div class="post-origin">' +
+                '<i class="icon ion-social-instagram-outline"></i>' +
+              '</div>' +
+            '</div>' +
+          '</li>',
+
+
+          height: function (post) {
+            if (post.image) return 500;
+            else return 200;
+          },
+          searchAll: function (query, items) {
+            var foundItems = [];
+            for (var i = 0; i < items.length; i++) {
+              if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
+                foundItems.push(i);
+              }
+            }
+            return foundItems;
+          }
+      });
     }
-  ];
+  });
 
-  // Initialize Virtual List
-  var eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-      items: posts,
-      template:
+  setTimeout(function() {
+    loading = false;
 
-      // text post template
-
-      // '<li class="text post">' +
-      //   '<div class="post-data-origin-wrapper">' +
-      //     '<div class="post-data">' +
-      //       '<div class="post-author">{{author}}</div>' +
-      //       '<blockquote class="post-content">{{content}}</blockquote>' +
-      //     '</div>' +
-      //     '<div class="post-origin">' +
-      //       '<i class="icon ion-social-instagram-outline"></i>' +
-      //     '</div>' +
-      //   '</div>' +
-      // '</li>',
-
-
-      // image post template
-
-      '<li class="image post">' +
-        '<div style="background-image: url({{image}})" class="post-img">' +
-        '</div>' +
-        '<div class="post-data-origin-wrapper">' +
-          '<div class="post-data">' +
-            '<div class="post-author">{{author}}</div>' +
-            '<div class="post-content">{{content}}</div>' +
-          '</div>' +
-          '<div class="post-origin">' +
-            '<i class="icon ion-social-instagram-outline"></i>' +
-          '</div>' +
-        '</div>' +
-      '</li>',
-
-      height: 452,        // FIXME should be dynamic height, return X height if img post, return Y height if text post FIXME
-      searchAll: function (query, items) {
-        var foundItems = [];
-        for (var i = 0; i < items.length; i++) {
-          if (items[i].title.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0 ) {
-            foundItems.push(i);
+    $$('.infinite-scroll').on('infinite', function() {
+      if (loading) return;
+      loading = true;
+      $$.ajax({
+        type:'GET',
+        url:'infinite-scroll-test.php',
+        data:{"lastRec":lastLoadedIndex+1},
+        dataType:'json',
+        success:function(data){
+          loading = false;
+          if (data === '') {
+            //  Nothing to load, detach infinite scroll events
+            myApp.detachInfiniteScroll(".infinite-scroll");
+          } else {
+            eventPostsList.appendItems(data);
+            eventPostsList.update();
+            lastLoadedIndex += data.length-1;
           }
         }
-        return foundItems;
-      }
-  });
+      }); // End AJAX
+    }); // End infinite scroll
+  }, 3000);
+
+
 });
 
 
