@@ -53,7 +53,7 @@ form .item-content {
 
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
-	a, i, .back.link {
+	a.link {
 		color: white;
 		&:hover {
 			color: grey;
