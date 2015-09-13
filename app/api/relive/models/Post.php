@@ -9,6 +9,7 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'posts';
+	protected  $primaryKey = 'post_id';
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.

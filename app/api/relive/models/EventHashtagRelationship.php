@@ -9,6 +9,7 @@ class EventHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'eventhashtagrelationships';
+	protected  $primaryKey = 'relation_id';
 	protected $fillable = array('hashtag_id','event_id');
 	public $timestamps = false;
 	/**

@@ -9,6 +9,7 @@ class PostHashtagRelationship extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'posthashtagrelationships';
+	protected  $primaryKey = 'relation_id';
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.

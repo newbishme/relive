@@ -9,6 +9,8 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 * @var string
 	 */
 	protected $table = 'events';
+	protected  $primaryKey = 'event_id';
+	protected $fillable = array('eventName');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -20,7 +22,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 
 
 	public function eventhashtagrelationship() {
-		return $this->hasMany('relive\models\EventHashtagRelationship');
+		return $this->hasMany('relive\models\EventHashtagRelationship','event_id','event_id');
 	}
 
 	public function posteventrelationship() {
@@ -29,7 +31,6 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 
 	public function getHashtagsAttribute() {
 		$hashtags = [];
-
 		foreach($this->eventhashtagrelationship as $relationship) {
 			array_push($hashtags, $relationship->hashtag->hashtag);
 		}

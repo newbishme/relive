@@ -81,11 +81,8 @@ class App {
 
                 // Post /api/event
                 $app->post('', 'relive\controllers\EventController::create');
-
                 //  Get /api/event/indexes
-                $app->get('/indexes', function() use ($app) {
-                    //return hashtags/name/media
-                });
+                $app->get('/indexes', 'relive\controllers\EventController::getSearchIndexes');
 
                 //  Get /api/event/recent
                 $app->get('/recent', function() use ($app) {
