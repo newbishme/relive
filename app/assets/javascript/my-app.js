@@ -75,7 +75,7 @@ myApp.onPageInit('home', function (page) {
   $$.ajax({
     type:'GET',
     url:'https://relive.space/api/event/indexes',
-    data:{"lastEventId":lastEventId},
+    data:{"startAt":lastEventId},
     dataType:'json',
     success:function(data){
       if (data !== '') {
@@ -176,7 +176,7 @@ myApp.onPageInit('event', function (page) {
     $$.ajax({
       type:'GET',
       url:'https://relive.space/api/event/'+pageId+'/post',
-      data:{"lastRec":lastLoadedIndex+1},
+      data:{"startAt":lastLoadedIndex},
       dataType:'json',
       success:function(data) {
         posts = data;
@@ -226,7 +226,7 @@ myApp.onPageInit('event', function (page) {
         $$.ajax({
           type:'GET',
           url:'https://relive.space/api/event/'+pageId+'/post',
-          data:{"lastRec":lastLoadedIndex+1},
+          data:{"startAt":lastLoadedIndex},
           dataType:'json',
           success:function(data){
             loading = false;
