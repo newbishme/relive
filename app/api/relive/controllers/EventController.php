@@ -7,6 +7,19 @@ class EventController extends Controller {
 	public function __construct() {
 	}
 
+	public static function getTrendingEvents() {
+		$app = \Slim\Slim::getInstance();
+        $allGetVars = $app->request->get();
+        $limit = @$allGetVars['limit']? $allGetVars['limit']: 5;
+
+        if (!is_int(intval($limit))) {
+        	$app->render(400, ['Status' => 'Invalid input.' ]);
+        	return;
+        }
+
+		$app->render(200,\relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
+	}
+
 	public static function getRecentEvents() {
 		$app = \Slim\Slim::getInstance();
         $allGetVars = $app->request->get();
