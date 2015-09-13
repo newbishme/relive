@@ -48,7 +48,7 @@ myApp.onPageInit('home', function (page) {
           '<h1>{{title}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="event.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{id}}&name={{title}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -164,6 +164,13 @@ myApp.onPageInit('event', function (page) {
 
   if (page.query.id != null) {
     var pageId = page.query.id;
+    var eventName = 'Event';
+
+    if (page.query.name != null) {
+      eventName = page.query.name;
+    }
+
+    $$('.title-event-name').text(eventName);
 
     $$.ajax({
       type:'GET',
