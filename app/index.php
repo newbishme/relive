@@ -28,7 +28,7 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#374f59">
-    <link href="/relive-startup.png"
+    <link href="https://placehold.it/750x1294"
       media="(device-width: 375px) and (device-height: 667px)
              and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image">
