@@ -141,15 +141,8 @@
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
             <div class="page with-subnavbar" data-page="home">
-
-              <!-- Searchbar overlay -->
               <div class="searchbar-overlay"></div>
-
               <div class="page-content">
-                <!--<div class="content-block">
-                  <p>The most awesome space to relive your moments</p>
-                </div>-->
-
                 <!-- Hidden by default, this will appear when search results is empty -->
                 <div class="content-block searchbar-not-found">
                   <!-- Make a Reel CTA -->
@@ -160,9 +153,6 @@
 
                 <div class="content-block-title">Trending events</div>
                 <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
-                <!-- <script id="homeTemplate" type="text/template7">
-                  {{eventName}}
-                </script> -->
 
               </div>
             </div>
@@ -171,9 +161,7 @@
 
       </div>
     </div>
-    <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="assets/javascript/framework7.min.js"></script>
-    <!-- Path to your app js-->
     <script type="text/javascript" src="assets/javascript/my-app.js"></script>
   </body>
 </html>
