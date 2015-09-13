@@ -98,7 +98,6 @@ myApp.onPageInit('home', function (page) {
     dataType:'json',
     success:function(data){
       if (data !== '') {
-        console.log(data);
         eventsList.appendItems(data);
         eventsList.update();
       }
