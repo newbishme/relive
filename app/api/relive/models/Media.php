@@ -24,4 +24,7 @@ class Media extends \Illuminate\Database\Eloquent\Model {
 	public function post() {
 		return $this->belongsTo('relive\models\Post','post_id','post_id');
 	}
+
+
+	
 }
