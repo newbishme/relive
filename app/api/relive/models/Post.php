@@ -17,7 +17,6 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	 * @var array
 	 */
 	protected $hidden = array('rankPoints','posteventrelationship','posthashtagrelationship');
-	protected $appends = ['media','provider'];
 
 	public function provider() {
 		return $this->belongsTo('relive\models\Provider','provider_id','provider_id');
@@ -35,11 +34,5 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 		return $this->hasMany('relive\models\PostHashtagRelationship','post_id','post_id');
 	}
 
-	public function getProviderAttribute() {
-		return $this->provider;
-	}
 
-	public function getMediaAttribute() {
-		return $this->media;
-	}
 }
