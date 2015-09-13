@@ -2,7 +2,7 @@
 
 namespace relive\models;
 
-class Event extends \Illuminate\Database\Eloquent\Model {
+class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 	/**
 	 * The database table used by the model.
 	 *
@@ -10,16 +10,14 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 */
 	protected $table = 'events';
 	protected  $primaryKey = 'event_id';
-	protected $fillable = array('eventName');
 	public $timestamps = false;
+	protected $appends = ['hashtags'];
+	protected $hidden = array('event_id','dateAdded','startDate','endDate','caption','longitude','latitude','eventhashtagrelationship','rankPoints');
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $appends = ['hashtags'];
-	protected $hidden = array('rankPoints','eventhashtagrelationship');
-
 
 	public function eventhashtagrelationship() {
 		return $this->hasMany('relive\models\EventHashtagRelationship','event_id','event_id');
@@ -34,10 +32,6 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 		foreach($this->eventhashtagrelationship as $relationship) {
 			array_push($hashtags, $relationship->hashtag->hashtag);
 		}
-		if (count($hashtags) > 0) {
-			return $hashtags;
-		} else {
-			return null;
-		}
+		return $hashtags;
 	}
 }
