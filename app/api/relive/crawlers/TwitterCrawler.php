@@ -57,9 +57,12 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             'caption'=>$status->text,
             'provider_id'=>$this->provider->provider_id
         ]);
-        foreach($status->entities->media as $twitter_media) {
-            $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
-            $this->createMediaUrls($media->media_id, $twitter_media);
+
+        if (!is_null($status->entities->media)) {
+            foreach($status->entities->media as $twitter_media) {
+                $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
+                $this->createMediaUrls($media->media_id, $twitter_media);
+            }
         }
         $relationship = \relive\models\PostEventRelationship::firstOrCreate([
             'event_id'=>$event->event_id,
