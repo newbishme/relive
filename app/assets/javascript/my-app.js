@@ -59,19 +59,6 @@ myApp.onPageInit('home', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var events = [];
 
-  for (var i = 1; i < 10; i++) {
-    var id = i;
-    var title = "Event " + i;
-    var image = "http://lorempixel.com/600/400/nature/" + i + "/";
-    events.push({"id":id,"title":title,"image":image});
-  }
-
-  // Initialize Search bar
-  var eventsSearchbar = myApp.searchbar('.searchbar', {
-    searchList: '.list-block-search',
-    searchIn: '.card-header'
-  });
-
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
       items: events,
@@ -97,6 +84,27 @@ myApp.onPageInit('home', function (page) {
         return foundItems;
       }
   });
+
+  // Initialize Search bar
+  var eventsSearchbar = myApp.searchbar('.searchbar', {
+    searchList: '.list-block-search',
+    searchIn: '.card-header'
+  });
+
+  // Load more events if connected to internet
+  $$.ajax({
+    type:'GET',
+    url:'landing-page-test-endpoint.php',
+    dataType:'json',
+    success:function(data){
+      if (data !== '') {
+        console.log(data);
+        eventsList.appendItems(data);
+        eventsList.update();
+      }
+    } // End ajax success
+  }); // End ajax
+
 });
 
 myApp.onPageInit('event', function (page) {
