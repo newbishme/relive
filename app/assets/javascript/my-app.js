@@ -102,7 +102,7 @@ myApp.onPageInit('home', function (page) {
           '<h1>{{title}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="events.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="event.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -119,7 +119,7 @@ myApp.onPageInit('home', function (page) {
   });
 });
 
-myApp.onPageInit('events', function (page) {
+myApp.onPageInit('event', function (page) {
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
   posts = [
@@ -172,7 +172,10 @@ myApp.onPageInit('events', function (page) {
         '</div>' +
       '</li>',
 
-      height: 452,        // FIXME should be dynamic height, return X height if img post, return Y height if text post FIXME
+      height: function (post) {
+        if (post.image) return 500;
+        else return 200;
+      },
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
