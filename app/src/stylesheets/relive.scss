@@ -121,8 +121,11 @@ form .item-content {
 	background-color: white;
 	.post-data-origin-wrapper {
 		display: flex;
+		display: -webkit-flex;
 		flex-flow: nowrap row;
+		-webkit-flex-flow: nowrap row;
 		justify-content: space-between;
+		-webkit-justify-content: space-between;
 		.post-data {
 			padding: 15px;
 			font-size: 14px;
@@ -152,8 +155,7 @@ form .item-content {
 	.post-data-origin-wrapper {
 		.post-data {
 			blockquote {
-				letter-spacing: 1px;
-				font-style: italic;
+				letter-spacing: 0.7px;
 				font-size: 17px;
 				margin: 1em 10px;
 				quotes: "\201C""\201D""\2018""\2019";
