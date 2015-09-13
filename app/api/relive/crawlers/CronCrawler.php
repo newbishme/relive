@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../../../vendor/autoload.php';
+require_once '/var/www/vendor/autoload.php';
 
 use \relive\Crawlers\TwitterCrawler;
 use \relive\Crawlers\InstagramCrawler;
