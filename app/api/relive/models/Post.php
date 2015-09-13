@@ -20,6 +20,16 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	protected $hidden = array('rankPoints','provider_id','posteventrelationship','posthashtagrelationship');
 	protected $appends = ['providerName','media'];
 
+	public function toArray() {
+		$data = parent::toArray();
+		$newData = [];
+		if ($data['media']!=null) {
+			return $data;
+		} else {
+			unset($data['media']);
+			return $data;
+		}
+	}
 	public function provider() {
 		return $this->belongsTo('relive\models\Provider','provider_id','provider_id');
 	}
@@ -41,6 +51,7 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getMediaAttribute() {
-		return $this->media()->get()->first();
+		$media = $this->media()->get()->first();
+		return $media;
 	}
 }
