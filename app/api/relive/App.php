@@ -83,12 +83,8 @@ class App {
                 $app->post('', 'relive\controllers\EventController::create');
                 //  Get /api/event/indexes
                 $app->get('/indexes', 'relive\controllers\EventController::getSearchIndexes');
-
                 //  Get /api/event/recent
-                $app->get('/recent', function() use ($app) {
-                    $allGetVars = $app->request->get();
-                    $limit = @$allGetVars['limit']? $allGetVars['limit']: 5;
-                });
+                $app->get('/recent', 'relive\controllers\EventController::getRecentEvents');
 
                 //  Get /api/event/trending
                 $app->get('/trending', function() use ($app) {

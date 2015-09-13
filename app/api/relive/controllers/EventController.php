@@ -7,12 +7,24 @@ class EventController extends Controller {
 	public function __construct() {
 	}
 
+	public static function getRecentEvents() {
+		$app = \Slim\Slim::getInstance();
+        $allGetVars = $app->request->get();
+        $limit = @$allGetVars['limit']? $allGetVars['limit']: 5;
+
+        if (!is_int(intval($limit))) {
+        	$app->render(400, ['Status' => 'Invalid input.' ]);
+        	return;
+        }
+
+		$app->render(200,\relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray());        
+	}
+
 	public static function getSearchIndexes() {
 		//return eventname/media/hashtags
 		$app = \Slim\Slim::getInstance();
 
-
-		$app->render(200,\relive\models\Event::all()->toArray());
+		$app->render(200,\relive\models\SearchIndex::all()->toArray());
 	}
 
 	public static function create() {
@@ -27,10 +39,9 @@ class EventController extends Controller {
         	$app->render(400, ['Status' => 'Invalid input.' ]);
         	return;
         }
-        
         try {
-
 	        $event = \relive\models\Event::firstOrCreate(['eventName' => $eventName]);
+
 			foreach($hashtags as $tag) {
 				$tag = trim($tag);
 				if (!empty($tag) && strlen($tag) < 255) {
