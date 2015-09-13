@@ -154,7 +154,8 @@ myApp.onPageInit('home', function (page) {
       }); // End ajax
     }, 2000);
   });
-
+  
+  mainView.router.refreshPage();
 });
 
 myApp.onPageInit('event', function (page) {
@@ -193,7 +194,7 @@ myApp.onPageInit('event', function (page) {
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
                   '<div class="post-author">{{author}}</div>' +
-                  '{{#if image}}' +
+                  '{{#if media}}' +
                   '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
                   '<blockquote class="post-content">{{caption}}</blockquote>' +
