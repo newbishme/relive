@@ -1,5 +1,6 @@
 $primaryColour: #374F59;
-$linkColor: #1B5DC8;
+$linkColour: #1B5DC8;
+$linkHoverColour: #CCCCCC; 
 
 @mixin vertical-align($position: relative) {
   position: $position;
@@ -18,7 +19,7 @@ p {
 }
 
 a {
-	color: $linkColor;
+	color: $linkColour;
 }
 
 .preloader {
@@ -56,13 +57,17 @@ form .item-content {
 	a.link {
 		color: white;
 		&:hover {
-			color: grey;
+			color: $linkHoverColour;
 		}
 	}
 }
 
 .searchbar .searchbar-cancel {
 	font-size: 15px;
+	color: white;
+	&:hover {
+		color: $linkHoverColour;
+	}
 }
 
 .event-card {
@@ -148,7 +153,7 @@ form .item-content {
 				quotes: "\201C""\201D""\2018""\2019";
 				&:before, &:after {
 					font-family: cursive;
-					color: #ccc;
+					color: $linkHoverColour;
 					font-size: 4em;
 					line-height: 0.1em;
 				}
@@ -198,7 +203,7 @@ form .item-content {
 			padding-left: 20px;
 		}
 		&:hover {
-			color: #ccc;
+			color: $linkHoverColour;
 		}
 	}
 }
