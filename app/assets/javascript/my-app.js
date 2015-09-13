@@ -72,38 +72,49 @@ myApp.onPageInit('home', function (page) {
   var events = [];
   events = [
     {
+      id:    "1",
       title: "Event 1",
       image: "http://lorempixel.com/600/400/nature/1/",
     },
     {
+      id:    "2",
       title: "Event 2",
       image: "http://lorempixel.com/600/400/nature/2/"
     },
     {
+      id:    "3",
       title: "Event 3",
       image: "http://lorempixel.com/600/400/nature/3/"
     },
     {
+      id:    "4",
       title: "Event 4",
       image: "http://lorempixel.com/600/400/nature/4/"
     },
     {
+      id:    "5",
       title: "Event 5",
       image: "http://lorempixel.com/600/400/nature/5/"
     }
   ];
 
+  // Initialize Search bar
+  var eventsSearchbar = myApp.searchbar('.searchbar', {
+    searchList: '.list-block-search',
+    searchIn: '.card-header'
+  });
+
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
       items: events,
       template:
-
+      // event card template
       '<li class="event-card">' +
         '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
           '<h1>{{title}}</h1>' +
         '</div>' +
         '<div class="event-card-footer">' +
-          '<a href="#" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '<a href="events.php?id={{id}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
         '</div>' +
       '</li>',
 
@@ -121,14 +132,6 @@ myApp.onPageInit('home', function (page) {
 });
 
 myApp.onPageInit('events', function (page) {
-
-  // Render landing page template for events
-  // var context = {
-  //   eventName: 'Hello world'
-  // };
-  // var homeHTML = compiledHomeTemplate(template7Data);
-  // $$('div#home-landing-events').html(homeHTML);
-
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
   posts = [
@@ -192,7 +195,7 @@ myApp.onPageInit('events', function (page) {
         '</div>' +
       '</li>',
 
-      height: 700,        // FIXME should be dynamic height, return X height if img post, return Y height if text post FIXME
+      height: 452,        // FIXME should be dynamic height, return X height if img post, return Y height if text post FIXME
       searchAll: function (query, items) {
         var foundItems = [];
         for (var i = 0; i < items.length; i++) {
@@ -203,12 +206,6 @@ myApp.onPageInit('events', function (page) {
         return foundItems;
       }
   });
-});
-
-// Initialize Search bar
-var eventsSearchbar = myApp.searchbar('.searchbar', {
-  searchList: '.list-block-search',
-  searchIn: '.card-header'
 });
 
 
