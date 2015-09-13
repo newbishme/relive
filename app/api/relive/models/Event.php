@@ -17,8 +17,8 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['hashtags'];
-	protected $hidden = array('rankPoints','eventhashtagrelationship');
+	protected $appends = ['hashtags','posts'];
+	protected $hidden = array('rankPoints','eventhashtagrelationship','posteventrelationship');
 
 
 	public function eventhashtagrelationship() {
@@ -26,7 +26,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function posteventrelationship() {
-		return $this->hasMany('relive\models\PostEventRelationship');
+		return $this->hasMany('relive\models\PostEventRelationship','event_id','event_id');
 	}
 
 	public function getHashtagsAttribute() {
@@ -34,10 +34,15 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 		foreach($this->eventhashtagrelationship as $relationship) {
 			array_push($hashtags, $relationship->hashtag->hashtag);
 		}
-		if (count($hashtags) > 0) {
-			return $hashtags;
-		} else {
-			return null;
+		return $hashtags;
+	}
+
+	public function getPostsAttribute() {
+		$posts = [];
+
+		foreach($this->posteventrelationship as $relationship) {
+			array_push($posts, $relationship->post);
 		}
+		return $posts;
 	}
 }
