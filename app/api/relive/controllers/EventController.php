@@ -62,6 +62,7 @@ class EventController extends Controller {
 					$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
 				}
 			}
+			\relive\Crawlers\CreationCrawler::initialCrawl($event);
 			$app->render(200, $event->toArray());
 		} catch (\Exception $e) {
 			print $e;
