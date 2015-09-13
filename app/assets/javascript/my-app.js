@@ -262,8 +262,10 @@ myApp.onPageInit('form', function (e) {
 
 myApp.onPageInit('form', function (page) {
   var hasNoName = false;
+  var hasHashtagError = false;
   var maxHashtags = 5;
   var hashtags = [];
+  var id = 1;
   
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
@@ -283,30 +285,90 @@ myApp.onPageInit('form', function (page) {
     }
   });
   
+  $$('.hashtags-input').on('focusout', function(e) {
+    if (hashtags.length === 0) {
+      addHashtagError("Please add at least 1 hashtag");
+    } else {
+      removeHashtagError();
+    }
+  });
+  
+  function addHashtagError(errorMessage) {
+    if (!hasHashtagError) {
+      $$('#hashtags-header').html(errorMessage).addClass("color-red");
+      $$('#hashtags-input-icon').addClass("color-red");
+    }
+  };
+  
+  function removeHashtagError() {
+    hasHashtagError = false;
+    updateHashtagTitle();
+    $$('#hashtags-header').removeClass("color-red");
+    $$('#hashtags-input-icon').removeClass("color-red");
+  };
+  
+  function updateHashtagTitle() {
+    var numHashtagsLeft = maxHashtags - hashtags.length;
+    if (numHashtagsLeft > 1) {
+      $$('#hashtags-header').html("You can add " + numHashtagsLeft + " more hashtags");
+    } else if (numHashtagsLeft === 1) {
+      $$('#hashtags-header').html("You can add " + numHashtagsLeft + " more hashtag");
+    } else {
+      $$('#hashtags-header').html("You're done!");
+    }
+  }
+  
   $$('.hashtags-input').on('keypress', function(e) {
     if (e.keyCode === 32) { // spacebar
       var inputHashtagsArr = e.srcElement.value.split(" ");
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
-        var hashtag = inputHashtagsArr[i].replace('#', '');
+        var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
         
-        if (hashtag.length > 0 && 
-            hashtags.length <= maxHashtags && 
-            hashtags.indexOf(hashtag) === -1) {
+        if (hashtag.length === 0) {
+        } else if (contains(hashtags, hashtag)) {
+          addHashtagError("You've added this hashtag before");
+        } else if (hashtags.length === maxHashtags) {
+          addHashtagError("You can only add 5 hashtags");
+        } else {
           $$('.hashtags').removeClass('hidden');
-
+          
           hashtags.push(hashtag);
           $$('.hashtags').append(
-            '<div class="hashtag">#' +
+            '<div class="hashtag" id="ht' + id + '">#' +
               hashtag + '<i class="icon ion-close"></i>' +
             '</div>'
           );
-        } else {
-          returnHashtags += hashtag + " ";
-        }
+          
+          removeHashtagError();
+          
+          $$('#ht' + id).on('click', function(e) {
+            var toBeDeleted = $$(this)[0].innerText.replace('#', '');
+            hashtags.splice(hashtags.indexOf(toBeDeleted), 1);
+            $$(this).remove();
+            updateHashtagTitle();
+            if (hashtags.length === 0) {
+              $$('.hashtags').addClass('hidden');
+              addHashtagError("Please add at least 1 hashtag");
+            }
+          });
+          
+          id++;
+          continue;
+        } 
+        
+        returnHashtags += hashtag + " ";
       }
       $$(this).val(returnHashtags.trim());
-      console.log(hashtags);
+    }
+    
+    function contains(array, str) {
+      for (var i in array) {
+        if (array[i].toLowerCase() === str.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
     }
   });
 });
