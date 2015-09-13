@@ -10,7 +10,7 @@
   <div data-page="event" class="page">
     <div class="page-content infinite-scroll">
       <div class="content-block">
-        <p>Here are some memories from this event.</p>
+        <p>Relive the magical moments from this occasion.</p>
       </div>
       <div class="list-block virtual-list"></div>
       <!-- Preloader -->
