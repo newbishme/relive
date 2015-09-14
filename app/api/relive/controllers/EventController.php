@@ -174,7 +174,7 @@ class EventController extends Controller {
 
        	$event = \relive\models\Event::find($event_id);
        	$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $hashtag]);
-		$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
+		    $eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
        	if ($event) {
        		echo json_encode($event, JSON_UNESCAPED_SLASHES);
        	} else {

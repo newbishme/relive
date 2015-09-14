@@ -32,19 +32,17 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 	public function getImageAttribute() {
 		$posts = [];
 
-		foreach($this->posteventrelationship as $relationship) {
-			array_push($posts, $relationship->post);
-		}
-		$mediaURL = "";
-		foreach($posts as $post) {
-			//$post->media->data[0]->mediaURL;
-			if ($post->media) {
-				$mediaData = $post->media->data;
-				if (count($mediaData) > 0) {
-					$mediaURL = $mediaData[0]->mediaURL;
+		while (true) {
+			$relationship = $this->posteventrelationship()->orderByRaw("RAND()")->first();
+			if ($relationship) {
+				$id = $relationship->toArray()['post_id'];
+				$media = \relive\models\Post::find($id)->media;
+				if ($media) {
+					return $media->data[0]->mediaURL;	
 				}
+			} else {
+				return "";
 			}
 		}
-		return $mediaURL;
 	}
 }
