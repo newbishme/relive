@@ -112,8 +112,19 @@
                     <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
                   </div>
                 </div>
+                
+                <div class="content-block-title">What is relive?</div>
+                <div class="content-block inset">
+                  <div class="content-block-inner">
+                    <p>
+                    Do you want to relive an event; to know what happened and when it happened?
+                    relive.space finds interesting stories from your favourite social media platforms
+                    to let you relive these moments.
+                    </p>
+                  </div>
+                </div>
 
-                <div class="content-block-title searchbar-found">Trending events</div>
+                <!-- <div class="content-block-title searchbar-found">Trending events</div> -->
                 <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
 
               </div>
