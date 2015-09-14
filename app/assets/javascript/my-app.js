@@ -38,12 +38,14 @@ myApp.onPageInit('home', function (page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
-          '<h1>{{eventName}}</h1>' +
-        '</div>' +
-        '<div class="event-card-footer">' +
-          '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
-        '</div>' +
+        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link">' +
+          '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
+            '<h1>{{eventName}}</h1>' +
+          '</div>' +
+          '<div class="event-card-footer">' +
+            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+          '</div>' +
+        '</a>' +
       '</li>',
 
       height: 212,
@@ -147,7 +149,7 @@ myApp.onPageInit('home', function (page) {
     }, 2000);
   });
 
-  mainView.router.refreshPage();
+  // mainView.router.reloadPage('');
 });
 
 myApp.onPageInit('event', function (page) {
