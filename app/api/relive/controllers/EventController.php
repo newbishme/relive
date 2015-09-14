@@ -97,7 +97,7 @@ class EventController extends Controller {
         	return;
         }
 
-		$events = \relive\models\Event::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		$events = \relive\models\SearchIndex::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
 		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
@@ -111,7 +111,7 @@ class EventController extends Controller {
         	return;
         }
 
-		$events = \relive\models\Event::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		$events = \relive\models\SearchIndex::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
 		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
