@@ -8,7 +8,7 @@
 
 <div class="pages navbar-through">
   <div data-page="event" class="page">
-    <div class="page-content infinite-scroll">
+    <div class="page-content infinite-scroll" data-distance="200">
       <div class="content-block">
         <p>Relive the magical moments from this occasion.</p>
       </div>
