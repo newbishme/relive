@@ -57,7 +57,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         if (count($tags) != 0) {
             $tag = $tags[0]->name;
             $media = $this->instagram->getTagMedia($tag, 90);
-            $count = 5;
+            $count = 3;
             while (count($media->data)) {
                 foreach ($media->data as $instaPost) {
                     $this->createPost($event, $instaPost);
