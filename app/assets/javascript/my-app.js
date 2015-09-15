@@ -176,6 +176,7 @@ myApp.onPageInit('event', function (page) {
       dataType:'json',
       success:function(data) {
         posts = data;
+        console.log(posts[0].providerName);
         lastLoadedIndex += posts.length;
         eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
             items: posts,
@@ -195,8 +196,8 @@ myApp.onPageInit('event', function (page) {
                   '{{/if}}' +
                 '</div>' +
                 '<div class="post-origin">' +
-                  '{{#if provider_id}}' +
-                  '<i class="icon ion-social-instagram-outline"></i>' +
+                  '{{#if providerName}}' +
+                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
                   '{{else}}' +
                   '<i class="icon ion-social-twitter-outline"></i>' +
                   '{{/if}}' +
