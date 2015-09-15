@@ -50,7 +50,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 	}
 
     private function createPost($event, $status) {
-        if (!isset($status->retweeted_status) || !isset($status->quoted_status))
+        if (isset($status->retweeted_status) || isset($status->quoted_status))
             return null;
         $statusUrl = "https://twitter.com/statuses/" . $status->id_str;
         try {
