@@ -48,6 +48,8 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 	}
 
     private function createPost($event, $status) {
+        if (!isset($status->retweeted_status) || !isset($status->quoted_status))
+            return null;
         $datetime = new \DateTime();
         $datetime->setTimestamp(strtotime($status->created_at));
         $post = \relive\models\Post::firstOrCreate([
