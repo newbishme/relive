@@ -30,9 +30,9 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getImageAttribute() {
-		$posts = [];
+		$count = 0;
 
-		while (true) {
+		while ($count<15) {
 			$relationship = $this->posteventrelationship()->orderByRaw("RAND()")->first();
 			if ($relationship) {
 				$id = $relationship->toArray()['post_id'];
@@ -43,6 +43,7 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 			} else {
 				return "";
 			}
+			$count++;
 		}
 	}
 }
