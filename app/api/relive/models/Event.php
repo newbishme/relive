@@ -39,8 +39,13 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 
 	public function getPostsAttribute() {
 		$posts = [];
+		$count = 0;
 		foreach($this->posteventrelationship as $relationship) {
+			if ($count == 15) {
+				break;
+			}
 			array_push($posts, $relationship->post);
+			$count++;
 		}
 		return $posts;
 	}
