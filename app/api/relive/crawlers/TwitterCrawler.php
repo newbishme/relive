@@ -3,6 +3,7 @@
 namespace relive\Crawlers;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TwitterCrawler extends \relive\Crawlers\Crawler {
 
@@ -31,45 +32,53 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'popular'));
         $response = $twitter->getLastBody();
         $repeat = 2;
-        while ($twitter->getLastHttpCode() == 200 && $response->search_metadata->count > 0 && $repeat > 0) {
+        if (isset($response->statuses)) {
             $statuses = $response->statuses;
-            foreach ($statuses as $status) {
-                $this->createPost($event, $status);
+            while ($twitter->getLastHttpCode() == 200 && count($statuses) > 0 && $repeat > 0) {
+                foreach ($statuses as $status)
+                    $this->createPost($event, $status);
+                $twitter->get("search/tweets", array(
+                    'q' => $keyword,
+                    'count' => 100,
+                    'result_type'=>'popular',
+                    'max_id'=>$statuses[count($statuses)-1]->id_str
+                ));
+                $response = $twitter->getLastBody();
+                $repeat--;
             }
-            $twitter->get("search/tweets", array(
-                'q' => $keyword,
-                'count' => 100,
-                'result_type'=>'recent',
-                'max_id'=>$statuses[count($statuses)-1]->id_str
-            ));
-            $response = $twitter->getLastBody();
-            $repeat--;
         }
 	}
 
     private function createPost($event, $status) {
-        $datetime = new \DateTime();
-        $datetime->setTimestamp(strtotime($status->created_at));
-        $post = \relive\models\Post::firstOrCreate([
-            'datetime'=>$datetime,
-            'postURL'=>"https://twitter.com/statuses/" . $status->id_str,
-            'author'=>$status->user->screen_name,
-            'caption'=>$status->text,
-            'provider_id'=>$this->provider->provider_id
-        ]);
+        if (isset($status->retweeted_status) || isset($status->quoted_status))
+            return null;
+        $statusUrl = "https://twitter.com/statuses/" . $status->id_str;
+        try {
+            return \relive\models\Post::where('postURL', '=', $statusUrl)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $datetime = new \DateTime();
+            $datetime->setTimestamp(strtotime($status->created_at));
+            $post = \relive\models\Post::firstOrCreate([
+                'datetime'=>$datetime,
+                'postURL'=>$statusUrl,
+                'author'=>$status->user->screen_name,
+                'caption'=>$status->text,
+                'provider_id'=>$this->provider->provider_id
+            ]);
 
-        if (isset($status->entities->media)) {
-            foreach($status->entities->media as $twitter_media) {
-                $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
-                $this->createMediaUrls($media->media_id, $twitter_media);
+            if (isset($status->entities->media)) {
+                foreach($status->entities->media as $twitter_media) {
+                    $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
+                    $this->createMediaUrls($media->media_id, $twitter_media);
+                }
             }
+            $relationship = \relive\models\PostEventRelationship::firstOrCreate([
+                'event_id'=>$event->event_id,
+                'post_id'=>$post->post_id,
+                'isFiltered'=>0
+            ]);
+            return $post;
         }
-        $relationship = \relive\models\PostEventRelationship::firstOrCreate([
-            'event_id'=>$event->event_id,
-            'post_id'=>$post->post_id,
-            'isFiltered'=>0
-        ]);
-        return $post;
     }
 
     private function createMediaUrls($media_id, $twitter_media) {
@@ -116,23 +125,20 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'recent'));
         $response = $twitter->getLastBody();
         $repeat = 2;
-        while ($twitter->getLastHttpCode() == 200 && $response->search_metadata->count > 0 && $repeat > 0) {
+        if (isset($response->statuses)) {
             $statuses = $response->statuses;
-            foreach ($statuses as $status) {
-                if (strtotime($status->created_at) >= $startTime - 600) {
-                    $this->createPost($event, $status);       
-                } else {
-                    return;
-                }
+            while ($twitter->getLastHttpCode() == 200 && count($statuses) > 0 && $repeat > 0) {
+                foreach ($statuses as $status)
+                    if (strtotime($status->created_at) >= $startTime - 600) $this->createPost($event, $status);
+                $twitter->get("search/tweets", array(
+                    'q' => $keyword,
+                    'count' => 100,
+                    'result_type'=>'recent',
+                    'max_id'=>$statuses[count($statuses)-1]->id_str
+                ));
+                $response = $twitter->getLastBody();
+                $repeat--;
             }
-            $twitter->get("search/tweets", array(
-                'q' => $keyword,
-                'count' => 100,
-                'result_type'=>'recent',
-                'max_id'=>$statuses[count($statuses)-1]->id_str
-            ));
-            $response = $twitter->getLastBody();
-            $repeat--;
         }
     }
 }

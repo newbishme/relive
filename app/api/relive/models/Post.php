@@ -22,8 +22,15 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 
 	public function toArray() {
 		$data = parent::toArray();
-		$newData = [];
 		if ($data['media']!=null) {
+			$largest = $data['media']['data'][0];
+			$medias=$data['media']['data'];
+			foreach($medias as $media) {
+				if ($media->width>$largest->width && $media->height>$largest->height) {
+					$largest=$media;
+				}
+			}
+			$data['media']['data'] = [$largest];
 			return $data;
 		} else {
 			unset($data['media']);
