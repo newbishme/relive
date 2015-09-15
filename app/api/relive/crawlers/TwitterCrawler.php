@@ -32,19 +32,20 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'popular'));
         $response = $twitter->getLastBody();
         $repeat = 2;
-        while ($twitter->getLastHttpCode() == 200 && $response->search_metadata->count > 0 && $repeat > 0) {
+        if (isset($response->statuses)) {
             $statuses = $response->statuses;
-            foreach ($statuses as $status) {
-                $this->createPost($event, $status);
+            while ($twitter->getLastHttpCode() == 200 && count($statuses) > 0 && $repeat > 0) {
+                foreach ($statuses as $status)
+                    $this->createPost($event, $status);
+                $twitter->get("search/tweets", array(
+                    'q' => $keyword,
+                    'count' => 100,
+                    'result_type'=>'popular',
+                    'max_id'=>$statuses[count($statuses)-1]->id_str
+                ));
+                $response = $twitter->getLastBody();
+                $repeat--;
             }
-            $twitter->get("search/tweets", array(
-                'q' => $keyword,
-                'count' => 100,
-                'result_type'=>'recent',
-                'max_id'=>$statuses[count($statuses)-1]->id_str
-            ));
-            $response = $twitter->getLastBody();
-            $repeat--;
         }
 	}
 
@@ -124,23 +125,20 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'recent'));
         $response = $twitter->getLastBody();
         $repeat = 2;
-        while ($twitter->getLastHttpCode() == 200 && $response->search_metadata->count > 0 && $repeat > 0) {
+        if (isset($response->statuses)) {
             $statuses = $response->statuses;
-            foreach ($statuses as $status) {
-                if (strtotime($status->created_at) >= $startTime - 600) {
-                    $this->createPost($event, $status);       
-                } else {
-                    return;
-                }
+            while ($twitter->getLastHttpCode() == 200 && count($statuses) > 0 && $repeat > 0) {
+                foreach ($statuses as $status)
+                    if (strtotime($status->created_at) >= $startTime - 600) $this->createPost($event, $status);
+                $twitter->get("search/tweets", array(
+                    'q' => $keyword,
+                    'count' => 100,
+                    'result_type'=>'recent',
+                    'max_id'=>$statuses[count($statuses)-1]->id_str
+                ));
+                $response = $twitter->getLastBody();
+                $repeat--;
             }
-            $twitter->get("search/tweets", array(
-                'q' => $keyword,
-                'count' => 100,
-                'result_type'=>'recent',
-                'max_id'=>$statuses[count($statuses)-1]->id_str
-            ));
-            $response = $twitter->getLastBody();
-            $repeat--;
         }
     }
 }
