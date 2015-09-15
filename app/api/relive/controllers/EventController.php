@@ -49,7 +49,7 @@ class EventController extends Controller {
 
         $event = \relive\models\Event::find($event_id);
        	if ($event) {
-       		$posts = array_slice($event->toArray()['posts'],$startAt, $limit);
+       		$posts = \relive\models\Post::join('posteventrelationships','posteventrelationships.post_id','=','posts.post_id')->where('event_id','=',$event_id)->orderBy('datetime','desc')->offset($startAt)->limit($limit)->get();
        		echo json_encode($posts, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);

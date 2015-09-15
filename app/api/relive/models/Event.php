@@ -38,15 +38,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getPostsAttribute() {
-		$posts = [];
-		$count = 0;
-		foreach($this->posteventrelationship as $relationship) {
-			if ($count == 15) {
-				break;
-			}
-			array_push($posts, $relationship->post);
-			$count++;
-		}
+		$posts = \relive\models\Post::join('posteventrelationships','posteventrelationships.post_id','=','posts.post_id')->where('event_id','=',$this->event_id)->orderBy('datetime','desc')->offset(0)->limit(15)->get();
 		return $posts;
 	}
 }
