@@ -23,6 +23,7 @@
       <div class="content-block">
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
+      <!-- Recent events redundant because landing page is already showing recent events. Reduces sidenav clutter as well.
       <div class="content-block-title">Recent events</div>
       <div class="list-block list-block-recent-events">
         <ul>
@@ -41,6 +42,7 @@
           </script>
         </ul>
       </div>
+      -->
       <div class="content-block-title">Trending events</div>
       <div class="list-block">
         <ul>
@@ -108,11 +110,12 @@
                 <!-- Hidden by default, this will appear when search results is empty -->
                 <div class="content-block searchbar-not-found">
                   <!-- Make a Reel CTA -->
+                  <div class="content-block-title">Can't find your event?</div>
                   <div class="content-block">
                     <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
                   </div>
                 </div>
-                
+
                 <div class="content-block-title">What is relive?</div>
                 <div class="content-block inset">
                   <div class="content-block-inner">
