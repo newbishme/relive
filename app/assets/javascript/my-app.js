@@ -84,29 +84,6 @@ myApp.onPageInit('home', function (page) {
     } // End ajax success
   }); // End ajax
 
-/* Recent events redundant because landing page is already showing recent events. Reduces sidenav clutter as well.
-  // Initialize Side Nav Recent events
-  var recentEventTemplate = $$('#sideNavRecentEventTemplate').html();
-  var compiledRecentEventTemplate = Template7.compile(recentEventTemplate);
-  var recentEvents = [];
-  var recentHtml = '';
-
-  $$.ajax({
-    type:'GET',
-    url:'https://relive.space/api/event/recent',
-    dataType:'json',
-    success:function(data){
-      if (data !== '') {
-        recentEvents = data;
-        for (var i = 0; i < recentEvents.length; i++) {
-          recentHtml = recentHtml.concat(compiledRecentEventTemplate(recentEvents[i]));
-        }
-        $$('div#side-nav-recent-events').html(recentHtml);
-      }
-    } // End ajax success
-  }); // End ajax
-*/
-
   // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
   var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
