@@ -81,7 +81,7 @@ myApp.onPageInit('home', function (page) {
     } // End ajax success
   }); // End ajax
 
-
+/* Recent events redundant because landing page is already showing recent events. Reduces sidenav clutter as well.
   // Initialize Side Nav Recent events
   var recentEventTemplate = $$('#sideNavRecentEventTemplate').html();
   var compiledRecentEventTemplate = Template7.compile(recentEventTemplate);
@@ -102,9 +102,9 @@ myApp.onPageInit('home', function (page) {
       }
     } // End ajax success
   }); // End ajax
+*/
 
-
-  // Initialize Side Nav Recent events
+  // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
   var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
   var trendingEvents = [];
