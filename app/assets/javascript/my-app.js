@@ -56,6 +56,9 @@ myApp.onPageInit('home', function (page) {
             foundItems.push(i);
           }
         }
+        if (foundItems.length > 0) {
+          $$('.landing-what-is-relive').addClass('searchbar-not-found');
+        }
         return foundItems;
       }
   });

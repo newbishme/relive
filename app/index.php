@@ -116,14 +116,15 @@
                   </div>
                 </div>
 
-                <div class="content-block-title">What is relive?</div>
-                <div class="content-block inset">
-                  <div class="content-block-inner">
-                    <p>
-                    Do you want to relive an event; to know what happened and when it happened?
-                    relive.space finds interesting stories from your favourite social media platforms
-                    to let you relive these moments.
-                    </p>
+                <div class="content-block landing-what-is-relive">
+                  <div class="content-block-title">What is relive?</div>
+                  <div class="content-block inset">
+                    <div class="content-block-inner">
+                      <p>
+                      relive.space finds interesting stories from various social media platforms
+                      to let you relive these moments easily.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
