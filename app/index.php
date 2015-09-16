@@ -51,7 +51,7 @@
             <li>
               <a href="event.php?id={{event_id}}&name={{eventName}}" class="item-link close-panel">
                 <div class="item-content">
-                  <div class="item-media"><i class="icon ion-android-time"></i></div>
+                  <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
                   <div class="item-inner">
                     <div class="item-title">{{eventName}}</div>
                   </div>
