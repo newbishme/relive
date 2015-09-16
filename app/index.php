@@ -23,26 +23,7 @@
       <div class="content-block">
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
-      <!-- Recent events redundant because landing page is already showing recent events. Reduces sidenav clutter as well.
-      <div class="content-block-title">Recent events</div>
-      <div class="list-block list-block-recent-events">
-        <ul>
-          <div id="side-nav-recent-events"></div>
-          <script id="sideNavRecentEventTemplate" type="text/template7">
-            <li>
-              <a href="event.php?id={{event_id}}&name={{eventName}}" class="item-link close-panel">
-                <div class="item-content">
-                  <div class="item-media"><i class="icon ion-android-time"></i></div>
-                  <div class="item-inner">
-                    <div class="item-title">{{eventName}}</div>
-                  </div>
-                </div>
-              </a>
-            </li>
-          </script>
-        </ul>
-      </div>
-      -->
+
       <div class="content-block-title">Trending events</div>
       <div class="list-block">
         <ul>
@@ -61,6 +42,7 @@
           </script>
         </ul>
       </div>
+
       <div class="content-block-title">Can't find your event?</div>
       <div class="content-block">
         <a href="form.html" class="button button-fill button-big color-orange close-panel">Make a Reel</a>
@@ -128,7 +110,6 @@
                   </div>
                 </div>
 
-                <!-- <div class="content-block-title searchbar-found">Trending events</div> -->
                 <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
 
               </div>
