@@ -1,4 +1,4 @@
-
+<?php include_once "googleanalytics.php" ?>
 <!-- We don't need full layout here, because this page will be parsed with Ajax-->
 <!-- Top Navbar-->
 <div class="navbar">
