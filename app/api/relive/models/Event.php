@@ -38,7 +38,20 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getPostsAttribute() {
-		$posts = \relive\models\Post::join('posteventrelationships','posteventrelationships.post_id','=','posts.post_id')->where('event_id','=',$this->event_id)->orderBy('datetime','desc')->offset(0)->limit(15)->get();
+		$posts = \relive\models\Post::whereIn('post_id', function($query) {
+			$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id);
+		})->orderBy('datetime','desc')->offset(0)->limit(15)->get();
+
+
+		/*
+		select * from `posts` where `post_id` in (SELECT post_id from posteventrelationships where event_id = 36) order by `datetime` desc limit 15 offset 0;
+
+		select * from `posts` inner join (SELECT post_id from posteventrelationships where event_id = 36) filter on `filter`.`post_id` = `posts`.`post_id` order by `datetime` desc limit 15 offset 0;
+
+		select * from `posts` inner join `posteventrelationships` on `posteventrelationships`.`post_id` = `posts`.`post_id` where `event_id` = 36 order by `datetime` desc limit 15 offset 0;
+		*/
+
+		//$posts = \relive\models\Post::join('posteventrelationships','posteventrelationships.post_id','=','posts.post_id')->where('event_id','=',$this->event_id)->orderBy('datetime','desc')->offset(0)->limit(15)->get();
 		return $posts;
 	}
 }
