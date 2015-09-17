@@ -75,6 +75,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
             try {
                 return \relive\models\Post::where('postURL', '=', $instaPost->link)->firstOrFail();
             } catch (ModelNotFoundException $e) {
+                $rankPoints = $this->rankPost($instaPost);
                 $datetime = new \DateTime();
                 $datetime->setTimestamp($instaPost->created_time);
                 $post = \relive\models\Post::firstOrCreate([
@@ -82,7 +83,8 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                     'postURL'=>$instaPost->link,
                     'author'=>$instaPost->user->username,
                     'caption'=>$instaPost->caption->text,
-                    'provider_id'=>$this->provider->provider_id
+                    'provider_id'=>$this->provider->provider_id,
+                    'rankPoints'=>$rankPoints
                 ]);
                 if (isset($instaPost->tags)) {
                     $this->createHashtags($post, $instaPost);
@@ -98,6 +100,11 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                 return $post;
             }
         }
+    }
+
+    private function rankPost($instaPost) {
+        $likeCount = $instaPost->likes->count;
+        return $likeCount > 5 ? 100 : ($likeCount > 2 ? 50 : 10);
     }
 
     private function createHashtags($post, $instaPost) {
