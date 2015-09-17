@@ -9,15 +9,6 @@
     <div class="panel-overlay"></div>
 
     <!-- Panel View Left -->
-    <div class="panel panel-left panel-cover">
-      <div class="view panel-view">
-        <div class="content-block">
-          <p><a href="form.html">Make a Reel</a></p>
-        </div>
-      </div>
-    </div>
-
-
     <div class="panel panel-left panel-cover layout-dark">
       <div class="content-block-title">Relive</div>
       <div class="content-block">
@@ -45,7 +36,7 @@
 
       <div class="content-block-title">Can't find your event?</div>
       <div class="content-block">
-        <a href="form.html" class="button button-fill button-big color-orange close-panel">Make a Reel</a>
+        <a href="form.php" class="button button-fill button-big color-orange close-panel">Make a Reel</a>
       </div>
     </div>
 
@@ -94,7 +85,7 @@
                   <!-- Make a Reel CTA -->
                   <div class="content-block-title">Can't find your event?</div>
                   <div class="content-block">
-                    <a href="form.html" class="button button-fill button-big color-orange">Make a Reel</a>
+                    <a href="form.php" class="button button-fill button-big color-orange">Make a Reel</a>
                   </div>
                 </div>
 

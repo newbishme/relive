@@ -1,3 +1,4 @@
+<?php include_once "googleanalytics.php" ?>
 <div class="navbar">
   <div class="navbar-inner">
     <div class="left sliding"><a href="index.php" class="back link"><i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
