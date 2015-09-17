@@ -84,6 +84,9 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                     'caption'=>$instaPost->caption->text,
                     'provider_id'=>$this->provider->provider_id
                 ]);
+                if (isset($instaPost->tags)) {
+                    $this->createHashtags($post, $instaPost);
+                }
                 if (isset($instaPost->images)) {
                     $this->saveImageUrls($post, $instaPost->images);
                 }
@@ -94,6 +97,14 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                 ]);
                 return $post;
             }
+        }
+    }
+
+    private function createHashtags($post, $instaPost) {
+        $hashtags = $instaPost->tags;
+        foreach ($hashtags as $tag) {
+            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
+            $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
     }
 

@@ -66,6 +66,10 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'provider_id'=>$this->provider->provider_id
             ]);
 
+            if (isset($status->hashtags)) {
+                $this->createHashtags($post, $status);
+            }
+
             if (isset($status->entities->media)) {
                 foreach($status->entities->media as $twitter_media) {
                     $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
@@ -78,6 +82,14 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'isFiltered'=>0
             ]);
             return $post;
+        }
+    }
+
+    private function createHashtags($post, $twitterPost) {
+        $hashtags = $twitterPost->hashtags;
+        foreach ($hashtags as $tag) {
+            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag->text]);
+            $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
     }
 
