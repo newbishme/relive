@@ -56,6 +56,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         try {
             return \relive\models\Post::where('postURL', '=', $statusUrl)->firstOrFail();
         } catch (ModelNotFoundException $e) {
+            $rankPoints = $this->rankPost($status);
             $datetime = new \DateTime();
             $datetime->setTimestamp(strtotime($status->created_at));
             $post = \relive\models\Post::firstOrCreate([
@@ -63,8 +64,13 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'postURL'=>$statusUrl,
                 'author'=>$status->user->screen_name,
                 'caption'=>$status->text,
-                'provider_id'=>$this->provider->provider_id
+                'provider_id'=>$this->provider->provider_id,
+                'rankPoints'=>$rankPoints
             ]);
+
+            if (isset($status->hashtags)) {
+                $this->createHashtags($post, $status);
+            }
 
             if (isset($status->entities->media)) {
                 foreach($status->entities->media as $twitter_media) {
@@ -78,6 +84,14 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'isFiltered'=>0
             ]);
             return $post;
+        }
+    }
+
+    private function createHashtags($post, $twitterPost) {
+        $hashtags = $twitterPost->hashtags;
+        foreach ($hashtags as $tag) {
+            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag->text]);
+            $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
     }
 
@@ -118,6 +132,27 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'sizes'=>'thumb'
             ]);
         }
+    }
+
+    private function rankPost($twitterPost) {
+        $followingCount = $twitterPost->user->friends_count;
+        $followersCount = $twitterPost->user->followers_count;
+        $retweetCount = $twitterPost->retweet_count;
+        $timeSincePost = time() - strtotime($twitterPost->created_at);
+        $timeSincePost = $timeSincePost > 0 ? $timeSincePost : 1;
+
+        $logFollowers = log10($followersCount + 2);
+        $logFollowers = $logFollowers > 5 ? 5 : ($logFollowers < 0 ? 0 : $logFollowers);
+        $powOneFiveFollowers = pow($logFollowers, 1.5);
+        $logFollowing = log10($followingCount + 2);
+
+        $seventyPercent = $powOneFiveFollowers * 30 / $logFollowing;
+        $seventyPercent = $seventyPercent > 70 ? 70 : ($seventyPercent < 0 ? 0 : $seventyPercent);
+
+        $thirtyPercent = log10($retweetCount + 2) * 150 / (log10($timeSincePost + 2)*$powOneFiveFollowers);
+        $thirtyPercent = $thirtyPercent > 30 ? 30 : ($thirtyPercent < 0 ? 0 : $thirtyPercent);
+
+        return $seventyPercent + $thirtyPercent;
     }
 
     public function recentCrawl($startTime, $event, $keyword){

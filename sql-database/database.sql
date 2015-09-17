@@ -97,7 +97,7 @@ postURL VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 author VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 latitude decimal(10 , 6),
 longitude decimal(10 , 6),
-caption VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin,
+caption TEXT CHARACTER SET utf8 COLLATE utf8_bin,
 provider_id int(11) NOT NULL,
 rankPoints int(11) DEFAULT 0,
 PRIMARY KEY (post_id)

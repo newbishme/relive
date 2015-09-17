@@ -10,7 +10,7 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	 */
 	protected $table = 'posts';
 	protected  $primaryKey = 'post_id';
-	protected $fillable = array('datetime', 'postURL', 'author', 'caption', 'provider_id');
+	protected $fillable = array('datetime', 'postURL', 'author', 'caption', 'provider_id', 'rankPoints');
 	public $timestamps = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -48,17 +48,17 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	public function posteventrelationship() {
 		return $this->hasMany('relive\models\PostEventRelationship','post_id','post_id');
 	}
-
+	/*
 	public function posthashtagrelationship() {
 		return $this->hasMany('relive\models\PostHashtagRelationship','post_id','post_id');
-	}
+	}*/
 
 	public function getProviderNameAttribute() {
 		return $this->provider()->select('providerName')->first()->providerName;
 	}
 
 	public function getMediaAttribute() {
-		$media = $this->media()->get()->first();
+		$media = $this->media()->first();
 		return $media;
 	}
 }
