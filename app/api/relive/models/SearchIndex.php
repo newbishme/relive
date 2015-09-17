@@ -32,18 +32,13 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 	public function getImageAttribute() {
 		$count = 0;
 
-		while ($count<15) {
-			$relationship = $this->posteventrelationship()->orderByRaw("RAND()")->first();
-			if ($relationship) {
-				$id = $relationship->toArray()['post_id'];
-				$media = \relive\models\Post::find($id)->media;
-				if ($media) {
-					return $media->data[0]->mediaURL;	
-				}
-			} else {
-				return "";
-			}
-			$count++;
+		$media = \relive\models\Media::whereIn('post_id', function($query) {
+            $query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id);
+          })->orderByRaw("RAND()")->first();
+
+		if ($media) {
+			return $media->data[0]->mediaURL;
 		}
+		return "";
 	}
 }
