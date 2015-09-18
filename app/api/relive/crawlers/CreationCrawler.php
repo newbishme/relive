@@ -19,24 +19,4 @@ class CreationCrawler extends \relive\Crawlers\Crawler {
 				'event_id'=>$event->event_id
 		]);
 	}
-
-}
-
-class AsyncCreationCrawler extends CreationCrawler {
-	public $event;
-
-    public function __construct($event) {
-        $this->event = $event;
-    }
-
-	public function run() {
-		if (($event = $this->event)) {
-            /*
-             * If a large amount of data is being requested, you might want to
-             * fsockopen and read using usleep in between reads
-             */
-            $this->initialCrawl($event);
-        } 
-
-	}
 }
