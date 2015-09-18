@@ -153,6 +153,7 @@ class EventController extends Controller {
 		try {
 			$event = \relive\models\Event::firstOrCreate(['eventName' => $eventName]);
 			$event->dateAdded = time();
+            $event->save();
 
 			foreach($hashtags as $tag) {
 				$tag = trim($tag);
