@@ -151,7 +151,7 @@ class EventController extends Controller {
         	return;
         }
         try {
-	        $event = \relive\models\Event::firstOrCreate(['eventName' => $eventName]);
+	        $event = \relive\models\Event::firstOrCreate(['eventName' => $eventName, 'dateAdded' => 'unix_timestamp(now())']);
 
 			foreach($hashtags as $tag) {
 				$tag = trim($tag);
