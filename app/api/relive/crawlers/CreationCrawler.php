@@ -4,11 +4,8 @@ require_once '/var/www/vendor/autoload.php';
 use \relive\Crawlers\TwitterCrawler;
 use \relive\Crawlers\InstagramCrawler;
 
-$event = $argv[1];
-
-echo "A";
-
-$event = \relive\models\Event::find($event);
+$event_id = $argv[1];
+$event = \relive\models\Event::find($event_id);
 
 $twitterCrawler = TwitterCrawler::getInstance();
 $instagramCrawler = InstagramCrawler::getInstance();

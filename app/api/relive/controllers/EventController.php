@@ -158,7 +158,6 @@ class EventController extends Controller {
 				}
 			}
       echo json_encode($event, JSON_UNESCAPED_SLASHES);
-
       passthru("php ./relive/crawlers/CreationCrawler.php ".$event->event_id. "> /dev/null &");
 		} catch (\Exception $e) {
 			$app->render(500, ['Status' => 'An error occurred.' ]);
