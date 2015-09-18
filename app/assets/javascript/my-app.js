@@ -156,7 +156,6 @@ myApp.onPageInit('event', function (page) {
       dataType:'json',
       success:function(data) {
         posts = data;
-        console.log(posts[0].providerName);
         lastLoadedIndex += posts.length;
         eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
             items: posts,
