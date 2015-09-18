@@ -290,7 +290,7 @@ myApp.onPageInit('form', function (page) {
   }
 
   $$('.hashtags-input').on('keypress', function(e) {
-    if (e.keyCode === 32) { // spacebar
+    if (e.keyCode === 32 || e.keyCode === 13) { // spacebar OR enter
       var inputHashtagsArr = e.srcElement.value.split(" ");
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
