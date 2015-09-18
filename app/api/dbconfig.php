@@ -12,7 +12,7 @@ $capsule->addConnection(array(
     'username'  => 'root',
     'password'  => getenv('MYSQL_PASSWORD'),
     'charset'   => 'utf8mb4',
-    'collation' => 'utf8mb4',
+    'collation' => 'utf8_bin',
     'prefix'    => ''
 ));
 $capsule->setAsGlobal();
