@@ -364,14 +364,15 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
-  // Clear form, hide panel
-  console.log('beforeSubmit callback');
-  console.log(data);
 });
 
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
+  console.log('====== AJAX Submit Error ======')
+  console.log(xhr);
+  console.log(data);
+  console.log('===============================')
   myApp.addNotification({
         title: 'Unsuccessful submission',
         message: 'There was a problem sending your request to the server.'
