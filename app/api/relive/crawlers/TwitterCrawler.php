@@ -57,10 +57,10 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             return \relive\models\Post::where('postURL', '=', $statusUrl)->firstOrFail();
         } catch (ModelNotFoundException $e) {
             $rankPoints = $this->rankPost($status);
-            $datetime = new \DateTime();
-            $datetime->setTimestamp(strtotime($status->created_at));
+            //$datetime = new \DateTime();
+            //$datetime->setTimestamp(strtotime($status->created_at));
             $post = \relive\models\Post::firstOrCreate([
-                'datetime'=>$datetime,
+                'datetime'=>strtotime($status->created_at),
                 'postURL'=>$statusUrl,
                 'author'=>$status->user->screen_name,
                 'caption'=>$status->text,
