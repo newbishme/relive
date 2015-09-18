@@ -6,6 +6,8 @@ use \relive\Crawlers\InstagramCrawler;
 
 $event = $argv[1];
 
+echo "A";
+
 $event = \relive\models\Event::find($event);
 
 $twitterCrawler = TwitterCrawler::getInstance();
