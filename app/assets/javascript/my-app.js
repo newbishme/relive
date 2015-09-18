@@ -289,8 +289,8 @@ myApp.onPageInit('form', function (page) {
   }
 
   $$('.hashtags-input').on('keypress', function(e) {
-    if (e.keyCode === 32 || e.keyCode === 13) { // spacebar OR enter
-      var inputHashtagsArr = e.srcElement.value.split(" ");
+    if (e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 44) { // spacebar OR enter OR comma
+      var inputHashtagsArr = e.srcElement.value.split(/,| /);
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
@@ -340,6 +340,13 @@ myApp.onPageInit('form', function (page) {
         }
       }
       return false;
+    }
+  });
+
+
+  $$('.hashtags-input').on('keyup', function(e) {
+    if (e.keyCode === 32 || e.keyCode === 188) { // spacebar OR comma
+      $$('.hashtags-input').val('');
     }
   });
 });
