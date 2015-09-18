@@ -52,7 +52,7 @@ class EventController extends Controller {
           $posts = \relive\models\Post::whereIn('post_id', function($query) use ($event_id) { 
             $query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event_id); 
           })->orderBy('datetime','desc')->offset($startAt)->limit($limit)->get();
-          
+
        		echo json_encode($posts, JSON_UNESCAPED_SLASHES);
        	} else {
        		$app->render(404, ['Status','Event not found.']);
@@ -157,8 +157,10 @@ class EventController extends Controller {
 					$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
 				}
 			}
-			\relive\Crawlers\CreationCrawler::initialCrawl($event);
 			echo json_encode($event, JSON_UNESCAPED_SLASHES);
+      $crawler = \relive\Crawlers\AsyncCreationCrawler($event);
+      $crawler->start();
+
 		} catch (\Exception $e) {
 			$app->render(500, ['Status' => 'An error occurred.' ]);
 		}

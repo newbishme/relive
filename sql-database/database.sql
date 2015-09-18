@@ -117,22 +117,31 @@ ALTER TABLE posthashtagrelationships ADD UNIQUE( `post_id`, `hashtag_id`);
 
 ALTER TABLE posteventrelationships ADD UNIQUE( `event_id`, `post_id`);
 
-ALTER TABLE crawljobs ADD FOREIGN KEY event_id_idxfk (event_id) REFERENCES events (event_id);
+ALTER TABLE crawljobs ADD FOREIGN KEY event_id_idxfk (event_id) REFERENCES events (event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY event_id_idxfk_1 (event_id) REFERENCES events (event_id);
+ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY event_id_idxfk_1 (event_id) REFERENCES events (event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk (hashtag_id) REFERENCES hashtags (hashtag_id);
+ALTER TABLE eventhashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk (hashtag_id) REFERENCES hashtags (hashtag_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE mediaurls ADD FOREIGN KEY post_id_idxfk_1 (media_id) REFERENCES medias (media_id);
+ALTER TABLE mediaurls ADD FOREIGN KEY post_id_idxfk_1 (media_id) REFERENCES medias (media_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE medias ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id);
+ALTER TABLE medias ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE posthashtagrelationships ADD FOREIGN KEY post_id_idxfk (post_id) REFERENCES posts (post_id);
+ALTER TABLE posthashtagrelationships ADD FOREIGN KEY post_id_idxfk (post_id) REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE posthashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk_1 (hashtag_id) REFERENCES hashtags (hashtag_id);
+ALTER TABLE posthashtagrelationships ADD FOREIGN KEY hashtag_id_idxfk_1 (hashtag_id) REFERENCES hashtags (hashtag_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE posteventrelationships ADD FOREIGN KEY event_id_idxfk_2 (event_id) REFERENCES events (event_id);
+ALTER TABLE posteventrelationships ADD FOREIGN KEY event_id_idxfk_2 (event_id) REFERENCES events (event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE posteventrelationships ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id);
+ALTER TABLE posteventrelationships ADD FOREIGN KEY post_id_idxfk_1 (post_id) REFERENCES posts (post_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE posts ADD FOREIGN KEY provider_id_idxfk (provider_id) REFERENCES providers (provider_id);
+ALTER TABLE posts ADD FOREIGN KEY provider_id_idxfk (provider_id) REFERENCES providers (provider_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+CREATE TRIGGER delete_posts_on_event_deletion
+AFTER DELETE ON `events`
+FOR EACH ROW
+BEGIN
+DELETE FROM `posts` WHERE post_id in (select post_id from posteventrelationships where event_id = old.event_id);
+END$$
+DELIMITER ;
