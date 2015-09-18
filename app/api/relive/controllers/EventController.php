@@ -158,9 +158,8 @@ class EventController extends Controller {
 				}
 			}
       echo json_encode($event, JSON_UNESCAPED_SLASHES);
-      $crawl = new \relive\Crawlers\CreationCrawler($event);
-      $crawl->start();
-      
+      \relive\Crawlers\CreationCrawler::initialCrawl($event);
+
 		} catch (\Exception $e) {
 			$app->render(500, ['Status' => 'An error occurred.' ]);
 		}

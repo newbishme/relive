@@ -2,7 +2,7 @@
 
 namespace relive\Crawlers;
 
-class Crawler extends \Thread {
+class Crawler {
 
 	private function __construct(){
 	}
