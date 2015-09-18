@@ -110,7 +110,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
     private function createHashtags($post, $instaPost) {
         $hashtags = $instaPost->tags;
         foreach ($hashtags as $tag) {
-            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag->text]);
+            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
             $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
     }

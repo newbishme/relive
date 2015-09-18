@@ -11,8 +11,8 @@ $capsule->addConnection(array(
     'database'  => 'relive',
     'username'  => 'root',
     'password'  => getenv('MYSQL_PASSWORD'),
-    'charset'   => 'utf8',
-    'collation' => 'utf8_general_ci',
+    'charset'   => 'utf8mb4',
+    'collation' => 'utf8mb4',
     'prefix'    => ''
 ));
 $capsule->setAsGlobal();
