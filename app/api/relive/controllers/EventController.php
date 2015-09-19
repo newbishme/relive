@@ -9,7 +9,6 @@ class EventController extends Controller {
 
 	public static function getEvents() {
 		$app = \Slim\Slim::getInstance();
-		$start_time = microtime(TRUE);
 		$allGetVars = $app->request->get();
 		$startAt = @$allGetVars['startAt']? intval($allGetVars['startAt']): 0;
 		$limit = @$allGetVars['limit']? $allGetVars['limit']: 15; 
@@ -27,9 +26,7 @@ class EventController extends Controller {
 
 		$event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($event, JSON_UNESCAPED_SLASHES);
-		$end_time = microtime(TRUE);
 
-		echo $end_time - $start_time;
 	}
 
 	public static function getPostsForEvent($event_id) {
