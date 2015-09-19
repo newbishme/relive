@@ -1,4 +1,3 @@
-<?php include_once "googleanalytics.php" ?>
 <!-- We don't need full layout here, because this page will be parsed with Ajax-->
 <!-- Top Navbar-->
 <div class="navbar">
@@ -50,49 +49,6 @@
               </div>
             </li>
 
-            <!--<li>
-              <div class="item-content">
-                <div class="item-media"><i class="icon ion-pound"></i></div>
-                <div class="item-inner">
-                  <div class="item-input">
-                    <input type="text" placeholder="Hashtag linked to this event" name="relive-hashtags[]"/>
-                  </div>
-                </div>
-              </div>
-            </li>
-
-            <li>
-              <div class="item-content">
-                <div class="item-media"><i class="icon ion-pound"></i></div>
-                <div class="item-inner">
-                  <div class="item-input">
-                    <input type="text" placeholder="Hashtag linked to this event" name="relive-hashtags[]"/>
-                  </div>
-                </div>
-              </div>
-            </li>
-
-            <li>
-              <div class="item-content">
-                <div class="item-media"><i class="icon ion-pound"></i></div>
-                <div class="item-inner">
-                  <div class="item-input">
-                    <input type="text" placeholder="Hashtag linked to this event" name="relive-hashtags[]"/>
-                  </div>
-                </div>
-              </div>
-            </li>
-
-            <li>
-              <div class="item-content">
-                <div class="item-media"><i class="icon ion-pound"></i></div>
-                <div class="item-inner">
-                  <div class="item-input">
-                    <input type="text" placeholder="Hashtag linked to this event" name="relive-hashtags[]"/>
-                  </div>
-                </div>
-              </div>
-            </li>-->
           </ul>
         </div>
 

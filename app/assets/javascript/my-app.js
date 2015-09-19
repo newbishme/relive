@@ -1,3 +1,20 @@
+function sendToGoogleAnalytics(page, title) {
+  if (page == null) {
+    return;
+  }
+
+  var pageTitle = 'Relive';
+
+  if (title != null) {
+    pageTitle = title;
+  }
+
+  ga('send', 'pageview', {
+    'page': page,
+    'title': pageTitle
+  });
+}
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -28,6 +45,8 @@ var mainView = myApp.addView('.view-main', {
 
 // Callbacks to run specific code for specific pages, for example for Home data page:
 myApp.onPageInit('home', function (page) {
+  sendToGoogleAnalytics('/', page.name);
+
   // TODO Get events from local cache, if not found, get from server
   var events = [];
   var lastEventId = 0;
@@ -126,13 +145,14 @@ myApp.onPageInit('home', function (page) {
           myApp.pullToRefreshDone();
         } // End ajax success
       }); // End ajax
-    }, 2000);
+    }, 1000);
   });
 
-  // mainView.router.reloadPage('');
 });
 
 myApp.onPageInit('event', function (page) {
+  sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
+
   // TODO Get events from local cache, if not found, get from server
   var posts = [];
   var eventPostsList;
@@ -217,13 +237,15 @@ myApp.onPageInit('event', function (page) {
           }
         }); // End AJAX
       }); // End infinite scroll
-    }, 3000);
+    }, 1000);
   }
 });
 
 
 // Initialize form page
 myApp.onPageInit('form', function (page) {
+  sendToGoogleAnalytics(page.url, "Relive | Reel Creation");
+
   var hasNoName = false;
   var hasHashtagError = false;
   var maxHashtags = 5;
@@ -289,8 +311,8 @@ myApp.onPageInit('form', function (page) {
   }
 
   $$('.hashtags-input').on('keypress', function(e) {
-    if (e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 44) { // spacebar OR enter OR comma
-      var inputHashtagsArr = e.srcElement.value.split(/,| /);
+    if (e.keyCode === 32) { // spacebar
+      var inputHashtagsArr = e.srcElement.value.split(" ");
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
@@ -342,13 +364,6 @@ myApp.onPageInit('form', function (page) {
       return false;
     }
   });
-
-
-  $$('.hashtags-input').on('keyup', function(e) {
-    if (e.keyCode === 32 || e.keyCode === 188) { // spacebar OR comma
-      $$('.hashtags-input').val('');
-    }
-  });
 });
 
 // Handle form ajax actions
@@ -370,15 +385,12 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
 $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
+  sendToGoogleAnalytics('/api/event', 'Relive | Submitted a Reel');
 });
 
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
-  console.log('====== AJAX Submit Error ======')
-  console.log(xhr);
-  console.log(data);
-  console.log('===============================')
   myApp.addNotification({
         title: 'Unsuccessful submission',
         message: 'There was a problem sending your request to the server.'
