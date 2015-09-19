@@ -76,10 +76,10 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                 return \relive\models\Post::where('postURL', '=', $instaPost->link)->firstOrFail();
             } catch (ModelNotFoundException $e) {
                 $rankPoints = $this->rankPost($instaPost);
-                $datetime = new \DateTime();
-                $datetime->setTimestamp($instaPost->created_time);
+                //$datetime = new \DateTime();
+                //$datetime->setTimestamp($instaPost->created_time);
                 $post = \relive\models\Post::firstOrCreate([
-                    'datetime'=>$datetime,
+                    'datetime'=>$instaPost->created_time,
                     'postURL'=>$instaPost->link,
                     'author'=>$instaPost->user->username,
                     'caption'=>$instaPost->caption->text,
