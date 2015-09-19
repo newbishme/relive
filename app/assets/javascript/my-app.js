@@ -32,15 +32,34 @@ function loadJsonFromLocalStorage(key) {
 }
 
 function storeImgToSessionStorage(key, imgData) {
-  if (key == null) {
+  if (key == null || loadImgFromSessionStorage(key) != null) {
     return;
   }
-  var base64ImgData = getBase64Image(imgData);
-  sessionStorage.setItem(key, base64ImgData);
+
+  convertImgToBase64URL(imgData, function(base64Img, url) {
+    sessionStorage.setItem(url, base64Img);
+  });
 }
+
 
 function loadImgFromSessionStorage(key) {
   return sessionStorage.getItem(key);
+}
+
+function convertImgToBase64URL(url, callback, outputFormat){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL, img.src);
+        canvas = null;
+    };
+    img.src = url;
 }
 
 function getBase64Image(imgData) {
@@ -147,14 +166,23 @@ myApp.onPageInit('home', function (page) {
       success:function(data){
         if (data !== '') {
           storeJsonToLocalStorage(eventIndexesKey, data);
-          // TODO Store loaded images to sessionStorage
+          sessionStorage.clear();
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].image != "") {
+              storeImgToSessionStorage(data[i].image, data[i].image);
+            }
+          }
           updateEventsList(data);
         }
       } // End ajax success
     }); // End ajax
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
-    // TODO Lookup images from sessionStorage
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].image != "") {
+        data[i].image = loadImgFromSessionStorage(data[i].image);
+      }
+    }
     updateEventsList(data);
   }
 
