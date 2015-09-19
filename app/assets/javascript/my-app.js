@@ -31,6 +31,31 @@ function loadJsonFromLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
+function storeImgToSessionStorage(key, imgData) {
+  if (key == null) {
+    return;
+  }
+  var base64ImgData = getBase64Image(imgData);
+  sessionStorage.setItem(key, base64ImgData);
+}
+
+function loadImgFromSessionStorage(key) {
+  return sessionStorage.getItem(key);
+}
+
+function getBase64Image(imgData) {
+  var canvas = document.createElement("canvas");
+  canvas.width = imgData.width;
+  canvas.height = imgData.height;
+
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(imgData, 0, 0);
+
+  var dataURL = canvas.toDataURL("image/png");
+
+  return dataURL;
+}
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -67,6 +92,7 @@ myApp.onPageInit('home', function (page) {
   var events = [];
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
+  var runOnceKey = 'reliveRunOnceKey';
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -121,14 +147,18 @@ myApp.onPageInit('home', function (page) {
       success:function(data){
         if (data !== '') {
           storeJsonToLocalStorage(eventIndexesKey, data);
+          // TODO Store loaded images to sessionStorage
           updateEventsList(data);
         }
       } // End ajax success
     }); // End ajax
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
+    // TODO Lookup images from sessionStorage
     updateEventsList(data);
   }
+
+
 
   // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
@@ -212,6 +242,8 @@ myApp.onPageInit('event', function (page) {
       eventName = page.query.name;
     }
 
+    var eventNameKey = 'ReliveEvent' + eventName;
+
     $$('.title-event-name').text(eventName);
 
     function updateEventPosts(eventPostsData) {
@@ -258,12 +290,12 @@ myApp.onPageInit('event', function (page) {
         data:{"startAt":lastLoadedIndex},
         dataType:'json',
         success:function(data) {
-          storeJsonToLocalStorage(eventName, data);
+          storeJsonToLocalStorage(eventNameKey, data);
           updateEventPosts(data);
         } // End Success
       }); // End AJAX
     } else {
-      var eventPostsData = loadJsonFromLocalStorage(eventName);
+      var eventPostsData = loadJsonFromLocalStorage(eventNameKey);
       updateEventPosts(eventPostsData);
     }
 
