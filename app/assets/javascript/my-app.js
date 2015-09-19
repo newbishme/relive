@@ -174,20 +174,22 @@ myApp.onPageInit('home', function (page) {
   ptrContent.on('refresh', function (e) {
     setTimeout(function () {
       // Load more events if connected to internet
-      $$.ajax({
-        type:'GET',
-        url:'https://relive.space/api/event/indexes',
-        data:{"startAt":lastEventId},
-        dataType:'json',
-        success:function(data){
-          if (data !== '') {
-            eventsList.appendItems(data);
-            eventsList.update();
-            lastEventId += data.length;
-          }
-          myApp.pullToRefreshDone();
-        } // End ajax success
-      }); // End ajax
+      if (navigator.onLine) {
+        $$.ajax({
+          type:'GET',
+          url:'https://relive.space/api/event/indexes',
+          data:{"startAt":lastEventId},
+          dataType:'json',
+          success:function(data){
+            if (data !== '') {
+              eventsList.appendItems(data);
+              eventsList.update();
+              lastEventId += data.length;
+            }
+            myApp.pullToRefreshDone();
+          } // End ajax success
+        }); // End ajax
+      }
     }, 1000);
   });
 
@@ -212,55 +214,64 @@ myApp.onPageInit('event', function (page) {
 
     $$('.title-event-name').text(eventName);
 
-    $$.ajax({
-      type:'GET',
-      url:'https://relive.space/api/event/'+pageId+'/post',
-      data:{"startAt":lastLoadedIndex},
-      dataType:'json',
-      success:function(data) {
-        posts = data;
-        lastLoadedIndex += posts.length;
-        eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-            items: posts,
-            template:
+    function updateEventPosts(eventPostsData) {
+      lastLoadedIndex += eventPostsData.length;
+      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+          items: eventPostsData,
+          template:
 
-            '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
-              '{{#if media}}' +
-              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
-              '{{/if}}' +
-              '<div class="post-data-origin-wrapper">' +
-                '<div class="post-data">' +
-                  '<div class="post-author">{{author}}</div>' +
-                  '{{#if media}}' +
-                  '<div class="post-content">{{caption}}</div>' +
-                  '{{else}}' +
-                  '<blockquote class="post-content">{{caption}}</blockquote>' +
-                  '{{/if}}' +
-                '</div>' +
-                '<div class="post-origin">' +
-                  '{{#if providerName}}' +
-                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                  '{{else}}' +
-                  '<i class="icon ion-social-twitter-outline"></i>' +
-                  '{{/if}}' +
-                '</div>' +
+          '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
+            '{{#if media}}' +
+            '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
+            '{{/if}}' +
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}</div>' +
+                '{{#if media}}' +
+                '<div class="post-content">{{caption}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{caption}}</blockquote>' +
+                '{{/if}}' +
               '</div>' +
-            '</li>',
+              '<div class="post-origin">' +
+                '{{#if providerName}}' +
+                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                '{{else}}' +
+                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{/if}}' +
+              '</div>' +
+            '</div>' +
+          '</li>',
 
 
-            height: function (post) {
-              if (post.media) return 500;
-              else return 200;
-            }
-        }); // End virtualList initialization
-      } // End Success
-    }); // End AJAX
+          height: function (post) {
+            if (post.media) return 500;
+            else return 200;
+          }
+      }); // End virtualList initialization
+    }
+
+    if (navigator.onLine) {
+      $$.ajax({
+        type:'GET',
+        url:'https://relive.space/api/event/'+pageId+'/post',
+        data:{"startAt":lastLoadedIndex},
+        dataType:'json',
+        success:function(data) {
+          storeJsonToLocalStorage(eventName, data);
+          updateEventPosts(data);
+        } // End Success
+      }); // End AJAX
+    } else {
+      var eventPostsData = loadJsonFromLocalStorage(eventName);
+      updateEventPosts(eventPostsData);
+    }
 
     setTimeout(function() {
       loading = false;
 
       $$('.infinite-scroll').on('infinite', function() {
-        if (loading) return;
+        if (loading || !navigator.onLine) return;
         loading = true;
         $$.ajax({
           type:'GET',
