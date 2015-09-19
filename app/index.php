@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="cache.manifest">
   <head>
     <?php include "head.php" ?>
   </head>
