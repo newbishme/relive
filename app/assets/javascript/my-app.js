@@ -41,7 +41,6 @@ function storeImgToSessionStorage(key, imgData) {
   });
 }
 
-
 function loadImgFromSessionStorage(key) {
   return sessionStorage.getItem(key);
 }
@@ -60,19 +59,6 @@ function convertImgToBase64URL(url, callback, outputFormat){
         canvas = null;
     };
     img.src = url;
-}
-
-function getBase64Image(imgData) {
-  var canvas = document.createElement("canvas");
-  canvas.width = imgData.width;
-  canvas.height = imgData.height;
-
-  var ctx = canvas.getContext("2d");
-  ctx.drawImage(imgData, 0, 0);
-
-  var dataURL = canvas.toDataURL("image/png");
-
-  return dataURL;
 }
 
 // Export selectors engine
