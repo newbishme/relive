@@ -15,6 +15,22 @@ function sendToGoogleAnalytics(page, title) {
   });
 }
 
+function storeJsonToLocalStorage(key, jsonData) {
+  if (key == null) {
+    return;
+  }
+  var dataToStore = JSON.stringify(jsonData);
+  localStorage.setItem(key, dataToStore);
+  // console.log('=====STORE=====');
+  // console.log('Storing: ');
+  // console.log(localStorage.getItem(key));
+  // console.log('===============');
+}
+
+function loadJsonFromLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -49,6 +65,7 @@ myApp.onPageInit('home', function (page) {
 
   // TODO Get events from local cache, if not found, get from server
   var events = [];
+  var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
 
   // Initialize Virtual List
@@ -88,42 +105,68 @@ myApp.onPageInit('home', function (page) {
     searchIn: '.card-header'
   });
 
-  // Load more events if connected to internet
-  $$.ajax({
-    type:'GET',
-    url:'https://relive.space/api/event/indexes',
-    data:{"startAt":lastEventId},
-    dataType:'json',
-    success:function(data){
-      if (data !== '') {
-        eventsList.appendItems(data);
-        eventsList.update();
-        lastEventId += data.length;
-      }
-    } // End ajax success
-  }); // End ajax
+  function updateEventsList(eventsData) {
+    eventsList.appendItems(eventsData);
+    eventsList.update();
+    lastEventId += eventsData.length;
+  }
+
+  if (navigator.onLine) {
+    // Load more events if connected to internet
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/indexes',
+      data:{"startAt":lastEventId},
+      dataType:'json',
+      success:function(data){
+        if (data !== '') {
+          storeJsonToLocalStorage(eventIndexesKey, data);
+          updateEventsList(data);
+        }
+      } // End ajax success
+    }); // End ajax
+  } else {
+    var data = loadJsonFromLocalStorage(eventIndexesKey);
+    updateEventsList(data);
+  }
 
   // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
   var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
-  var trendingEvents = [];
-  var trendingHtml = '';
+  var trendingEventsKey = 'trendingEventsIndexes';
 
-  $$.ajax({
-    type:'GET',
-    url:'https://relive.space/api/event/trending',
-    dataType:'json',
-    success:function(data){
-      if (data !== '') {
-        trendingEvents = data;
-        for (var i = 0; i < trendingEvents.length; i++) {
-          trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+  function updateTrendingList(events) {
+    var trendingEvents = [];
+    var trendingHtml = '';
+
+    if (events == null) {
+      return;
+    }
+
+    trendingEvents = events;
+
+    for (var i = 0; i < trendingEvents.length; i++) {
+      trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+    }
+    $$('div#side-nav-trending-events').html(trendingHtml);
+  }
+
+  if (navigator.onLine) {
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/trending',
+      dataType:'json',
+      success:function(data){
+        if (data !== '') {
+          storeJsonToLocalStorage(trendingEventsKey, data);
+          updateTrendingList(data);
         }
-        $$('div#side-nav-trending-events').html(trendingHtml);
-      }
-    } // End ajax success
-  }); // End ajax
-
+      } // End ajax success
+    }); // End ajax
+  } else {
+      var data = loadJsonFromLocalStorage(trendingEventsKey);
+      updateTrendingList(data);
+  }
 
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
