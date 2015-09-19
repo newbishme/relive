@@ -391,6 +391,10 @@ $$(document).on('beforeSubmit', 'form.ajax-submit', function (e) {
 $$(document).on('submitError', 'form.ajax-submit', function (e) {
   var xhr = e.detail.xhr;
   var data = e.detail.data;
+  console.log('====== AJAX Submit Error ======');
+  console.log(xhr);
+  console.log(data);
+  console.log('===============================');
   myApp.addNotification({
         title: 'Unsuccessful submission',
         message: 'There was a problem sending your request to the server.'
