@@ -395,11 +395,23 @@ $$(document).on('submitError', 'form.ajax-submit', function (e) {
   console.log(xhr);
   console.log(data);
   console.log('===============================');
-  myApp.addNotification({
-        title: 'Unsuccessful submission',
-        message: 'There was a problem sending your request to the server.'
-  });
+  showUserNotification('Unsuccessful submission', 'There was a problem sending your request to the server.');
 });
 
 // Initialize the app
 myApp.init();
+
+function showUserNotification(title, message) {
+  myApp.addNotification({
+        title: title,
+        message: message
+  });
+}
+
+window.addEventListener('online', function (event) {
+  showUserNotification('Connected to the Internet','All features are available.');
+}, false);
+
+window.addEventListener('offline', function (event) {
+  showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+}, false);
