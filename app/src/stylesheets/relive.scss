@@ -2,6 +2,9 @@ $primaryColour: #374F59;
 $linkColour: #1B5DC8;
 $linkHoverColour: #CCCCCC; 
 
+$break-large: 1200px;
+$break-medium: 768px;
+
 @mixin vertical-align($position: relative) {
   position: $position;
   top: 50%;
@@ -20,6 +23,17 @@ p {
 
 a {
 	color: $linkColour;
+}
+
+.page-content {
+	@media (min-width: $break-medium) {
+		margin: 0 auto;
+		padding: 0 20%;
+	}
+	@media (min-width: $break-large) {
+		margin: 0 auto;
+		padding: 0 30%;
+	}
 }
 
 .preloader {
@@ -144,6 +158,12 @@ form .item-content {
 .image.post {
 	@extend .post;
 	.post-img {
+		@media (min-width: $break-medium) {
+			height: 400px;
+		}
+		@media (min-width: $break-large) {
+			height: 500px;
+		}
 		height: 350px;
 		background-size: cover;
 		background-position: center;
