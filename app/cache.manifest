@@ -1,0 +1,39 @@
+CACHE MANIFEST
+# version 1.0.0.1.1
+
+CACHE:
+# Pages
+index.php
+form.php
+event.php
+
+# Fonts
+assets/fonts/ionicons.eot
+assets/fonts/ionicons.svg?v=2.0.1#Ionicons
+assets/fonts/ionicons.ttf?v=2.0.1
+assets/fonts/ionicons.woff?v=2.0.1
+
+# Images
+assets/img/preloader.svg
+mstile-144x144.png
+
+# Scripts
+assets/javascript/framework7.min.js
+assets/javascript/framework7.min.js.map
+#assets/javascript/my-app.js
+
+# Stylesheets
+assets/stylesheets/relive.min.css
+assets/stylesheets/base.css
+assets/stylesheets/framework7.ios.min.css
+assets/stylesheets/framework7.ios.colors.min.css
+assets/stylesheets/ionicons.min.css
+assets/stylesheets/my-app.ios.css
+https://fonts.googleapis.com/css?family=Patua+One|Oxygen:400,300,700
+
+# Manifest
+manifest.json
+
+
+NETWORK:
+*
