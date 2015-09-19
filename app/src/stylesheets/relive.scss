@@ -2,12 +2,22 @@ $primaryColour: #374F59;
 $linkColour: #1B5DC8;
 $linkHoverColour: #CCCCCC; 
 
+$break-large: 1200px;
+$break-medium: 768px;
+
 @mixin vertical-align($position: relative) {
   position: $position;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+@mixin word-wrap() {
+  word-break:     break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens:    auto;
+  hyphens:         auto;
 }
 
 body, h1, h2, h3, h4, h5, h6 {
@@ -22,6 +32,17 @@ a {
 	color: $linkColour;
 }
 
+.page-content {
+	@media (min-width: $break-medium) {
+		margin: 0 auto;
+		padding: 0 20%;
+	}
+	@media (min-width: $break-large) {
+		margin: 0 auto;
+		padding: 0 30%;
+	}
+}
+
 .preloader {
 	background-image: url(../img/preloader.svg);
 }
@@ -32,6 +53,9 @@ a {
 
 .list-block ul {
 	background-color: #EFEFF4;
+	&:after {
+		display: none;
+	}
 }
 
 .statusbar-overlay {
@@ -76,13 +100,13 @@ form .item-content {
   	border-bottom: 1px solid #C8C7CC;
 	background-color: white;
 	.event-card-header-img {
-		height: 150px;
+		height: 200px;
 		background-size: cover;
 		background-position: center;
-    display: -webkit-flex;
+    	display: -webkit-flex;
 		display: flex;
-    -webkit-align-items: center;
-    -webkit-justify-content: center;
+    	-webkit-align-items: center;
+    	-webkit-justify-content: center;
 		align-items: center;
 		justify-content: center;
 
@@ -133,6 +157,9 @@ form .item-content {
 				font-weight: 700;
 				padding-bottom: 10px;
 			}
+			.post-content {
+				@include word-wrap();
+			}
 		}
 		.post-origin {
 			padding: 15px;
@@ -144,6 +171,12 @@ form .item-content {
 .image.post {
 	@extend .post;
 	.post-img {
+		@media (min-width: $break-medium) {
+			height: 400px;
+		}
+		@media (min-width: $break-large) {
+			height: 500px;
+		}
 		height: 350px;
 		background-size: cover;
 		background-position: center;
