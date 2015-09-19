@@ -18,10 +18,10 @@ foreach (Event::all() as $event) {
 
 		PostEventRelationship::whereIn('post_id', function($query) use ($rankPoints) {
 			$query->select('post_id')->from('posts')->where('rankPoints', '<', $rankPoints);
-		})->update(['isFiltered' => 1]);
+		})->where('event_id', '=', $event_id)->update(['isFiltered' => 1]);
 
 		PostEventRelationship::whereIn('post_id', function($query) use ($rankPoints) {
 			$query->select('post_id')->from('posts')->where('rankPoints', '>=', $rankPoints);
-		})->update(['isFiltered' => 0]);
+		})->where('event_id', '=', $event_id)->update(['isFiltered' => 0]);
 	}
 }
