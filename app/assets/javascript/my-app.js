@@ -302,7 +302,7 @@ myApp.onPageInit('form', function (page) {
 
   var hasNoName = false;
   var hasHashtagError = false;
-  var maxHashtags = 5;
+  var maxHashtags = 3;
   var hashtags = [];
   var id = 1;
 
@@ -365,8 +365,8 @@ myApp.onPageInit('form', function (page) {
   }
 
   $$('.hashtags-input').on('keypress', function(e) {
-    if (e.keyCode === 32) { // spacebar
-      var inputHashtagsArr = e.srcElement.value.split(" ");
+    if (e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 44) { // spacebar OR enter OR comma
+      var inputHashtagsArr = e.srcElement.value.split(/,| /);
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
@@ -375,7 +375,7 @@ myApp.onPageInit('form', function (page) {
         } else if (contains(hashtags, hashtag)) {
           addHashtagError("You've added this hashtag before");
         } else if (hashtags.length === maxHashtags) {
-          addHashtagError("You can only add 5 hashtags");
+          addHashtagError("You can only add 3 hashtags");
         } else {
           $$('.hashtags').removeClass('hidden');
 
@@ -416,6 +416,12 @@ myApp.onPageInit('form', function (page) {
         }
       }
       return false;
+    }
+  });
+
+  $$('.hashtags-input').on('keyup', function(e) {
+    if (e.keyCode === 32 || e.keyCode === 188) { // spacebar OR comma
+      $$('.hashtags-input').val('');
     }
   });
 });

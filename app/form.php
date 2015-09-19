@@ -31,7 +31,7 @@
           </ul>
         </div>
 
-        <div class="content-block-title" id="hashtags-header">Add up to 5 hashtags</div>
+        <div class="content-block-title" id="hashtags-header">Add up to 3 hashtags</div>
         <div class="list-block">
           <ul>
             <li>
