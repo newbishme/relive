@@ -13,6 +13,13 @@ $break-medium: 768px;
   transform: translateY(-50%);
 }
 
+@mixin word-wrap() {
+  word-break:     break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens:    auto;
+  hyphens:         auto;
+}
+
 body, h1, h2, h3, h4, h5, h6 {
 	font-family: Oxygen, Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -146,6 +153,9 @@ form .item-content {
 			.post-author {
 				font-weight: 700;
 				padding-bottom: 10px;
+			}
+			.post-content {
+				@include word-wrap();
 			}
 		}
 		.post-origin {
