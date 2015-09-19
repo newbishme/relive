@@ -15,6 +15,66 @@ function sendToGoogleAnalytics(page, title) {
   });
 }
 
+function storeJsonToLocalStorage(key, jsonData) {
+  if (key == null) {
+    return;
+  }
+  var dataToStore = JSON.stringify(jsonData);
+  localStorage.setItem(key, dataToStore);
+  // console.log('=====STORE=====');
+  // console.log('Storing: ');
+  // console.log(localStorage.getItem(key));
+  // console.log('===============');
+}
+
+function loadJsonFromLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
+function storeImgToSessionStorage(key, imgData) {
+  if (key == null || loadImgFromSessionStorage(key) != null) {
+    return;
+  }
+
+  convertImgToBase64URL(imgData, function(base64Img, url) {
+    sessionStorage.setItem(url, base64Img);
+  });
+}
+
+
+function loadImgFromSessionStorage(key) {
+  return sessionStorage.getItem(key);
+}
+
+function convertImgToBase64URL(url, callback, outputFormat){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL, img.src);
+        canvas = null;
+    };
+    img.src = url;
+}
+
+function getBase64Image(imgData) {
+  var canvas = document.createElement("canvas");
+  canvas.width = imgData.width;
+  canvas.height = imgData.height;
+
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(imgData, 0, 0);
+
+  var dataURL = canvas.toDataURL("image/png");
+
+  return dataURL;
+}
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -49,7 +109,9 @@ myApp.onPageInit('home', function (page) {
 
   // TODO Get events from local cache, if not found, get from server
   var events = [];
+  var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
+  var runOnceKey = 'reliveRunOnceKey';
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -88,42 +150,81 @@ myApp.onPageInit('home', function (page) {
     searchIn: '.card-header'
   });
 
-  // Load more events if connected to internet
-  $$.ajax({
-    type:'GET',
-    url:'https://relive.space/api/event/indexes',
-    data:{"startAt":lastEventId},
-    dataType:'json',
-    success:function(data){
-      if (data !== '') {
-        eventsList.appendItems(data);
-        eventsList.update();
-        lastEventId += data.length;
+  function updateEventsList(eventsData) {
+    eventsList.appendItems(eventsData);
+    eventsList.update();
+    lastEventId += eventsData.length;
+  }
+
+  if (navigator.onLine) {
+    // Load more events if connected to internet
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/indexes',
+      data:{"startAt":lastEventId},
+      dataType:'json',
+      success:function(data){
+        if (data !== '') {
+          storeJsonToLocalStorage(eventIndexesKey, data);
+          sessionStorage.clear();
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].image != "") {
+              storeImgToSessionStorage(data[i].image, data[i].image);
+            }
+          }
+          updateEventsList(data);
+        }
+      } // End ajax success
+    }); // End ajax
+  } else {
+    var data = loadJsonFromLocalStorage(eventIndexesKey);
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].image != "") {
+        data[i].image = loadImgFromSessionStorage(data[i].image);
       }
-    } // End ajax success
-  }); // End ajax
+    }
+    updateEventsList(data);
+  }
+
+
 
   // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
   var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
-  var trendingEvents = [];
-  var trendingHtml = '';
+  var trendingEventsKey = 'trendingEventsIndexes';
 
-  $$.ajax({
-    type:'GET',
-    url:'https://relive.space/api/event/trending',
-    dataType:'json',
-    success:function(data){
-      if (data !== '') {
-        trendingEvents = data;
-        for (var i = 0; i < trendingEvents.length; i++) {
-          trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+  function updateTrendingList(events) {
+    var trendingEvents = [];
+    var trendingHtml = '';
+
+    if (events == null) {
+      return;
+    }
+
+    trendingEvents = events;
+
+    for (var i = 0; i < trendingEvents.length; i++) {
+      trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+    }
+    $$('div#side-nav-trending-events').html(trendingHtml);
+  }
+
+  if (navigator.onLine) {
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/trending',
+      dataType:'json',
+      success:function(data){
+        if (data !== '') {
+          storeJsonToLocalStorage(trendingEventsKey, data);
+          updateTrendingList(data);
         }
-        $$('div#side-nav-trending-events').html(trendingHtml);
-      }
-    } // End ajax success
-  }); // End ajax
-
+      } // End ajax success
+    }); // End ajax
+  } else {
+      var data = loadJsonFromLocalStorage(trendingEventsKey);
+      updateTrendingList(data);
+  }
 
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
@@ -131,20 +232,22 @@ myApp.onPageInit('home', function (page) {
   ptrContent.on('refresh', function (e) {
     setTimeout(function () {
       // Load more events if connected to internet
-      $$.ajax({
-        type:'GET',
-        url:'https://relive.space/api/event/indexes',
-        data:{"startAt":lastEventId},
-        dataType:'json',
-        success:function(data){
-          if (data !== '') {
-            eventsList.appendItems(data);
-            eventsList.update();
-            lastEventId += data.length;
-          }
-          myApp.pullToRefreshDone();
-        } // End ajax success
-      }); // End ajax
+      if (navigator.onLine) {
+        $$.ajax({
+          type:'GET',
+          url:'https://relive.space/api/event/indexes',
+          data:{"startAt":lastEventId},
+          dataType:'json',
+          success:function(data){
+            if (data !== '') {
+              eventsList.appendItems(data);
+              eventsList.update();
+              lastEventId += data.length;
+            }
+            myApp.pullToRefreshDone();
+          } // End ajax success
+        }); // End ajax
+      }
     }, 1000);
   });
 
@@ -167,57 +270,68 @@ myApp.onPageInit('event', function (page) {
       eventName = page.query.name;
     }
 
+    var eventNameKey = 'ReliveEvent' + eventName;
+
     $$('.title-event-name').text(eventName);
 
-    $$.ajax({
-      type:'GET',
-      url:'https://relive.space/api/event/'+pageId+'/post',
-      data:{"startAt":lastLoadedIndex},
-      dataType:'json',
-      success:function(data) {
-        posts = data;
-        lastLoadedIndex += posts.length;
-        eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-            items: posts,
-            template:
+    function updateEventPosts(eventPostsData) {
+      lastLoadedIndex += eventPostsData.length;
+      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+          items: eventPostsData,
+          template:
 
-            '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
-              '{{#if media}}' +
-              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
-              '{{/if}}' +
-              '<div class="post-data-origin-wrapper">' +
-                '<div class="post-data">' +
-                  '<div class="post-author">{{author}}</div>' +
-                  '{{#if media}}' +
-                  '<div class="post-content">{{caption}}</div>' +
-                  '{{else}}' +
-                  '<blockquote class="post-content">{{caption}}</blockquote>' +
-                  '{{/if}}' +
-                '</div>' +
-                '<div class="post-origin">' +
-                  '{{#if providerName}}' +
-                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                  '{{else}}' +
-                  '<i class="icon ion-social-twitter-outline"></i>' +
-                  '{{/if}}' +
-                '</div>' +
+          '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
+            '{{#if media}}' +
+            '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
+            '{{/if}}' +
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}</div>' +
+                '{{#if media}}' +
+                '<div class="post-content">{{caption}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{caption}}</blockquote>' +
+                '{{/if}}' +
               '</div>' +
-            '</li>',
+              '<div class="post-origin">' +
+                '{{#if providerName}}' +
+                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                '{{else}}' +
+                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{/if}}' +
+              '</div>' +
+            '</div>' +
+          '</li>',
 
 
-            height: function (post) {
-              if (post.media) return 500;
-              else return 200;
-            }
-        }); // End virtualList initialization
-      } // End Success
-    }); // End AJAX
+          height: function (post) {
+            if (post.media) return 500;
+            else return 200;
+          }
+      }); // End virtualList initialization
+    }
+
+    if (navigator.onLine) {
+      $$.ajax({
+        type:'GET',
+        url:'https://relive.space/api/event/'+pageId+'/post',
+        data:{"startAt":lastLoadedIndex},
+        dataType:'json',
+        success:function(data) {
+          storeJsonToLocalStorage(eventNameKey, data);
+          updateEventPosts(data);
+        } // End Success
+      }); // End AJAX
+    } else {
+      var eventPostsData = loadJsonFromLocalStorage(eventNameKey);
+      updateEventPosts(eventPostsData);
+    }
 
     setTimeout(function() {
       loading = false;
 
       $$('.infinite-scroll').on('infinite', function() {
-        if (loading) return;
+        if (loading || !navigator.onLine) return;
         loading = true;
         $$.ajax({
           type:'GET',
@@ -248,7 +362,7 @@ myApp.onPageInit('form', function (page) {
 
   var hasNoName = false;
   var hasHashtagError = false;
-  var maxHashtags = 5;
+  var maxHashtags = 3;
   var hashtags = [];
   var id = 1;
 
@@ -311,8 +425,8 @@ myApp.onPageInit('form', function (page) {
   }
 
   $$('.hashtags-input').on('keypress', function(e) {
-    if (e.keyCode === 32) { // spacebar
-      var inputHashtagsArr = e.srcElement.value.split(" ");
+    if (e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 44) { // spacebar OR enter OR comma
+      var inputHashtagsArr = e.srcElement.value.split(/,| /);
       var returnHashtags = "";
       for (var i in inputHashtagsArr) {
         var hashtag = inputHashtagsArr[i].replace(/[^a-zA-Z 0-9]+/g, '');
@@ -321,7 +435,7 @@ myApp.onPageInit('form', function (page) {
         } else if (contains(hashtags, hashtag)) {
           addHashtagError("You've added this hashtag before");
         } else if (hashtags.length === maxHashtags) {
-          addHashtagError("You can only add 5 hashtags");
+          addHashtagError("You can only add 3 hashtags");
         } else {
           $$('.hashtags').removeClass('hidden');
 
@@ -364,6 +478,12 @@ myApp.onPageInit('form', function (page) {
       return false;
     }
   });
+
+  $$('.hashtags-input').on('keyup', function(e) {
+    if (e.keyCode === 32 || e.keyCode === 188) { // spacebar OR comma
+      $$('.hashtags-input').val('');
+    }
+  });
 });
 
 // Handle form ajax actions
@@ -395,11 +515,23 @@ $$(document).on('submitError', 'form.ajax-submit', function (e) {
   console.log(xhr);
   console.log(data);
   console.log('===============================');
-  myApp.addNotification({
-        title: 'Unsuccessful submission',
-        message: 'There was a problem sending your request to the server.'
-  });
+  showUserNotification('Unsuccessful submission', 'There was a problem sending your request to the server.');
 });
 
 // Initialize the app
 myApp.init();
+
+function showUserNotification(title, message) {
+  myApp.addNotification({
+        title: title,
+        message: message
+  });
+}
+
+window.addEventListener('online', function (event) {
+  showUserNotification('Connected to the Internet','All features are available.');
+}, false);
+
+window.addEventListener('offline', function (event) {
+  showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+}, false);
