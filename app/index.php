@@ -37,14 +37,14 @@
       </div>
 
       <div class="event-hashtags-block hidden">
-        <div class="content-block-title">Filter by Hashtags</div>
+        <div class="content-block-title">Showing Hashtags</div>
         <div class="list-block">
           <ul>
             <div id="side-nav-event-hashtags"></div>
             <script id="sideNavEventHashtagsTemplate" type="text/template7">
               <li>
                 <label class="label-checkbox item-content">
-                  <input type="checkbox" name="event-hashtags" value="{{hashtag}}" checked="checked">
+                  <input type="checkbox" name="event-hashtags" value="{{hashtag}}" checked="checked" class="relive-filter-hashtag">
                   <div class="item-media">
                     <i class="icon icon-form-checkbox"></i>
                   </div>
