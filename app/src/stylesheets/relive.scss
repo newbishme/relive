@@ -80,14 +80,6 @@ form .item-content {
 	background-color: white;
 }
 
-.navbar {
-	opacity: 0;
-	&.visible {
-		opacity: 1;
-		transition: opacity 1.5s ease;
-	}
-}
-
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
 	a.link {
@@ -127,13 +119,13 @@ form .item-content {
 
 	.landing-title {
 		font-family: 'Patua One';
-		font-size: 7em;
+		font-size: 10vh;
 		font-weight: normal;
 		margin: -20vh 0 0;
 	}
 	
 	.landing-caption {
-		font-size: 1.3em;
+		font-size: 2.5vh;
 		font-weight: 300;
 		text-align: center;
 	}
@@ -161,6 +153,7 @@ form .item-content {
 	}
 	
 	.discover {
+		color: $primaryColour;
 		margin-top: 10vh;
 		cursor: pointer;
 		display: flex;
@@ -183,6 +176,7 @@ form .item-content {
 		}
 		
 		i {
+			padding-left: 10px;
 			font-size: 2em;
 		}
 	}
