@@ -15,23 +15,47 @@
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
 
-      <div class="content-block-title">Trending events</div>
-      <div class="list-block">
-        <ul>
-          <div id="side-nav-trending-events"></div>
-          <script id="sideNavTrendingEventTemplate" type="text/template7">
-            <li>
-              <a href="event.php?id={{event_id}}&name={{eventName}}" class="item-link close-panel">
-                <div class="item-content">
-                  <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
-                  <div class="item-inner">
-                    <div class="item-title">{{eventName}}</div>
+      <div class="trending-events-block">
+        <div class="content-block-title">Trending events</div>
+        <div class="list-block">
+          <ul>
+            <div id="side-nav-trending-events"></div>
+            <script id="sideNavTrendingEventTemplate" type="text/template7">
+              <li>
+                <a href="event.php?id={{event_id}}&name={{eventName}}" class="item-link close-panel">
+                  <div class="item-content">
+                    <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
+                    <div class="item-inner">
+                      <div class="item-title">{{eventName}}</div>
+                    </div>
                   </div>
-                </div>
-              </a>
-            </li>
-          </script>
-        </ul>
+                </a>
+              </li>
+            </script>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event-hashtags-block hidden">
+        <div class="content-block-title">Filter by Hashtags</div>
+        <div class="list-block">
+          <ul>
+            <div id="side-nav-event-hashtags"></div>
+            <script id="sideNavEventHashtagsTemplate" type="text/template7">
+              <li>
+                <label class="label-checkbox item-content">
+                  <input type="checkbox" name="event-hashtags" value="{{hashtag}}" checked="checked">
+                  <div class="item-media">
+                    <i class="icon icon-form-checkbox"></i>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">{{hashtag}}</div>
+                  </div>
+                </label>
+              </li>
+            </script>
+          </ul>
+        </div>
       </div>
 
       <div class="content-block-title">Can't find your event?</div>
@@ -44,7 +68,7 @@
     <div class="views">
       <!-- Your main view, should have "view-main" class -->
       <div class="view view-main">
-                   
+
         <!-- Top Navbar-->
         <div class="navbar" data-page="home">
           <div class="navbar-inner" >
@@ -89,7 +113,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="page cached with-subnavbar" data-page="home">
               <div class="searchbar-overlay"></div>
               <div class="page-content pull-to-refresh-content" data-ptr-distance="55">

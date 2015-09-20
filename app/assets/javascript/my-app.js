@@ -194,6 +194,7 @@ function homeInit(page) {
   });
 
   $$('.navbar').removeClass('hidden');
+  $$('div.event-hashtags-block').addClass('hidden');
 
   var isLandingPageHidden = false;
   $$('.page-content').on('scroll', function() {
@@ -344,6 +345,7 @@ function homeInit(page) {
       updateTrendingList(data);
   }
 
+
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
 
@@ -380,6 +382,9 @@ myApp.onPageInit('event', function (page) {
   var loading = false;
   var lastLoadedIndex = 0;
   var timeout = 3000;
+  var eventNameKey = 'Relive-Event-ID-' + pageId;
+  var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
+  var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
 
   if (page.query.id != null) {
     var pageId = page.query.id;
@@ -398,10 +403,30 @@ myApp.onPageInit('event', function (page) {
         }
         $$('.title-event-name').html(decodeURI(eventName));
         console.log(hashtags); // TODO update hash tag list at sidenav
+        updateHashtagsList(hashtags);
       } // End Success
     }); // End ajax to get event information
 
-    var eventNameKey = 'Relive-Event-ID-' + pageId;
+    // Initialize Side Nav Filter Hashtags
+    function updateHashtagsList(hashtags) {
+      var eventHashtags = [];
+      var eventHashtagHtml = '';
+
+      if (hashtags == null) {
+        return;
+      }
+
+      eventHashtags = hashtags;
+
+      for (var i = 0; i < eventHashtags.length; i++) {
+        var hashtag = {hashtag: eventHashtags[i]};
+        console.log(hashtag);
+        eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
+      }
+      $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
+      $$('div.event-hashtags-block').removeClass('hidden');
+      console.log($$('div#side-nav-event-hashtags').html());
+    }
 
     function updateEventPosts(eventPostsData) {
       if (eventPostsData != null) {
@@ -575,6 +600,8 @@ myApp.onPageInit('form', function (page) {
   $$(document).on('ajaxComplete', function () {
       myApp.hideIndicator();
   });
+
+  $$('div.event-hashtags-block').addClass('hidden');
 
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
