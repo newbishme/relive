@@ -353,7 +353,14 @@ myApp.onPageInit('event', function (page) {
 
       $$('.swipeout').on('deleted', function () {
         var relivePostId = $$(this).attr('relive-post-id');
-        // console.log(relivePostId); // TODO feedback of hidden post to backend endpoint
+        $$.ajax({
+          type:'POST',
+          url:'https://relive.space/api/event/'+pageId+'/report',
+          data:{"post_id":relivePostId},
+          dataType:'text',
+          success:function(data) {
+          } // End Success
+        });
         var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
         storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
       });
