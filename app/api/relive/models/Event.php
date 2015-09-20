@@ -25,9 +25,10 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 		return $this->hasMany('relive\models\EventHashtagRelationship','event_id','event_id');
 	}
 
+	/*
 	public function posteventrelationship() {
 		return $this->hasMany('relive\models\PostEventRelationship','event_id','event_id');
-	}
+	}*/
 
 	public function getHashtagsAttribute() {
 		$hashtags = [];
@@ -38,10 +39,11 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getPostsAttribute() {
+		/*
 		$posts = \relive\models\Post::whereIn('post_id', function($query) {
 			$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id)->where('isFiltered',False);
 		})->orderBy('datetime','desc')->offset(0)->limit(15)->get();
-
+		*/
 
 		/*
 		select * from `posts` where `post_id` in (SELECT post_id from posteventrelationships where event_id = 36) order by `datetime` desc limit 15 offset 0;
