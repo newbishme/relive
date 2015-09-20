@@ -90,7 +90,6 @@
                   <form class="landing-searchbar searchbar">
                     <div class="searchbar-input">
                       <input type="search" placeholder="Look for an event to relive">
-                      <a href="#" class="searchbar-clear"></a>
                     </div>
                   </form>
                   <a href="events.php" class="discover">

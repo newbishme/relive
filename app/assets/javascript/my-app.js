@@ -110,6 +110,7 @@ myApp.onPageInit('landing', function(page) {
   
   $$('.landing-searchbar').on('submit', function(e) {
     var searchText = e.srcElement[0].value;
+    console.log(searchText);
     var options = {
       url: 'events.php',
       query: {q: searchText},
@@ -125,6 +126,15 @@ myApp.onPageReinit('events', function (page) {
 // Callbacks to run specific code for specific pages, for example for events data page:
 myApp.onPageInit('events', function (page) {
   eventsInit(page);
+});
+
+myApp.onPageAfterAnimation('events', function(page) {
+  var mySearchbar = $$('.searchbar')[0].f7Searchbar;
+  
+  // Search if there's a query
+  if (page.query.q != null) {
+    mySearchbar.search(page.query.q);
+  }
 });
 
 function eventsInit(page) {
@@ -170,15 +180,10 @@ function eventsInit(page) {
   $$('.navbar').removeClass('hidden');
 
   // Initialize Search bar
-  var eventsSearchbar = myApp.searchbar('.searchbar', {
+  myApp.searchbar('.searchbar', {
     searchList: '.list-block-search',
     searchIn: '.card-header'
   });
-  
-  // Search if there's a query
-  if (page.query.q != null) {
-    $$('#search-input-box')[0].value = page.query.q;
-  }
 
   // Splits a given URL by its parameters if any (eg. ?id=1&name=ABC)
   function URLToArray(url) {
