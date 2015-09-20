@@ -54,6 +54,6 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 		*/
 
 		//$posts = \relive\models\Post::join('posteventrelationships','posteventrelationships.post_id','=','posts.post_id')->where('event_id','=',$this->event_id)->orderBy('datetime','desc')->offset(0)->limit(15)->get();
-		return $posts;
+		//return $posts;
 	}
 }
