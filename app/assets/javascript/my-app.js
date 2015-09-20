@@ -121,16 +121,19 @@ myApp.onPageReinit('landing', function(page) {
 });
 
 myApp.onPageInit('landing', function(page) {
+  sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
   $$('#landing-searchbar-input').focus();
   $$('.landing-searchbar').on('submit', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     var searchText = e.srcElement[0].value;
-    console.log(searchText);
     var options = {
       url: 'events.php',
-      query: {q: searchText},
+      query: { q: searchText }
     };
     mainView.router.load(options);
+    return false;
   });
 });
 
@@ -145,7 +148,7 @@ myApp.onPageInit('events', function (page) {
 
 myApp.onPageAfterAnimation('events', function(page) {
   var mySearchbar = $$('.searchbar')[0].f7Searchbar;
-  
+
   // Search if there's a query
   if (page.query.q != null) {
     mySearchbar.search(page.query.q);
@@ -153,7 +156,7 @@ myApp.onPageAfterAnimation('events', function(page) {
 });
 
 function eventsInit(page) {
-  sendToGoogleAnalytics('/', page.name);
+  sendToGoogleAnalytics('events.php', page.name);
 
   // TODO Get events from local cache, if not found, get from server
   var events = [];
@@ -172,7 +175,7 @@ function eventsInit(page) {
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event.php?id={{event_id}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event.php?id={{event_id}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -191,7 +194,7 @@ function eventsInit(page) {
         return foundItems;
       }
   });
-  
+
   $$('.navbar').removeClass('hidden');
 
   // Initialize Search bar
@@ -224,8 +227,7 @@ function eventsInit(page) {
       var eventHref = $$(this).attr('href');
       var eventHrefArray = URLToArray(eventHref);
       var query = {
-        id: eventHrefArray['id'],
-        name: eventHrefArray['name']
+        id: eventHrefArray['id']
       };
       var options = {
           url: 'event.php',
@@ -348,7 +350,7 @@ myApp.onPageInit('event', function (page) {
   var eventNameKey = 'Relive-Event-ID-' + pageId;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
-  
+
   $$('.navbar').removeClass('hidden');
   if (page.query.id != null) {
     var pageId = page.query.id;
@@ -604,7 +606,7 @@ myApp.onPageInit('form', function (page) {
   var id = 1;
 
   $$('.navbar').removeClass('hidden');
-  
+
   $$(document).on('ajaxStart', function () {
       myApp.showIndicator();
   });

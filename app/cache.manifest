@@ -1,11 +1,12 @@
 CACHE MANIFEST
-# version 1.0.5.9.3
+# version 1.0.5.9.5
 
 CACHE:
 # Pages
 index.php
 form.php
 event.php
+events.php
 
 # Fonts
 assets/fonts/ionicons.eot
