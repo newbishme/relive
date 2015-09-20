@@ -1,18 +1,18 @@
 {
-	"autoload": {
-		"psr-0": {
-			"relive" : "app/api/"
-		},
+    "autoload": {
+        "psr-0": {
+            "relive" : "app/api/"
+        },
         "files": [ "app/api/dbconfig.php" ],
         "classmap": [ "app/api/relive/models/","app/api/relive/controllers/","app/api/relive/crawlers/"]
-
-	},
+    },
     "require": {
         "slim/slim": "*",
         "dogancelik/slim-json": "dev-master",
         "cosenary/instagram" : "dev-master",
-         "illuminate/database": "*",
-		"abraham/twitteroauth": "^0.6.0"
+        "illuminate/database": "*",
+        "abraham/twitteroauth": "^0.6.0",
+        "facebook/php-sdk-v4" : "~5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
