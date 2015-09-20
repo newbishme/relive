@@ -105,12 +105,12 @@ myApp.onPageInit('home', function (page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link">' +
+        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link" id="eventPageURL">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -136,10 +136,41 @@ myApp.onPageInit('home', function (page) {
     searchIn: '.card-header'
   });
 
+  // Splits a given URL by its parameters if any (eg. ?id=1&name=ABC)
+  function URLToArray(url) {
+    var request = {};
+    var pairs = url.substring(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      if (!pairs[i]) continue;
+      var pair = pairs[i].split('=');
+      request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+    return request;
+  }
+
   function updateEventsList(eventsData) {
     eventsList.appendItems(eventsData);
     eventsList.update();
     lastEventId += eventsData.length;
+
+    // Allow offline a href clicks to still load the linked page
+    $$('a#eventPageURL').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var eventHref = $$(this).attr('href');
+      var eventHrefArray = URLToArray(eventHref);
+      var query = {
+        id: eventHrefArray['id'],
+        name: eventHrefArray['name']
+      };
+      var options = {
+          url: 'event.php',
+          query: query,
+          pushState: true
+      };
+      mainView.router.load(options);
+      return false;
+    });
   }
 
   if (navigator.onLine) {
@@ -261,9 +292,15 @@ myApp.onPageInit('event', function (page) {
     $$('.title-event-name').text(eventName);
 
     function updateEventPosts(eventPostsData) {
-      lastLoadedIndex += eventPostsData.length;
+      var postsData = [];
+
+      if (eventPostsData != null) {
+        postsData = eventPostsData;
+        lastLoadedIndex += postsData.length;
+      }
+
       eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: eventPostsData,
+          items: postsData,
           template:
 
           '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
