@@ -38,7 +38,6 @@ while(true) {
 			}
 			$job->delay = $job->delay*2;
 			$job->save();
-			print $job->crawler_id;
 			unset($crawling[$job->crawler_id]);
 		}
 	}
