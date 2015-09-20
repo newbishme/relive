@@ -228,7 +228,7 @@ function eventsInit(page) {
         id: eventId
       };
       var options = {
-          url: 'event.php',
+          url: 'event.php?id='+eventId,
           query: query,
           pushState: true
       };
@@ -736,7 +736,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
     name: eventDetails.eventName
   };
   var options = {
-      url: 'event.php',
+      url: 'event.php?id='+query.id,
       query: query,
       pushState: false
   };
