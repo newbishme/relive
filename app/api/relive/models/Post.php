@@ -18,7 +18,7 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	 * @var array
 	 */
 	protected $hidden = array('rankPoints','provider_id','posteventrelationship','posthashtagrelationship');
-	protected $appends = ['providerName','media'];
+	protected $appends = ['providerName','media','hashtags'];
 
 	public function toArray() {
 		$data = parent::toArray();
@@ -48,13 +48,25 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	public function posteventrelationship() {
 		return $this->hasMany('relive\models\PostEventRelationship','post_id','post_id');
 	}
-	/*
+
+	public function report() {
+		return $this->hasMany('relive\models\Report', 'post_id', 'post_id');
+	}
+
 	public function posthashtagrelationship() {
 		return $this->hasMany('relive\models\PostHashtagRelationship','post_id','post_id');
-	}*/
+	}
 
 	public function getProviderNameAttribute() {
 		return $this->provider()->select('providerName')->first()->providerName;
+	}
+
+	public function getHashtagsAttribute() {
+		$hashtags = [];
+		foreach($this->posthashtagrelationship as $relationship) {
+			array_push($hashtags, $relationship->hashtag->hashtag);
+		}
+		return $hashtags;
 	}
 
 	public function getMediaAttribute() {

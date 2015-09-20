@@ -44,7 +44,7 @@
     <div class="views">
       <!-- Your main view, should have "view-main" class -->
       <div class="view view-main">
-
+                   
         <!-- Top Navbar-->
         <div class="navbar">
           <div class="navbar-inner">
@@ -59,7 +59,7 @@
               <div class="subnavbar-search">
                 <form class="searchbar">
                   <div class="searchbar-input">
-                    <input type="search" placeholder="Look for an event to relive">
+                    <input id="search-input-box" type="search" placeholder="Look for an event to relive">
                     <a href="#" class="searchbar-clear"></a>
                   </div>
                   <a href="#" class="searchbar-cancel">Cancel</a>
@@ -69,17 +69,32 @@
           </div>
         </div>
 
-
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
             <div class="page with-subnavbar" data-page="home">
-              <div class="searchbar-overlay"></div>
+              <div class="searchbar-overlay hidden"></div>
               <div class="page-content pull-to-refresh-content" data-ptr-distance="55">
-                <div class="pull-to-refresh-layer">
+                
+                <div class="landing-header">
+                  <h1 class="landing-title">relive</h1>
+                  <h4 class="landing-caption">Find interesting stories from various social media platforms
+                      to relive these moments</h4>
+                  <form class="landing-searchbar searchbar">
+                    <div class="searchbar-input">
+                      <input type="search" placeholder="Look for an event to relive">
+                      <a href="#" class="searchbar-clear"></a>
+                    </div>
+                  </form>
+                  <div class="discover">
+                    <h4 class="discover-caption">Discover</h4>
+                    <i class="icon ion-chevron-down"></i>
+                  </div>
+                </div>
+                
+                <div class="pull-to-refresh-layer hidden">
                   <div class="preloader"></div>
                   <div class="pull-to-refresh-arrow"></div>
                 </div>
-
                 <!-- Hidden by default, this will appear when search results is empty -->
                 <div class="content-block searchbar-not-found">
                   <!-- Make a Reel CTA -->
@@ -89,7 +104,7 @@
                   </div>
                 </div>
 
-                <div class="content-block landing-what-is-relive">
+                <!--<div class="content-block landing-what-is-relive">
                   <div class="content-block-title">What is relive?</div>
                   <div class="content-block inset">
                     <div class="content-block-inner">
@@ -99,9 +114,9 @@
                       </p>
                     </div>
                   </div>
-                </div>
+                </div>-->
 
-                <div class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
+                <div id="featured" class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
 
               </div>
             </div>

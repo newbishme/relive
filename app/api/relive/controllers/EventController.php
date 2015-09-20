@@ -2,6 +2,8 @@
 
 namespace relive\controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class EventController extends Controller {
 
 	public function __construct() {
@@ -48,9 +50,13 @@ class EventController extends Controller {
 
 		$event = \relive\models\Event::find($event_id);
 		if ($event) {
+            $event->rankPoints=$event->rankPoints+1;
+            $event->save();
             $crawljob = \relive\models\CrawlJob::where('event_id','=',$event_id)->first();
-            $crawljob->delay = 10;
-            $crawljob->save();
+            if ($crawljob) {
+                $crawljob->delay = 10;
+                $crawljob->save();
+            }
 
 			$posts = \relive\models\Post::whereIn('post_id', function($query) use ($event_id) { 
 				$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event_id)->where('isFiltered',False);
@@ -136,6 +142,24 @@ class EventController extends Controller {
 		$limit = $count-$startAt;
 		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->orderBy('event_id','desc')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($indexes, JSON_UNESCAPED_SLASHES);
+	}
+
+	public static function reportPostFromEvent($event_id) {
+		$app = \Slim\Slim::getInstance();
+
+		$allPostVars = $app->request->post();
+		$post_id = @$allPostVars['post_id']?$allPostVars['post_id']:-1;
+
+		if (isset($post_id) && $post_id != -1) {
+			try {
+				$relationship = \relive\models\PostEventRelationship::where('event_id', '=', $event_id)
+				->where('post_id', '=', $post_id)->firstOrFail();
+				$report = \relive\models\Report::create(['report_time'=>time(), 'post_id'=>$post_id]);
+				echo json_encode($report, JSON_UNESCAPED_SLASHES);
+			} catch (ModelNotFoundException $e) {
+				$app->render(404, ['Status' => 'Relationship not found']);
+			}
+		}
 	}
 
 	public static function create() {
