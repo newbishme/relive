@@ -25,7 +25,7 @@ while(true) {
 		$top = $objPQ->top();
 		$currentTime = time();
 		//if top's time is later than current, sleep.
-		if ($top['priority'] <= $currentTime) {
+		while ($top['priority'] <= $currentTime) {
 			$queueObj = $objPQ->extract();
 			$job = $queueObj['data'];
 			$event = \relive\models\Event::find($job->event_id);
@@ -39,6 +39,7 @@ while(true) {
 			$job->delay = $job->delay*2;
 			$job->save();
 			unset($crawling[$job->crawler_id]);
+			$top = $objPQ->top();
 		}
 	}
 	$jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->where('delay','<',1440)->whereNotIn('event_id', $crawling)->get();
