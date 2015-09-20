@@ -167,12 +167,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event/{{event_id}}" class="link" id="eventPageURL">' +
+        '<a href="event.php?id={{event_id}}" class="link" id="eventPageURL">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event/{{event_id}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event.php?id={{event_id}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
