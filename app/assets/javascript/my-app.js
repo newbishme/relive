@@ -118,6 +118,10 @@ myApp.onPageInit('landing', function(page) {
   });
 });
 
+myApp.onPageReinit('events', function (page) {
+  eventsInit(page);
+});
+
 // Callbacks to run specific code for specific pages, for example for events data page:
 myApp.onPageInit('events', function (page) {
   eventsInit(page);
@@ -162,55 +166,19 @@ function eventsInit(page) {
         return foundItems;
       }
   });
-
-  // Search if there's a query
-  if (page.query.q != null) {
-    $$('#search-input-box')[0].value = page.query.q;
-  }
   
   $$('.navbar').removeClass('hidden');
-
-  var isLandingPageHidden = false;
-  $$('.page-content').on('scroll', function() {
-    if (!isLandingPageHidden) {
-       // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
-      hideLandingPage();
-      isLandingPageHidden = true;
-      // $$('.page-content')[0].scrollTop = 0;
-    }
-  });
-
-  $$(".discover").on('click', function(e) {
-    hideLandingPage();
-  });
-
-  $$('.landing-searchbar').on('submit', function(e) {
-    var searchText = e.srcElement[0].value;
-    hideLandingPage();
-    search(searchText);
-  });
-
-  function hideLandingPage() {
-    $$('.landing-header').addClass('visually-hidden');
-    setTimeout(function() {
-      $$('.landing-header').remove();
-      $$('.searchbar-overlay').removeClass('hidden');
-      $$('.pull-to-refresh-layer').removeClass('hidden');
-    }, 1000);
-
-    $$('.navbar').removeClass('hidden').addClass('visible');
-    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled');
-  }
-
-  function search(query) {
-    $$('#search-input-box')[0].value = query;
-  }
 
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
     searchList: '.list-block-search',
     searchIn: '.card-header'
   });
+  
+  // Search if there's a query
+  if (page.query.q != null) {
+    $$('#search-input-box')[0].value = page.query.q;
+  }
 
   // Splits a given URL by its parameters if any (eg. ?id=1&name=ABC)
   function URLToArray(url) {
