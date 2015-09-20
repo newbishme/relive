@@ -22,7 +22,7 @@ if (isset($event_id)) {
 		$sourceLink = "https://relive.space/#!/event.php?id=" . $event->event_id . "&name=" . $event->eventName;
 		$fbPostMessage = "The event \"" . $event->eventName . "\" was just added to relive.space!\n\n" . $sourceLink;
 
-		$response = $fb->post('/' . $fbPageId . '/feed', ['message' => $fbPostMessage])
+		$response = $fb->post('/' . $fbPageId . '/feed', ['message' => $fbPostMessage]);
 
 		echo json_encode($response);
 	} catch (ModelNotFoundException $e) {
