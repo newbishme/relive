@@ -288,8 +288,7 @@ myApp.onPageInit('event', function (page) {
     }
 
     var eventNameKey = 'ReliveEvent' + eventName;
-
-    $$('.title-event-name').text(eventName);
+    $$('.title-event-name').html(decodeURI(eventName));
 
     function updateEventPosts(eventPostsData) {
       var postsData = [];
@@ -303,26 +302,31 @@ myApp.onPageInit('event', function (page) {
           items: postsData,
           template:
 
-          '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
-            '{{#if media}}' +
-            '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
-            '{{/if}}' +
-            '<div class="post-data-origin-wrapper">' +
-              '<div class="post-data">' +
-                '<div class="post-author">{{author}}</div>' +
-                '{{#if media}}' +
-                '<div class="post-content">{{caption}}</div>' +
-                '{{else}}' +
-                '<blockquote class="post-content">{{caption}}</blockquote>' +
-                '{{/if}}' +
+          '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout">' +
+            '<div class="swipeout-content">' +
+              '{{#if media}}' +
+              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
+              '{{/if}}' +
+              '<div class="post-data-origin-wrapper">' +
+                '<div class="post-data">' +
+                  '<div class="post-author">{{author}}</div>' +
+                  '{{#if media}}' +
+                  '<div class="post-content">{{caption}}</div>' +
+                  '{{else}}' +
+                  '<blockquote class="post-content">{{caption}}</blockquote>' +
+                  '{{/if}}' +
+                '</div>' +
+                '<div class="post-origin">' +
+                  '{{#if providerName}}' +
+                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
+                '</div>' +
               '</div>' +
-              '<div class="post-origin">' +
-                '{{#if providerName}}' +
-                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                '{{else}}' +
-                '<i class="icon ion-social-twitter-outline"></i>' +
-                '{{/if}}' +
-              '</div>' +
+            '</div>' +
+            '<div class="swipeout-actions-right">' +
+              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
             '</div>' +
           '</li>',
 
