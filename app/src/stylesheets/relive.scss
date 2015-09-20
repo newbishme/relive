@@ -32,6 +32,10 @@ a {
 	color: $linkColour;
 }
 
+.hidden {
+	display: none;
+}
+
 .page-content {
 	@media (min-width: $break-medium) {
 		margin: 0 auto;
@@ -76,6 +80,14 @@ form .item-content {
 	background-color: white;
 }
 
+.navbar {
+	opacity: 0;
+	&.visible {
+		opacity: 1;
+		transition: opacity 1.5s ease;
+	}
+}
+
 .navbar, .subnavbar, .subnavbar-search .searchbar {
 	background: $primaryColour;
 	a.link {
@@ -91,6 +103,88 @@ form .item-content {
 	color: white;
 	&:hover {
 		color: $linkHoverColour;
+	}
+}
+
+.landing-header {
+	padding: 0 10%;
+	height: 100vh;
+	color: $primaryColour;
+	display: -webkit-flex;
+	display: flex;
+    align-items: center;
+	-webkit-align-items: center;
+    justify-content: center;
+	-webkit-justify-content: center;
+	flex-flow: wrap column;
+	-webkit-flex-flow: wrap column;
+	
+	&.visually-hidden {
+    	height: 0;
+		opacity: 0;
+  		transition: height 1s ease, opacity 0.2s linear;
+	}
+
+	.landing-title {
+		font-family: 'Patua One';
+		font-size: 7em;
+		font-weight: normal;
+		margin: -20vh 0 0;
+	}
+	
+	.landing-caption {
+		font-size: 1.3em;
+		font-weight: 300;
+		text-align: center;
+	}
+
+	.searchbar {
+		background-color: transparent;
+		border: none;
+		margin-top: 20px;
+		padding: 0;
+		&:after {
+			display: none;
+		}
+		
+		.searchbar-input {
+			height: 100%;
+			input {
+				padding: 0 40px;
+				background-position: 15px center;
+			}
+		}
+		
+		.searchbar-clear {
+			height: 100%;
+		}
+	}
+	
+	.discover {
+		margin-top: 20vh;
+		cursor: pointer;
+		display: flex;
+    	align-items: center;
+		justify-content: center;
+		flex-flow: nowrap column;
+		
+		display: -webkit-flex;
+		-webkit-align-items: center;
+		-webkit-justify-content: center;
+		-webkit-flex-flow: nowrap column;
+		
+		&:hover {
+			color: lighten($primaryColour, 30%);
+		}
+		
+		.discover-caption {
+			font-size: 1em;
+			margin-bottom: 0.3em;
+		}
+		
+		i {
+			font-size: 2em;
+		}
 	}
 }
 
