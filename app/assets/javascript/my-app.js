@@ -288,8 +288,7 @@ myApp.onPageInit('event', function (page) {
     }
 
     var eventNameKey = 'ReliveEvent' + eventName;
-
-    $$('.title-event-name').text(eventName);
+    $$('.title-event-name').html(decodeURI(eventName));
 
     function updateEventPosts(eventPostsData) {
       var postsData = [];
