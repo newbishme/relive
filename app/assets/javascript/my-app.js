@@ -374,6 +374,7 @@ function homeInit(page) {
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
+  var hashtags = [];
   var posts = [];
   var eventPostsList;
   var loading = false;
@@ -384,12 +385,23 @@ myApp.onPageInit('event', function (page) {
     var pageId = page.query.id;
     var eventName = 'Event';
 
-    if (page.query.name != null) {
-      eventName = page.query.name;
-    }
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/'+pageId,
+      dataType:'json',
+      success:function(data) {
+        if (data.eventName != null) {
+          eventName = data.eventName;
+        }
+        if (data.hashtags != null) {
+          hashtags = data.hashtags;
+        }
+        $$('.title-event-name').html(decodeURI(eventName));
+        console.log(hashtags); // TODO update hash tag list at sidenav
+      } // End Success
+    }); // End ajax to get event information
 
-    var eventNameKey = 'ReliveEvent' + eventName;
-    $$('.title-event-name').html(decodeURI(eventName));
+    var eventNameKey = 'Relive-Event-ID-' + pageId;
 
     function updateEventPosts(eventPostsData) {
       if (eventPostsData != null) {
