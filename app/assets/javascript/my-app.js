@@ -15,6 +15,21 @@ function sendToGoogleAnalytics(page, title) {
   });
 }
 
+function isInArray(array, value) {
+  return array.indexOf(value) > -1;
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
 function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
   if (key == null) {
     return;
@@ -319,6 +334,7 @@ myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
   var hashtags = [];
+  var filteredHashtags = [];
   var posts = [];
   var eventPostsList;
   var loading = false;
@@ -344,7 +360,6 @@ myApp.onPageInit('event', function (page) {
           hashtags = data.hashtags;
         }
         $$('.title-event-name').html(decodeURI(eventName));
-        console.log(hashtags); // TODO update hash tag list at sidenav
         updateHashtagsList(hashtags);
       } // End Success
     }); // End ajax to get event information
@@ -365,9 +380,24 @@ myApp.onPageInit('event', function (page) {
         eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
       }
       $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
+      $$('.relive-filter-hashtag').on('click', function(e) {
+        if ($$(this) != null && $$(this)[0] != null) {
+          var checked = $$(this)[0].checked;
+          var hashtag = $$(this)[0].value;
+          if (!checked && !isInArray(filteredHashtags, hashtag)) {
+            filteredHashtags.push(hashtag);
+            updateEventPosts(posts);
+          } else if (checked && isInArray(filteredHashtags, hashtag)) {
+            removeFromArray(filteredHashtags, hashtag);
+            updateEventPosts(posts);
+          }
+        }
+      });
     }
 
     function updateEventPosts(eventPostsData) {
+      var filteredPosts = [];
+
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
@@ -378,8 +408,32 @@ myApp.onPageInit('event', function (page) {
         lastLoadedIndex += eventPostsData.length; // Count all included hidden items
       }
 
+      if (filteredHashtags.length > 0) {
+
+        console.log(filteredHashtags);
+        for (var i = 0; i < posts.length; i++) {
+          var currPost = posts[i];
+          var isMatch = false;
+          for (var j = 0; j < filteredHashtags.length; j++) {
+            for (var k = 0; k < currPost.hashtags.length; k++) {
+              if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
+                console.log("Filter: "+filteredHashtags[j].toUpperCase());
+                console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
+                isMatch = true;
+                break;
+              }
+            }
+          }
+          if (!isMatch) {
+            filteredPosts.push(currPost);
+          }
+        }
+      } else {
+        filteredPosts = posts;
+      }
+
       eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: posts,
+          items: filteredPosts,
           template:
 
           '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
