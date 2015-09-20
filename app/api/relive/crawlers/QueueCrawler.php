@@ -30,7 +30,7 @@ while(true) {
 			$queueObj = $objPQ->extract();
 			$job = $queueObj['data'];
 			$event = \relive\models\Event::find($job->event_id);
-			print "Crawling for event:".$event->event_id."->".$event->eventName." with Delay:".$job->delay."\n"
+			print "Crawling for event:".$event->event_id."->".$event->eventName." with Delay:".$job->delay."\n";
 			$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
 			foreach ($hashtagRelationships as $hashtagRelationship) {
 				$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
