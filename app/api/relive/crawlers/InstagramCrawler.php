@@ -80,9 +80,9 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
                 //$datetime->setTimestamp($instaPost->created_time);
                 $post = \relive\models\Post::firstOrCreate([
                     'datetime'=>$instaPost->created_time,
-                    'postURL'=>$instaPost->link,
-                    'author'=>$instaPost->user->username,
-                    'caption'=>$instaPost->caption->text,
+                    'postURL'=>htmlspecialchars($instaPost->link, ENT_QUOTES, 'UTF-8'),
+                    'author'=>htmlspecialchars($instaPost->user->username, ENT_QUOTES, 'UTF-8'),
+                    'caption'=>htmlspecialchars($instaPost->caption->text, ENT_QUOTES, 'UTF-8'),
                     'provider_id'=>$this->provider->provider_id,
                     'rankPoints'=>$rankPoints
                 ]);
@@ -110,6 +110,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
     private function createHashtags($post, $instaPost) {
         $hashtags = $instaPost->tags;
         foreach ($hashtags as $tag) {
+            $tag = htmlspecialchars($tag, ENT_QUOTES, 'UTF-8');
             $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
             $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
@@ -121,7 +122,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         if (isset($instaImages->low_resolution)) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$instaImages->low_resolution->url,
+                'mediaURL'=>htmlspecialchars($instaImages->low_resolution->url, ENT_QUOTES, 'UTF-8'),
                 'width'=>$instaImages->low_resolution->width,
                 'height'=>$instaImages->low_resolution->height,
                 'sizes'=>'low_resolution'
@@ -130,7 +131,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         if (isset($instaImages->thumbnail)) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$instaImages->thumbnail->url,
+                'mediaURL'=>htmlspecialchars($instaImages->thumbnail->url, ENT_QUOTES, 'UTF-8'),
                 'width'=>$instaImages->thumbnail->width,
                 'height'=>$instaImages->thumbnail->height,
                 'sizes'=>'thumbnail'
@@ -139,7 +140,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         if (isset($instaImages->standard_resolution)) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$instaImages->standard_resolution->url,
+                'mediaURL'=>htmlspecialchars($instaImages->standard_resolution->url, ENT_QUOTES, 'UTF-8'),
                 'width'=>$instaImages->standard_resolution->width,
                 'height'=>$instaImages->standard_resolution->height,
                 'sizes'=>'standard_resolution'

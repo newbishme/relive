@@ -61,9 +61,9 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             //$datetime->setTimestamp(strtotime($status->created_at));
             $post = \relive\models\Post::firstOrCreate([
                 'datetime'=>strtotime($status->created_at),
-                'postURL'=>$statusUrl,
-                'author'=>$status->user->screen_name,
-                'caption'=>$status->text,
+                'postURL'=>htmlspecialchars($statusUrl, ENT_QUOTES, 'UTF-8'),
+                'author'=>htmlspecialchars($status->user->screen_name, ENT_QUOTES, 'UTF-8'),
+                'caption'=>htmlspecialchars($status->text, ENT_QUOTES, 'UTF-8'),
                 'provider_id'=>$this->provider->provider_id,
                 'rankPoints'=>$rankPoints
             ]);
@@ -74,7 +74,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 
             if (isset($status->entities->media)) {
                 foreach($status->entities->media as $twitter_media) {
-                    $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>$twitter_media->type]);
+                    $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>htmlspecialchars($twitter_media->type, ENT_QUOTES, 'UTF-8')]);
                     $this->createMediaUrls($media->media_id, $twitter_media);
                 }
             }
@@ -90,7 +90,8 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
     private function createHashtags($post, $twitterPost) {
         $hashtags = $twitterPost->hashtags;
         foreach ($hashtags as $tag) {
-            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag->text]);
+            $tagText = htmlspecialchars($tag->text, ENT_QUOTES, 'UTF-8');
+            $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tagText]);
             $posthashtagrelationship = \relive\models\PostHashtagRelationship::firstOrCreate(['post_id'=>$post->post_id, 'hashtag_id' => $hashtag->hashtag_id]);
         }
     }
@@ -99,7 +100,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         if ($twitter_media->sizes->medium !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$twitter_media->media_url_https . ':medium',
+                'mediaURL'=>htmlspecialchars($twitter_media->media_url_https . ':medium', ENT_QUOTES, 'UTF-8'),
                 'width'=>$twitter_media->sizes->medium->w,
                 'height'=>$twitter_media->sizes->medium->h,
                 'sizes'=>'medium'
@@ -108,7 +109,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         if ($twitter_media->sizes->small !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$twitter_media->media_url_https . ':small',
+                'mediaURL'=>htmlspecialchars($twitter_media->media_url_https . ':small', ENT_QUOTES, 'UTF-8'),
                 'width'=>$twitter_media->sizes->small->w,
                 'height'=>$twitter_media->sizes->small->h,
                 'sizes'=>'small'
@@ -117,7 +118,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         if ($twitter_media->sizes->large !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$twitter_media->media_url_https . ':large',
+                'mediaURL'=>htmlspecialchars($twitter_media->media_url_https . ':large', ENT_QUOTES, 'UTF-8'),
                 'width'=>$twitter_media->sizes->large->w,
                 'height'=>$twitter_media->sizes->large->h,
                 'sizes'=>'large'
@@ -126,7 +127,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         if ($twitter_media->sizes->thumb !== null) {
             $media_url = \relive\models\MediaURL::firstOrCreate([
                 'media_id'=>$media_id,
-                'mediaURL'=>$twitter_media->media_url_https . ':thumb',
+                'mediaURL'=>htmlspecialchars($twitter_media->media_url_https . ':thumb', ENT_QUOTES, 'UTF-8'),
                 'width'=>$twitter_media->sizes->thumb->w,
                 'height'=>$twitter_media->sizes->thumb->h,
                 'sizes'=>'thumb'
