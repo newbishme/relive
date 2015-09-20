@@ -15,6 +15,21 @@ function sendToGoogleAnalytics(page, title) {
   });
 }
 
+function isInArray(array, value) {
+  return array.indexOf(value) > -1;
+}
+
+function removeFromArray(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+
 function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
   if (key == null) {
     return;
@@ -106,54 +121,28 @@ myApp.onPageReinit('landing', function(page) {
 });
 
 myApp.onPageInit('landing', function(page) {
-  console.log('landing');
-  // var isLandingPageHidden = false;
-  // $$('.page-content').on('scroll', function() {
-  //   if (!isLandingPageHidden) {
-  //      // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
-  //     hideLandingPage();
-  //     isLandingPageHidden = true;
-  //     // $$('.page-content')[0].scrollTop = 0;
-  //   }
-  // });
-
   $$('.navbar').addClass('hidden');
-  $$('.discover').on('click', function(e) {
-    mainView.router.load({pageName: 'home'});
-  });
-
+  
   $$('.landing-searchbar').on('submit', function(e) {
     var searchText = e.srcElement[0].value;
-    mainView.router.load({pageName: 'home'});
-    search(searchText);
+    var options = {
+      url: 'events.php',
+      query: {q: searchText},
+    };
+    mainView.router.load(options);
   });
-
-  function hideLandingPage() {
-    $$('.landing-header').addClass('visually-hidden');
-    setTimeout(function() {
-      $$('.landing-header').remove();
-      $$('.searchbar-overlay').removeClass('hidden');
-      $$('.pull-to-refresh-layer').removeClass('hidden');
-    }, 1000);
-
-    $$('.navbar').removeClass('hidden').addClass('visible');
-    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled');
-  }
-
-  function search(query) {
-    $$('#search-input-box')[0].value = query;
-  }
 });
 
-myApp.onPageReinit('home', function(page) {
-  homeInit(page);
-});
-// Callbacks to run specific code for specific pages, for example for Home data page:
-myApp.onPageInit('home', function (page) {
-  homeInit(page);
+myApp.onPageReinit('events', function (page) {
+  eventsInit(page);
 });
 
-function homeInit(page) {
+// Callbacks to run specific code for specific pages, for example for events data page:
+myApp.onPageInit('events', function (page) {
+  eventsInit(page);
+});
+
+function eventsInit(page) {
   sendToGoogleAnalytics('/', page.name);
 
   // TODO Get events from local cache, if not found, get from server
@@ -192,50 +181,19 @@ function homeInit(page) {
         return foundItems;
       }
   });
-
+  
   $$('.navbar').removeClass('hidden');
-
-  var isLandingPageHidden = false;
-  $$('.page-content').on('scroll', function() {
-    if (!isLandingPageHidden) {
-       // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
-      hideLandingPage();
-      isLandingPageHidden = true;
-      // $$('.page-content')[0].scrollTop = 0;
-    }
-  });
-
-  $$(".discover").on('click', function(e) {
-    hideLandingPage();
-  });
-
-  $$('.landing-searchbar').on('submit', function(e) {
-    var searchText = e.srcElement[0].value;
-    hideLandingPage();
-    search(searchText);
-  });
-
-  function hideLandingPage() {
-    $$('.landing-header').addClass('visually-hidden');
-    setTimeout(function() {
-      $$('.landing-header').remove();
-      $$('.searchbar-overlay').removeClass('hidden');
-      $$('.pull-to-refresh-layer').removeClass('hidden');
-    }, 1000);
-
-    $$('.navbar').removeClass('hidden').addClass('visible');
-    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled');
-  }
-
-  function search(query) {
-    $$('#search-input-box')[0].value = query;
-  }
 
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
     searchList: '.list-block-search',
     searchIn: '.card-header'
   });
+  
+  // Search if there's a query
+  if (page.query.q != null) {
+    $$('#search-input-box')[0].value = page.query.q;
+  }
 
   // Splits a given URL by its parameters if any (eg. ?id=1&name=ABC)
   function URLToArray(url) {
@@ -344,6 +302,7 @@ function homeInit(page) {
       updateTrendingList(data);
   }
 
+
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
 
@@ -374,24 +333,71 @@ function homeInit(page) {
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
+  var hashtags = [];
+  var filteredHashtags = [];
   var posts = [];
   var eventPostsList;
   var loading = false;
   var lastLoadedIndex = 0;
   var timeout = 3000;
+  var eventNameKey = 'Relive-Event-ID-' + pageId;
+  var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
+  var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
 
   if (page.query.id != null) {
     var pageId = page.query.id;
     var eventName = 'Event';
 
-    if (page.query.name != null) {
-      eventName = page.query.name;
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/'+pageId,
+      dataType:'json',
+      success:function(data) {
+        if (data.eventName != null) {
+          eventName = data.eventName;
+        }
+        if (data.hashtags != null) {
+          hashtags = data.hashtags;
+        }
+        $$('.title-event-name').html(decodeURI(eventName));
+        updateHashtagsList(hashtags);
+      } // End Success
+    }); // End ajax to get event information
+
+    // Initialize Side Nav Filter Hashtags
+    function updateHashtagsList(hashtags) {
+      var eventHashtags = [];
+      var eventHashtagHtml = '';
+
+      if (hashtags == null) {
+        return;
+      }
+
+      eventHashtags = hashtags;
+
+      for (var i = 0; i < eventHashtags.length; i++) {
+        var hashtag = {hashtag: eventHashtags[i]};
+        eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
+      }
+      $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
+      $$('.relive-filter-hashtag').on('click', function(e) {
+        if ($$(this) != null && $$(this)[0] != null) {
+          var checked = $$(this)[0].checked;
+          var hashtag = $$(this)[0].value;
+          if (!checked && !isInArray(filteredHashtags, hashtag)) {
+            filteredHashtags.push(hashtag);
+            updateEventPosts(posts);
+          } else if (checked && isInArray(filteredHashtags, hashtag)) {
+            removeFromArray(filteredHashtags, hashtag);
+            updateEventPosts(posts);
+          }
+        }
+      });
     }
 
-    var eventNameKey = 'ReliveEvent' + eventName;
-    $$('.title-event-name').html(decodeURI(eventName));
-
     function updateEventPosts(eventPostsData) {
+      var filteredPosts = [];
+
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
@@ -402,8 +408,32 @@ myApp.onPageInit('event', function (page) {
         lastLoadedIndex += eventPostsData.length; // Count all included hidden items
       }
 
+      if (filteredHashtags.length > 0) {
+
+        console.log(filteredHashtags);
+        for (var i = 0; i < posts.length; i++) {
+          var currPost = posts[i];
+          var isMatch = false;
+          for (var j = 0; j < filteredHashtags.length; j++) {
+            for (var k = 0; k < currPost.hashtags.length; k++) {
+              if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
+                console.log("Filter: "+filteredHashtags[j].toUpperCase());
+                console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
+                isMatch = true;
+                break;
+              }
+            }
+          }
+          if (!isMatch) {
+            filteredPosts.push(currPost);
+          }
+        }
+      } else {
+        filteredPosts = posts;
+      }
+
       eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: posts,
+          items: filteredPosts,
           template:
 
           '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
@@ -546,6 +576,16 @@ myApp.onPageInit('event', function (page) {
   }
 });
 
+// Hides and Shows filter hashtag list when appropriate
+myApp.onPageAfterAnimation('home', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
+myApp.onPageAfterAnimation('event', function (page) {
+  $$('div.event-hashtags-block').removeClass('hidden');
+});
+myApp.onPageAfterAnimation('form', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
 
 // Initialize form page
 myApp.onPageInit('form', function (page) {
@@ -563,6 +603,7 @@ myApp.onPageInit('form', function (page) {
   $$(document).on('ajaxComplete', function () {
       myApp.hideIndicator();
   });
+
 
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
