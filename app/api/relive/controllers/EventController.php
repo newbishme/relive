@@ -48,6 +48,8 @@ class EventController extends Controller {
 
 		$event = \relive\models\Event::find($event_id);
 		if ($event) {
+            $event->rankPoints=$event->rankPoints+1;
+            $event->save();
             $crawljob = \relive\models\CrawlJob::where('event_id','=',$event_id)->first();
             if ($crawljob) {
                 $crawljob->delay = 10;
