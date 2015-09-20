@@ -73,9 +73,8 @@
         <div class="navbar hidden">
           <div class="navbar-inner" >
             <div class="left"></div>
-            <div class="center sliding" id="page-title">relive</div>
+            <div class="center"></div>
             <div class="right">
-              <a href="#" class="link icon-only open-panel"><i class="icon ion-ios-more"></i></a>
             </div>
           </div>
         </div>
