@@ -129,7 +129,42 @@ myApp.onPageInit('home', function (page) {
         return foundItems;
       }
   });
-
+  
+  var isLandingPageHidden = false;
+  $$('.page-content').on('scroll', function() {
+    if (!isLandingPageHidden && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/5) {
+      hideLandingPage();
+      isLandingPageHidden = true;
+      $$('.page-content')[0].scrollTop = 0;
+    }
+  });
+  
+  $$(".discover").on('click', function(e) {
+    hideLandingPage();
+  });
+  
+  $$('.landing-searchbar').on('submit', function(e) {
+    var searchText = e.srcElement[0].value;
+    hideLandingPage();
+    search(searchText);
+  });
+  
+  function hideLandingPage() {
+    $$('.landing-header').addClass('visually-hidden');
+    setTimeout(function() {
+      $$('.landing-header').remove();
+      $$('.searchbar-overlay').removeClass('hidden');
+      $$('.pull-to-refresh-layer').removeClass('hidden');
+    }, 1000);
+    
+    $$('.navbar').removeClass('hidden').addClass('visible');
+    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled'); 
+  }
+  
+  function search(query) {
+    $$('#search-input-box')[0].value = query;
+  }
+  
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
     searchList: '.list-block-search',
