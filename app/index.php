@@ -78,7 +78,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
             <div class="page" data-page="landing">
@@ -87,7 +87,7 @@
                   <h1 class="landing-title">relive</h1>
                   <h4 class="landing-caption">Find interesting stories from various social media platforms
                       to relive these moments</h4>
-                  <form class="landing-searchbar searchbar">
+                  <form action="events.php" class="landing-searchbar searchbar">
                     <div class="searchbar-input">
                       <input id="landing-searchbar-input" type="search" placeholder="Look for an event to relive">
                     </div>

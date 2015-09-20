@@ -124,13 +124,15 @@ myApp.onPageInit('landing', function(page) {
   $$('.navbar').addClass('hidden');
   $$('#landing-searchbar-input').focus();
   $$('.landing-searchbar').on('submit', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     var searchText = e.srcElement[0].value;
-    console.log(searchText);
     var options = {
       url: 'events.php',
-      query: {q: searchText},
+      query: { q: searchText }
     };
     mainView.router.load(options);
+    return false;
   });
 });
 
@@ -145,7 +147,7 @@ myApp.onPageInit('events', function (page) {
 
 myApp.onPageAfterAnimation('events', function(page) {
   var mySearchbar = $$('.searchbar')[0].f7Searchbar;
-  
+
   // Search if there's a query
   if (page.query.q != null) {
     mySearchbar.search(page.query.q);
@@ -191,7 +193,7 @@ function eventsInit(page) {
         return foundItems;
       }
   });
-  
+
   $$('.navbar').removeClass('hidden');
 
   // Initialize Search bar
