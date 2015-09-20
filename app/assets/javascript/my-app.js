@@ -143,10 +143,11 @@ myApp.onPageInit('home', function (page) {
   
   var isLandingPageHidden = false;
   $$('.page-content').on('scroll', function() {
-    if (!isLandingPageHidden && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/5) {
+    if (!isLandingPageHidden) {
+       // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
       hideLandingPage();
       isLandingPageHidden = true;
-      $$('.page-content')[0].scrollTop = 0;
+      // $$('.page-content')[0].scrollTop = 0;
     }
   });
   
