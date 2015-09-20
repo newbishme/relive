@@ -123,7 +123,6 @@ myApp.onPageReinit('landing', function(page) {
 myApp.onPageInit('landing', function(page) {
   $$('.navbar').addClass('hidden');
   $$('#landing-searchbar-input').focus();
-  $$('#landing-searchbar-input').select();
   $$('.landing-searchbar').on('submit', function(e) {
     var searchText = e.srcElement[0].value;
     console.log(searchText);
