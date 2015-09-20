@@ -48,7 +48,11 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 	public function posteventrelationship() {
 		return $this->hasMany('relive\models\PostEventRelationship','post_id','post_id');
 	}
-	
+
+	public function report() {
+		return $this->hasMany('relive\models\Report', 'post_id', 'post_id');
+	}
+
 	public function posthashtagrelationship() {
 		return $this->hasMany('relive\models\PostHashtagRelationship','post_id','post_id');
 	}

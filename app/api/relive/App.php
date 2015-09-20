@@ -84,6 +84,11 @@ class App {
                         // Get {startAt,orderBy}
                         $app->get('', 'relive\controllers\EventController::getPostsForEvent');
                     });
+                    // Route /api/event/:event_id/report
+                    $app->group('/report', function() use ($app) {
+                        // Post
+                        $app->post('', 'relive\controllers\EventController::reportPostFromEvent');
+                    });
                     // Route /api/event/:event_id/hashtag
                     $app->group('/hashtag', function() use ($app) {
                         // Get
