@@ -170,6 +170,8 @@ class EventController extends Controller {
 		$eventName = @$allPostVars['relive-event-name']?@trim($allPostVars['relive-event-name']):NULL;
 		$hashtags = @$allPostVars['relive-hashtags']?$allPostVars['relive-hashtags']:[];  
 
+        $eventName = trim(htmlspecialchars($eventName, ENT_QUOTES, 'UTF-8'));
+
 		if (is_null($eventName)||empty($eventName)||strlen($eventName) > 255||count($hashtags)==0) {
 			$app->render(400, ['Status' => 'Invalid input.' ]);
 			return;
