@@ -105,12 +105,12 @@ myApp.onPageInit('home', function (page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link">' +
+        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link" id="eventPageURL">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -136,10 +136,41 @@ myApp.onPageInit('home', function (page) {
     searchIn: '.card-header'
   });
 
+  // Splits a given URL by its parameters if any (eg. ?id=1&name=ABC)
+  function URLToArray(url) {
+    var request = {};
+    var pairs = url.substring(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      if (!pairs[i]) continue;
+      var pair = pairs[i].split('=');
+      request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+    return request;
+  }
+
   function updateEventsList(eventsData) {
     eventsList.appendItems(eventsData);
     eventsList.update();
     lastEventId += eventsData.length;
+
+    // Allow offline a href clicks to still load the linked page
+    $$('a#eventPageURL').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var eventHref = $$(this).attr('href');
+      var eventHrefArray = URLToArray(eventHref);
+      var query = {
+        id: eventHrefArray['id'],
+        name: eventHrefArray['name']
+      };
+      var options = {
+          url: 'event.php',
+          query: query,
+          pushState: true
+      };
+      mainView.router.load(options);
+      return false;
+    });
   }
 
   if (navigator.onLine) {
@@ -257,35 +288,45 @@ myApp.onPageInit('event', function (page) {
     }
 
     var eventNameKey = 'ReliveEvent' + eventName;
-
-    $$('.title-event-name').text(eventName);
+    $$('.title-event-name').html(decodeURI(eventName));
 
     function updateEventPosts(eventPostsData) {
-      lastLoadedIndex += eventPostsData.length;
+      var postsData = [];
+
+      if (eventPostsData != null) {
+        postsData = eventPostsData;
+        lastLoadedIndex += postsData.length;
+      }
+
       eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: eventPostsData,
+          items: postsData,
           template:
 
-          '<li class="{{#if media}}image{{else}}text{{/if}} post">' +
-            '{{#if media}}' +
-            '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
-            '{{/if}}' +
-            '<div class="post-data-origin-wrapper">' +
-              '<div class="post-data">' +
-                '<div class="post-author">{{author}}</div>' +
-                '{{#if media}}' +
-                '<div class="post-content">{{caption}}</div>' +
-                '{{else}}' +
-                '<blockquote class="post-content">{{caption}}</blockquote>' +
-                '{{/if}}' +
+          '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout">' +
+            '<div class="swipeout-content">' +
+              '{{#if media}}' +
+              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
+              '{{/if}}' +
+              '<div class="post-data-origin-wrapper">' +
+                '<div class="post-data">' +
+                  '<div class="post-author">{{author}}</div>' +
+                  '{{#if media}}' +
+                  '<div class="post-content">{{caption}}</div>' +
+                  '{{else}}' +
+                  '<blockquote class="post-content">{{caption}}</blockquote>' +
+                  '{{/if}}' +
+                '</div>' +
+                '<div class="post-origin">' +
+                  '{{#if providerName}}' +
+                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
+                '</div>' +
               '</div>' +
-              '<div class="post-origin">' +
-                '{{#if providerName}}' +
-                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                '{{else}}' +
-                '<i class="icon ion-social-twitter-outline"></i>' +
-                '{{/if}}' +
-              '</div>' +
+            '</div>' +
+            '<div class="swipeout-actions-right">' +
+              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
             '</div>' +
           '</li>',
 
