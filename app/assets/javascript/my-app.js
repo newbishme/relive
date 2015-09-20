@@ -106,54 +106,24 @@ myApp.onPageReinit('landing', function(page) {
 });
 
 myApp.onPageInit('landing', function(page) {
-  console.log('landing');
-  // var isLandingPageHidden = false;
-  // $$('.page-content').on('scroll', function() {
-  //   if (!isLandingPageHidden) {
-  //      // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
-  //     hideLandingPage();
-  //     isLandingPageHidden = true;
-  //     // $$('.page-content')[0].scrollTop = 0;
-  //   }
-  // });
-  
   $$('.navbar').addClass('hidden');
-  $$('.discover').on('click', function(e) {
-    mainView.router.load({pageName: 'home'});
-  });
   
   $$('.landing-searchbar').on('submit', function(e) {
     var searchText = e.srcElement[0].value;
-    mainView.router.load({pageName: 'home'});
-    search(searchText);
+    var options = {
+      url: 'events.php',
+      query: {q: searchText},
+    };
+    mainView.router.load(options);
   });
-  
-  function hideLandingPage() {
-    $$('.landing-header').addClass('visually-hidden');
-    setTimeout(function() {
-      $$('.landing-header').remove();
-      $$('.searchbar-overlay').removeClass('hidden');
-      $$('.pull-to-refresh-layer').removeClass('hidden');
-    }, 1000);
-    
-    $$('.navbar').removeClass('hidden').addClass('visible');
-    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled'); 
-  }
-  
-  function search(query) {
-    $$('#search-input-box')[0].value = query;
-  }
 });
 
-myApp.onPageReinit('home', function(page) {
-  homeInit(page);
-});
-// Callbacks to run specific code for specific pages, for example for Home data page:
-myApp.onPageInit('home', function (page) {
-  homeInit(page);
+// Callbacks to run specific code for specific pages, for example for events data page:
+myApp.onPageInit('events', function (page) {
+  eventsInit(page);
 });
 
-function homeInit(page) {
+function eventsInit(page) {
   sendToGoogleAnalytics('/', page.name);
 
   // TODO Get events from local cache, if not found, get from server
@@ -192,6 +162,11 @@ function homeInit(page) {
         return foundItems;
       }
   });
+
+  // Search if there's a query
+  if (page.query.q != null) {
+    $$('#search-input-box')[0].value = page.query.q;
+  }
   
   $$('.navbar').removeClass('hidden');
   
