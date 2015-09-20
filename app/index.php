@@ -70,7 +70,7 @@
       <div class="view view-main">
 
         <!-- Top Navbar-->
-        <div class="navbar hidden">
+        <div class="navbar">
           <div class="navbar-inner" >
             <div class="left"></div>
             <div class="center"></div>
@@ -89,7 +89,7 @@
                       to relive these moments</h4>
                   <form class="landing-searchbar searchbar">
                     <div class="searchbar-input">
-                      <input type="search" placeholder="Look for an event to relive">
+                      <input id="landing-searchbar-input" type="search" placeholder="Look for an event to relive">
                     </div>
                   </form>
                   <a href="events.php" class="discover">
