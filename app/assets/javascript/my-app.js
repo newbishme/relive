@@ -97,11 +97,63 @@ var myApp = new Framework7({
 
 // Add view
 var mainView = myApp.addView('.view-main', {
-    dynamicNavbar: true
+    dynamicNavbar: true,
+    domCache: true
 });
 
+myApp.onPageReinit('landing', function(page) {
+  $$('.navbar').addClass('hidden');
+});
+
+myApp.onPageInit('landing', function(page) {
+  console.log('landing');
+  // var isLandingPageHidden = false;
+  // $$('.page-content').on('scroll', function() {
+  //   if (!isLandingPageHidden) {
+  //      // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
+  //     hideLandingPage();
+  //     isLandingPageHidden = true;
+  //     // $$('.page-content')[0].scrollTop = 0;
+  //   }
+  // });
+  
+  $$('.navbar').addClass('hidden');
+  $$('.discover').on('click', function(e) {
+    mainView.router.load({pageName: 'home'});
+  });
+  
+  $$('.landing-searchbar').on('submit', function(e) {
+    var searchText = e.srcElement[0].value;
+    mainView.router.load({pageName: 'home'});
+    search(searchText);
+  });
+  
+  function hideLandingPage() {
+    $$('.landing-header').addClass('visually-hidden');
+    setTimeout(function() {
+      $$('.landing-header').remove();
+      $$('.searchbar-overlay').removeClass('hidden');
+      $$('.pull-to-refresh-layer').removeClass('hidden');
+    }, 1000);
+    
+    $$('.navbar').removeClass('hidden').addClass('visible');
+    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled'); 
+  }
+  
+  function search(query) {
+    $$('#search-input-box')[0].value = query;
+  }
+});
+
+myApp.onPageReinit('home', function(page) {
+  homeInit(page);
+});
 // Callbacks to run specific code for specific pages, for example for Home data page:
 myApp.onPageInit('home', function (page) {
+  homeInit(page);
+});
+
+function homeInit(page) {
   sendToGoogleAnalytics('/', page.name);
 
   // TODO Get events from local cache, if not found, get from server
@@ -141,41 +193,7 @@ myApp.onPageInit('home', function (page) {
       }
   });
   
-  var isLandingPageHidden = false;
-  $$('.page-content').on('scroll', function() {
-    if (!isLandingPageHidden) {
-       // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
-      hideLandingPage();
-      isLandingPageHidden = true;
-      // $$('.page-content')[0].scrollTop = 0;
-    }
-  });
-  
-  $$(".discover").on('click', function(e) {
-    hideLandingPage();
-  });
-  
-  $$('.landing-searchbar').on('submit', function(e) {
-    var searchText = e.srcElement[0].value;
-    hideLandingPage();
-    search(searchText);
-  });
-  
-  function hideLandingPage() {
-    $$('.landing-header').addClass('visually-hidden');
-    setTimeout(function() {
-      $$('.landing-header').remove();
-      $$('.searchbar-overlay').removeClass('hidden');
-      $$('.pull-to-refresh-layer').removeClass('hidden');
-    }, 1000);
-    
-    $$('.navbar').removeClass('hidden').addClass('visible');
-    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled'); 
-  }
-  
-  function search(query) {
-    $$('#search-input-box')[0].value = query;
-  }
+  $$('.navbar').removeClass('hidden');
   
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
@@ -315,7 +333,7 @@ myApp.onPageInit('home', function (page) {
     }, 1000);
   });
 
-});
+}
 
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);

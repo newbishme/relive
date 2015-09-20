@@ -46,8 +46,8 @@
       <div class="view view-main">
                    
         <!-- Top Navbar-->
-        <div class="navbar">
-          <div class="navbar-inner">
+        <div class="navbar" data-page="home">
+          <div class="navbar-inner" >
             <div class="left"></div>
             <div class="center sliding" id="page-title">relive</div>
             <div class="right">
@@ -71,10 +71,8 @@
 
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through">
-            <div class="page with-subnavbar" data-page="home">
-              <div class="searchbar-overlay hidden"></div>
-              <div class="page-content pull-to-refresh-content" data-ptr-distance="55">
-                
+            <div class="page" data-page="landing">
+              <div class="page-content">
                 <div class="landing-header">
                   <h1 class="landing-title">relive</h1>
                   <h4 class="landing-caption">Find interesting stories from various social media platforms
@@ -85,13 +83,17 @@
                       <a href="#" class="searchbar-clear"></a>
                     </div>
                   </form>
-                  <div class="discover">
-                    <h4 class="discover-caption">Discover</h4>
-                    <i class="icon ion-chevron-down"></i>
-                  </div>
+                  <a href="#home" class="discover">
+                    <h4 class="discover-caption">Discover<i class="icon ion-chevron-right"></i></h4>
+                  </a>
                 </div>
-                
-                <div class="pull-to-refresh-layer hidden">
+              </div>
+            </div>
+            
+            <div class="page cached with-subnavbar" data-page="home">
+              <div class="searchbar-overlay"></div>
+              <div class="page-content pull-to-refresh-content" data-ptr-distance="55">
+                <div class="pull-to-refresh-layer">
                   <div class="preloader"></div>
                   <div class="pull-to-refresh-arrow"></div>
                 </div>
@@ -104,25 +106,11 @@
                   </div>
                 </div>
 
-                <!--<div class="content-block landing-what-is-relive">
-                  <div class="content-block-title">What is relive?</div>
-                  <div class="content-block inset">
-                    <div class="content-block-inner">
-                      <p>
-                      relive.space finds interesting stories from various social media platforms
-                      to let you relive these moments easily.
-                      </p>
-                    </div>
-                  </div>
-                </div>-->
-
                 <div id="featured" class="list-block list-block-search virtual-list searchbar-found" id="home-landing-events"></div>
 
               </div>
             </div>
         </div>
-
-
       </div>
     </div>
     <script type="text/javascript" src="assets/javascript/framework7.min.js"></script>
