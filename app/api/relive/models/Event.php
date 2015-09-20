@@ -17,7 +17,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['hashtags','posts'];
+	protected $appends = ['hashtags'];
 	protected $hidden = array('rankPoints','eventhashtagrelationship','posteventrelationship');
 
 
