@@ -49,8 +49,10 @@ class EventController extends Controller {
 		$event = \relive\models\Event::find($event_id);
 		if ($event) {
             $crawljob = \relive\models\CrawlJob::where('event_id','=',$event_id)->first();
-            $crawljob->delay = 10;
-            $crawljob->save();
+            if ($crawljob) {
+                $crawljob->delay = 10;
+                $crawljob->save();
+            }
 
 			$posts = \relive\models\Post::whereIn('post_id', function($query) use ($event_id) { 
 				$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event_id)->where('isFiltered',False);
