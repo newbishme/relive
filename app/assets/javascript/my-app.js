@@ -320,11 +320,11 @@ myApp.onPageInit('home', function (page) {
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
-  // TODO Get events from local cache, if not found, get from server
   var posts = [];
   var eventPostsList;
   var loading = false;
   var lastLoadedIndex = 0;
+  var timeout = 3000;
 
   if (page.query.id != null) {
     var pageId = page.query.id;
@@ -338,20 +338,18 @@ myApp.onPageInit('event', function (page) {
     $$('.title-event-name').html(decodeURI(eventName));
 
     function updateEventPosts(eventPostsData) {
-      var postsData = [];
-
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
           if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
-            postsData.push(post);
+            posts.push(post);
           }
         });
-        lastLoadedIndex += postsData.length;
+        lastLoadedIndex += eventPostsData.length; // Count all included hidden items
       }
 
       eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: postsData,
+          items: posts,
           template:
 
           '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
@@ -378,7 +376,7 @@ myApp.onPageInit('event', function (page) {
               '</div>' +
             '</div>' +
             '<div class="swipeout-actions-right">' +
-              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
+              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
           '</li>',
 
@@ -391,13 +389,29 @@ myApp.onPageInit('event', function (page) {
 
       $$('.swipeout').on('deleted', function () {
         var relivePostId = $$(this).attr('relive-post-id');
-        // console.log(relivePostId); // TODO feedback of hidden post to backend endpoint
+        $$.ajax({
+          type:'POST',
+          url:'https://relive.space/api/event/'+pageId+'/report',
+          data:{"post_id":relivePostId},
+          dataType:'text',
+          success:function(data) {
+          } // End Success
+        });
         var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
         storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
       });
+
+      if (eventPostsData === null || eventPostsData.length <= 0) {
+        if (navigator.onLine) {
+          setTimeout(function() {
+            getPostsWithAJAX();
+          }, timeout);
+          timeout *= 2;
+        }
+      }
     }
 
-    if (navigator.onLine) {
+    function getPostsWithAJAX() {
       $$.ajax({
         type:'GET',
         url:'https://relive.space/api/event/'+pageId+'/post',
@@ -406,8 +420,18 @@ myApp.onPageInit('event', function (page) {
         success:function(data) {
           storeJsonToLocalStorage(eventNameKey, data);
           updateEventPosts(data);
-        } // End Success
+          if (data.length > 0) {
+            timeout = 3000;
+          }
+        }, // End Success
+        error:function() {
+          updateEventPosts(null);
+        }
       }); // End AJAX
+    }
+
+    if (navigator.onLine) {
+      getPostsWithAJAX();
     } else {
       var eventPostsData = loadJsonFromLocalStorage(eventNameKey);
       updateEventPosts(eventPostsData);
@@ -424,13 +448,21 @@ myApp.onPageInit('event', function (page) {
           url:'https://relive.space/api/event/'+pageId+'/post',
           data:{"startAt":lastLoadedIndex},
           dataType:'json',
+          timeout: 5000,
           success:function(data){
             loading = false;
             if (data === '') {
               //  Nothing to load, detach infinite scroll events
               myApp.detachInfiniteScroll(".infinite-scroll");
             } else {
-              eventPostsList.appendItems(data);
+              var morePosts = [];
+              data.forEach(function(post){
+                var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
+                if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
+                  morePosts.push(post);
+                }
+              });
+              eventPostsList.appendItems(morePosts);
               eventPostsList.update();
               lastLoadedIndex += data.length;
             }
@@ -583,7 +615,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   var options = {
       url: 'event.php',
       query: query,
-      pushState: true
+      pushState: false
   };
   mainView.router.load(options);
 });
