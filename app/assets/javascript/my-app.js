@@ -15,6 +15,17 @@ function sendToGoogleAnalytics(page, title) {
   });
 }
 
+function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
+  if (key == null) {
+    return;
+  }
+  localStorage.setItem(key, hiddenPostId);
+}
+
+function isPostHiddenInLocalStorage(key) {
+  return localStorage.getItem(key) != null;
+}
+
 function storeJsonToLocalStorage(key, jsonData) {
   if (key == null) {
     return;
@@ -294,7 +305,12 @@ myApp.onPageInit('event', function (page) {
       var postsData = [];
 
       if (eventPostsData != null) {
-        postsData = eventPostsData;
+        eventPostsData.forEach(function(post){
+          var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
+          if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
+            postsData.push(post);
+          }
+        });
         lastLoadedIndex += postsData.length;
       }
 
@@ -302,7 +318,7 @@ myApp.onPageInit('event', function (page) {
           items: postsData,
           template:
 
-          '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout">' +
+          '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
             '<div class="swipeout-content">' +
               '{{#if media}}' +
               '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
@@ -336,6 +352,13 @@ myApp.onPageInit('event', function (page) {
             else return 200;
           }
       }); // End virtualList initialization
+
+      $$('.swipeout').on('deleted', function () {
+        var relivePostId = $$(this).attr('relive-post-id');
+        // console.log(relivePostId); // TODO feedback of hidden post to backend endpoint
+        var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
+        storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
+      });
     }
 
     if (navigator.onLine) {
