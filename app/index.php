@@ -22,7 +22,7 @@
             <div id="side-nav-trending-events"></div>
             <script id="sideNavTrendingEventTemplate" type="text/template7">
               <li>
-                <a href="event.php?id={{event_id}}&name={{eventName}}" class="item-link close-panel">
+                <a href="event.php?id={{event_id}}" class="item-link close-panel" id="eventPageURL" relive-event-id="{{event_id}}">
                   <div class="item-content">
                     <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
                     <div class="item-inner">
