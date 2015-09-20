@@ -169,12 +169,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link" id="eventPageURL">' +
+        '<a href="event.php?id={{event_id}}" class="link" id="eventPageURL">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event.php?id={{event_id}}&name={{eventName}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event.php?id={{event_id}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -350,7 +350,8 @@ myApp.onPageInit('event', function (page) {
   var eventNameKey = 'Relive-Event-ID-' + pageId;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
-
+  
+  $$('.navbar').removeClass('hidden');
   if (page.query.id != null) {
     var pageId = page.query.id;
     var eventName = 'Event';
@@ -604,6 +605,8 @@ myApp.onPageInit('form', function (page) {
   var hashtags = [];
   var id = 1;
 
+  $$('.navbar').removeClass('hidden');
+  
   $$(document).on('ajaxStart', function () {
       myApp.showIndicator();
   });
