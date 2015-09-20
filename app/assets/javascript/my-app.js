@@ -284,7 +284,6 @@ myApp.onPageInit('home', function (page) {
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
-  // TODO Get events from local cache, if not found, get from server
   var posts = [];
   var eventPostsList;
   var loading = false;
@@ -342,7 +341,7 @@ myApp.onPageInit('event', function (page) {
               '</div>' +
             '</div>' +
             '<div class="swipeout-actions-right">' +
-              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
+              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
           '</li>',
 
@@ -547,7 +546,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   var options = {
       url: 'event.php',
       query: query,
-      pushState: true
+      pushState: false
   };
   mainView.router.load(options);
 });
