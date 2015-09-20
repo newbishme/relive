@@ -39,7 +39,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
 
 	public function getPostsAttribute() {
 		$posts = \relive\models\Post::whereIn('post_id', function($query) {
-			$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id);
+			$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id)->where('isFiltered',False);
 		})->orderBy('datetime','desc')->offset(0)->limit(15)->get();
 
 

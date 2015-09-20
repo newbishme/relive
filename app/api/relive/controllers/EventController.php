@@ -26,7 +26,6 @@ class EventController extends Controller {
 
 		$event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($event, JSON_UNESCAPED_SLASHES);
-
 	}
 
 	public static function getPostsForEvent($event_id) {
@@ -50,7 +49,7 @@ class EventController extends Controller {
 		$event = \relive\models\Event::find($event_id);
 		if ($event) {
 			$posts = \relive\models\Post::whereIn('post_id', function($query) use ($event_id) { 
-				$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event_id); 
+				$query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event_id)->where('isFiltered',False);
 			})->orderBy('datetime','desc')->offset($startAt)->limit($limit)->get();
 
 			echo json_encode($posts, JSON_UNESCAPED_SLASHES);
