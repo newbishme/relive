@@ -1,7 +1,6 @@
 <?php
 
 require_once '/var/www/vendor/autoload.php';
-include("dbconfig.php");
 
 use \relive\Crawlers\TwitterCrawler;
 use \relive\Crawlers\InstagramCrawler;
