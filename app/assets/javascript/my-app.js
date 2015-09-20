@@ -194,7 +194,6 @@ function homeInit(page) {
   });
 
   $$('.navbar').removeClass('hidden');
-  $$('div.event-hashtags-block').addClass('hidden');
 
   var isLandingPageHidden = false;
   $$('.page-content').on('scroll', function() {
@@ -420,12 +419,9 @@ myApp.onPageInit('event', function (page) {
 
       for (var i = 0; i < eventHashtags.length; i++) {
         var hashtag = {hashtag: eventHashtags[i]};
-        console.log(hashtag);
         eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
       }
       $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
-      $$('div.event-hashtags-block').removeClass('hidden');
-      console.log($$('div#side-nav-event-hashtags').html());
     }
 
     function updateEventPosts(eventPostsData) {
@@ -583,6 +579,16 @@ myApp.onPageInit('event', function (page) {
   }
 });
 
+// Hides and Shows filter hashtag list when appropriate
+myApp.onPageAfterAnimation('home', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
+myApp.onPageAfterAnimation('event', function (page) {
+  $$('div.event-hashtags-block').removeClass('hidden');
+});
+myApp.onPageAfterAnimation('form', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
 
 // Initialize form page
 myApp.onPageInit('form', function (page) {
@@ -601,7 +607,6 @@ myApp.onPageInit('form', function (page) {
       myApp.hideIndicator();
   });
 
-  $$('div.event-hashtags-block').addClass('hidden');
 
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
