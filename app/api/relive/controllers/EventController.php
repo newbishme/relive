@@ -169,6 +169,7 @@ class EventController extends Controller {
 		$allPostVars = $app->request->post();
 		$eventName = @$allPostVars['relive-event-name']?@trim($allPostVars['relive-event-name']):NULL;
 		$hashtags = @$allPostVars['relive-hashtags']?$allPostVars['relive-hashtags']:[];  
+        $eventName = htmlspecialchars($eventName, ENT_QUOTES, 'UTF-8');
 
 		if (is_null($eventName)||empty($eventName)||strlen($eventName) > 255||count($hashtags)==0) {
 			$app->render(400, ['Status' => 'Invalid input.' ]);
@@ -180,7 +181,7 @@ class EventController extends Controller {
             $event->save();
 
 			foreach($hashtags as $tag) {
-				$tag = trim($tag);
+				$tag = trim(htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'));
 				if (!empty($tag) && strlen($tag) < 255) {
 					$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
 					$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event->event_id, 'hashtag_id' => $hashtag->hashtag_id]);
@@ -198,6 +199,7 @@ class EventController extends Controller {
 
 		$allPostVars = $app->request->post();
 		$hashtag = @$allPostVars['hashtag']?trim($allPostVars['hashtag']):NULL;
+        $hashtag = htmlspecialchars($hashtag, ENT_QUOTES, 'UTF-8');
 
 		if (!filter_var($event_id, FILTER_VALIDATE_INT)||is_null($hashtag)||strlen($hashtag)>255||empty($hashtag)) {
 			$app->render(400, ['Status' => 'Invalid input.' ]);

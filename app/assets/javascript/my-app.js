@@ -169,7 +169,43 @@ function eventsInit(page) {
   }
   
   $$('.navbar').removeClass('hidden');
-  
+
+  var isLandingPageHidden = false;
+  $$('.page-content').on('scroll', function() {
+    if (!isLandingPageHidden) {
+       // && $$('.page-content')[0].scrollTop > $$('.landing-header')[0].clientHeight/6) {
+      hideLandingPage();
+      isLandingPageHidden = true;
+      // $$('.page-content')[0].scrollTop = 0;
+    }
+  });
+
+  $$(".discover").on('click', function(e) {
+    hideLandingPage();
+  });
+
+  $$('.landing-searchbar').on('submit', function(e) {
+    var searchText = e.srcElement[0].value;
+    hideLandingPage();
+    search(searchText);
+  });
+
+  function hideLandingPage() {
+    $$('.landing-header').addClass('visually-hidden');
+    setTimeout(function() {
+      $$('.landing-header').remove();
+      $$('.searchbar-overlay').removeClass('hidden');
+      $$('.pull-to-refresh-layer').removeClass('hidden');
+    }, 1000);
+
+    $$('.navbar').removeClass('hidden').addClass('visible');
+    $$('.searchbar-disabled').addClass('searchbar').removeClass('searchbar-disabled');
+  }
+
+  function search(query) {
+    $$('#search-input-box')[0].value = query;
+  }
+
   // Initialize Search bar
   var eventsSearchbar = myApp.searchbar('.searchbar', {
     searchList: '.list-block-search',
@@ -283,6 +319,7 @@ function eventsInit(page) {
       updateTrendingList(data);
   }
 
+
   // Initialize Pull to refresh
   var ptrContent = $$('.pull-to-refresh-content');
 
@@ -313,22 +350,54 @@ function eventsInit(page) {
 myApp.onPageInit('event', function (page) {
   sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
 
+  var hashtags = [];
   var posts = [];
   var eventPostsList;
   var loading = false;
   var lastLoadedIndex = 0;
   var timeout = 3000;
+  var eventNameKey = 'Relive-Event-ID-' + pageId;
+  var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
+  var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
 
   if (page.query.id != null) {
     var pageId = page.query.id;
     var eventName = 'Event';
 
-    if (page.query.name != null) {
-      eventName = page.query.name;
-    }
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/'+pageId,
+      dataType:'json',
+      success:function(data) {
+        if (data.eventName != null) {
+          eventName = data.eventName;
+        }
+        if (data.hashtags != null) {
+          hashtags = data.hashtags;
+        }
+        $$('.title-event-name').html(decodeURI(eventName));
+        console.log(hashtags); // TODO update hash tag list at sidenav
+        updateHashtagsList(hashtags);
+      } // End Success
+    }); // End ajax to get event information
 
-    var eventNameKey = 'ReliveEvent' + eventName;
-    $$('.title-event-name').html(decodeURI(eventName));
+    // Initialize Side Nav Filter Hashtags
+    function updateHashtagsList(hashtags) {
+      var eventHashtags = [];
+      var eventHashtagHtml = '';
+
+      if (hashtags == null) {
+        return;
+      }
+
+      eventHashtags = hashtags;
+
+      for (var i = 0; i < eventHashtags.length; i++) {
+        var hashtag = {hashtag: eventHashtags[i]};
+        eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
+      }
+      $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
+    }
 
     function updateEventPosts(eventPostsData) {
       if (eventPostsData != null) {
@@ -348,7 +417,7 @@ myApp.onPageInit('event', function (page) {
           '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
             '<div class="swipeout-content">' +
               '{{#if media}}' +
-              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img"></div>' +
+              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img relive-photobrowser-lazy" relive-mediabrowser-url="{{media.data.0.mediaURL}}" relive-mediabrowser-caption="{{caption}}"></div>' +
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
@@ -377,22 +446,41 @@ myApp.onPageInit('event', function (page) {
           height: function (post) {
             if (post.media) return 500;
             else return 200;
+          },
+          onItemsAfterInsert: function (list, fragment) {
+            $$('.swipeout').on('deleted', function () {
+              var relivePostId = $$(this).attr('relive-post-id');
+              $$.ajax({
+                type:'POST',
+                url:'https://relive.space/api/event/'+pageId+'/report',
+                data:{"post_id":relivePostId},
+                dataType:'text',
+                success:function(data) {
+                } // End Success
+              });
+              var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
+              storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
+            });
+
+            $$('.relive-photobrowser-lazy').on('click', function () {
+                var mediaURL = $$(this).attr('relive-mediabrowser-url');
+                var mediaCaption = $$(this).attr('relive-mediabrowser-caption');
+                var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
+
+                // Initialize Media Browser
+                var relivePhotoBrowser = myApp.photoBrowser({
+                    photos: mediaObjects,
+                    theme: 'dark',
+                    navbar: false,
+                    toolbar: false,
+                    onTap: function (swiper, event) {
+                      relivePhotoBrowser.close();
+                    }
+                });
+                relivePhotoBrowser.open();
+            });
           }
       }); // End virtualList initialization
-
-      $$('.swipeout').on('deleted', function () {
-        var relivePostId = $$(this).attr('relive-post-id');
-        $$.ajax({
-          type:'POST',
-          url:'https://relive.space/api/event/'+pageId+'/report',
-          data:{"post_id":relivePostId},
-          dataType:'text',
-          success:function(data) {
-          } // End Success
-        });
-        var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
-        storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
-      });
 
       if (eventPostsData === null || eventPostsData.length <= 0) {
         if (navigator.onLine) {
@@ -466,6 +554,16 @@ myApp.onPageInit('event', function (page) {
   }
 });
 
+// Hides and Shows filter hashtag list when appropriate
+myApp.onPageAfterAnimation('home', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
+myApp.onPageAfterAnimation('event', function (page) {
+  $$('div.event-hashtags-block').removeClass('hidden');
+});
+myApp.onPageAfterAnimation('form', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
 
 // Initialize form page
 myApp.onPageInit('form', function (page) {
@@ -483,6 +581,7 @@ myApp.onPageInit('form', function (page) {
   $$(document).on('ajaxComplete', function () {
       myApp.hideIndicator();
   });
+
 
   $$('.event-name-input').on('focusout', function(e) {
     if (e.srcElement.value.length === 0) {
