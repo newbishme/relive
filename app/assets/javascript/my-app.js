@@ -170,12 +170,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event.php?id={{event_id}}" class="link" id="eventPageURL">' +
+        '<a href="event/{{event_id}}" class="link" id="eventPageURL" relive-event-id="{{event_id}}">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event.php?id={{event_id}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event/{{event_id}}" class="link right" id="eventPageURL">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -223,17 +223,16 @@ function eventsInit(page) {
     // Allow offline a href clicks to still load the linked page
     $$('a#eventPageURL').on('click', function (e) {
       e.preventDefault();
-      e.stopPropagation();
-      var eventHref = $$(this).attr('href');
-      var eventHrefArray = URLToArray(eventHref);
+      var eventId = $$(this).attr('relive-event-id')
       var query = {
-        id: eventHrefArray['id']
+        id: eventId
       };
       var options = {
-          url: 'event.php',
+          url: 'event.php?id='+eventId,
           query: query,
           pushState: true
       };
+      myApp.closePanel();
       mainView.router.load(options);
       return false;
     });
@@ -737,7 +736,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
     name: eventDetails.eventName
   };
   var options = {
-      url: 'event.php',
+      url: 'event.php?id='+query.id,
       query: query,
       pushState: false
   };
