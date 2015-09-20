@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 1.0.4
+# version 1.0.5.3
 
 CACHE:
 # Pages
@@ -29,6 +29,7 @@ assets/stylesheets/framework7.ios.min.css
 assets/stylesheets/framework7.ios.colors.min.css
 assets/stylesheets/ionicons.min.css
 assets/stylesheets/my-app.ios.css
+https://fonts.googleapis.com/css?family=Patua+One%7COxygen:400,300,700
 https://fonts.googleapis.com/css?family=Patua+One|Oxygen:400,300,700
 
 # Manifest
