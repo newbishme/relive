@@ -67,6 +67,10 @@ function loadImgFromLocalStorage(key) {
   return localStorage.getItem(key);
 }
 
+function removeItemFromLocalStorage(key) {
+  localStorage.removeItem(key);
+}
+
 function convertImgToBase64URL(url, callback, outputFormat){
     var img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -440,8 +444,7 @@ myApp.onPageInit('event', function (page) {
               '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
             '<div class="swipeout-actions-left">' +
-
-              '<a href="#" id="swipeToSaveFavourites" class="bg-green swipeout-overswipe swipeout-close" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+              '<a href="#" id="swipeToSaveFavourites" class="bg-green" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
             '</div>' +
           '</li>',
 
@@ -654,6 +657,10 @@ myApp.onPageInit('favourites', function (page) {
             for (var i = 0; i < posts.length; i++) {
               if (posts[i].post_id !== relivePostId) {
                 newPostsAfterDelete.push(posts[i]);
+              } else {
+                if (posts[i].media != null) {
+                  removeItemFromLocalStorage(posts[i].media);
+                }
               }
             }
             posts = newPostsAfterDelete;
@@ -665,18 +672,6 @@ myApp.onPageInit('favourites', function (page) {
 
   var favouritePostsData = loadJsonFromLocalStorage(reliveFavouritesKey);
   reloadFavouritePosts(favouritePostsData);
-
-  $$('.infinite-scroll').on('infinite', function() {
-    if (loading) return;
-    loading = true;
-    var newFavouritePosts = loadPostsFromSessionStorage(key);
-    if (newFavouritePosts != null) {
-      if (posts.length !== newFavouritePosts.length) {
-        updateFavouritePosts(newFavouritePosts);
-      }
-    }
-    loading = false;
-  }); // End infinite scroll
 });
 
 // Hides and Shows filter hashtag list when appropriate

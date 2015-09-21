@@ -18,10 +18,6 @@
         <p>Relive your favourite memories.</p>
       </div>
       <div class="list-block virtual-list"></div>
-      <!-- Preloader -->
-      <div class="infinite-scroll-preloader hidden">
-        <div class="preloader"></div>
-      </div>
     </div>
   </div>
 </div>
