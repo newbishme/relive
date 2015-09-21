@@ -23,6 +23,7 @@ mstile-144x144.png
 assets/javascript/framework7.min.js
 assets/javascript/framework7.min.js.map
 assets/javascript/my-app.js
+assets/javascript/main.min.js
 
 # Stylesheets
 assets/stylesheets/relive.min.css
