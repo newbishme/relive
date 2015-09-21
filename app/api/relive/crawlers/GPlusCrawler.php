@@ -14,7 +14,7 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
         $client->setApplicationName("Relive");
         $client->setDeveloperKey(getenv("GPLUS_API_KEY"));
         $this->gplus = new \Google_Service_Plus($client);
-        $this->provider = \relive\models\Provider::firstOrCreate(['providerName'=>'google+','providerSite'=>'https://plus.google.com/']);
+        $this->provider = \relive\models\Provider::firstOrCreate(['providerName'=>'googleplus','providerSite'=>'https://plus.google.com/']);
 	}
 
     public static function getInstance() {
