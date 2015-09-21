@@ -314,12 +314,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event/{{event_id}}" class="link" id="eventPageURL" relive-event-id="{{event_id}}">' +
+        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event/{{event_id}}" class="link right" id="eventPageURL" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -336,6 +336,25 @@ function eventsInit(page) {
           $$('.landing-what-is-relive').addClass('searchbar-not-found');
         }
         return foundItems;
+      },
+      onItemsAfterInsert: function (list, fragment) {
+        // Allow offline a href clicks to still load the linked page
+        $$('a.event-page-url').on('click', function (e) {
+          e.preventDefault();
+          var eventId = $$(this).attr('relive-event-id')
+          console.log(eventId);
+          var query = {
+            id: eventId
+          };
+          var options = {
+              url: 'event.php?id='+eventId,
+              query: query,
+              pushState: true
+          };
+          myApp.closePanel();
+          mainView.router.load(options);
+          return false;
+        });
       }
   });
 
@@ -361,23 +380,6 @@ function eventsInit(page) {
     eventsList.appendItems(eventsData);
     eventsList.update();
     lastEventId += eventsData.length;
-
-    // Allow offline a href clicks to still load the linked page
-    $$('a#eventPageURL').on('click', function (e) {
-      e.preventDefault();
-      var eventId = $$(this).attr('relive-event-id')
-      var query = {
-        id: eventId
-      };
-      var options = {
-          url: 'event.php?id='+eventId,
-          query: query,
-          pushState: true
-      };
-      myApp.closePanel();
-      mainView.router.load(options);
-      return false;
-    });
   }
 
   if (navigator.onLine) {
