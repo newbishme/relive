@@ -248,23 +248,23 @@ function eventsInit(page) {
       success:function(data){
         if (data !== '') {
           storeJsonToLocalStorage(eventIndexesKey, data);
-          sessionStorage.clear();
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].image != "") {
-              storeImgToSessionStorage(data[i].image, data[i].image);
-            }
-          }
+          // sessionStorage.clear();
+          // for (var i = 0; i < data.length; i++) {
+          //   if (data[i].image != "") {
+          //     storeImgToSessionStorage(data[i].image, data[i].image);
+          //   }
+          // }
           updateEventsList(data);
         }
       } // End ajax success
     }); // End ajax
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].image != "") {
-        data[i].image = loadImgFromSessionStorage(data[i].image);
-      }
-    }
+    // for (var i = 0; i < data.length; i++) {
+    //   if (data[i].image != "") {
+    //     data[i].image = loadImgFromSessionStorage(data[i].image);
+    //   }
+    // }
     updateEventsList(data);
   }
 
