@@ -730,6 +730,7 @@ myApp.onPageInit('event', function (page) {
           var provider = post.attr('relive-post-provider');
           var mediaURL = post.attr('relive-favourite-post-img-url');
           var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
+          var favouritesContainsFavourite = false;
           var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
 
           if (favourites == null) {
