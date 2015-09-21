@@ -43,7 +43,7 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
             $response = $this->gplus->activities->search($keyword, $params);
             $items = $response->getItems();
             foreach ($items as $gPlusPost) {
-                createPost($event, $gPlusPost);
+                $this->createPost($event, $gPlusPost);
             }
             if (is_null($response->getNextPageToken())) {
                 return;
@@ -72,7 +72,7 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
             $response = $this->gplus->activities->search($keyword, $params);
             $items = $response->getItems();
             foreach ($items as $gPlusPost) {
-                createPost($event, $gPlusPost);
+                $this->createPost($event, $gPlusPost);
             }
             if (is_null($response->getNextPageToken())) {
                 return;
