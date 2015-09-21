@@ -540,31 +540,31 @@ myApp.onPageInit('event', function (page) {
       var msPerDay = msPerHour * 24;
       var msPerMonth = msPerDay * 30;
       var msPerYear = msPerDay * 365;
-  
+      var time = 0;
       var elapsed = current - previous;
-      console.log(elapsed);
+
       if (elapsed < msPerMinute) {
-          return elapsed + ' seconds ago';
-      }
-  
-      else if (elapsed < msPerHour) {
-          return Math.round(elapsed/msPerMinute) + ' minutes ago';   
-      }
-  
-      else if (elapsed < msPerDay ) {
-          return Math.round(elapsed/msPerHour) + ' hours ago';   
-      }
-  
-      else if (elapsed < msPerMonth) {
-          return 'around ' + Math.round(elapsed/msPerDay) + ' days ago';   
-      }
-  
-      else if (elapsed < msPerYear) {
-          return 'around ' + Math.round(elapsed/msPerMonth) + ' months ago';   
-      }
-  
-      else {
-          return 'around ' + Math.round(elapsed/msPerYear) + ' years ago';   
+        return elapsed + ' seconds ago';
+      
+      } else if (elapsed < msPerHour) {
+        time = Math.round(elapsed/msPerMinute);
+        return time + (time === 1 ? ' minute' : ' minutes') + ' ago';
+      
+      } else if (elapsed < msPerDay ) {
+        time = Math.round(elapsed/msPerHour);
+        return time + (time === 1 ? ' hour' : ' hours') + ' ago';
+      
+      } else if (elapsed < msPerMonth) {
+        time = Math.round(elapsed/msPerDay);
+        return 'around ' + time + (time === 1 ? ' day' : ' days') + ' ago';
+             
+      } else if (elapsed < msPerYear) {
+        time = Math.round(elapsed/msPerMonth);
+        return 'around ' + time + (time === 1 ? ' month' : ' months') + ' ago'; 
+      
+      } else {
+        time = Math.round(elapsed/msPerYear);
+        return 'around ' + time + (time === 1 ? ' year' : ' years') + ' ago';  
       }
     }
 
