@@ -4,9 +4,11 @@ require_once '/var/www/vendor/autoload.php';
 
 use \relive\Crawlers\TwitterCrawler;
 use \relive\Crawlers\InstagramCrawler;
+use \relive\Crawlers\GPlusCrawler;
 
 $twitter = TwitterCrawler::getInstance();
 $instagram = InstagramCrawler::getInstance();
+$gplus = GPlusCrawler::getInstance();
 
 class PQCrawlJob extends SplPriorityQueue 
 { 
@@ -36,6 +38,7 @@ while(true) {
 					$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
 					$twitter->recentCrawl($currentTime, $event, $hashtag->hashtag);
 					$instagram->recentCrawl($currentTime, $event, $hashtag->hashtag);
+					$gplus->recentCrawl($event, $hashtag->hashtag);
 				}
 				$job->delay = $job->delay*2;
 				$job->save();

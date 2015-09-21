@@ -29,7 +29,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 
 	public function popularCrawl($event, $keyword){
         $twitter = $this->twitter;
-        $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'popular'));
+        $twitter->get("search/tweets", array('q' => '#' . $keyword, 'count' => 100, 'result_type'=>'popular'));
         $response = $twitter->getLastBody();
         $repeat = 2;
         if (isset($response->statuses)) {
@@ -158,7 +158,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
 
     public function recentCrawl($startTime, $event, $keyword){
         $twitter = $this->twitter;
-        $twitter->get("search/tweets", array('q' => $keyword, 'count' => 100, 'result_type'=>'recent'));
+        $twitter->get("search/tweets", array('q' => '#' . $keyword, 'count' => 100, 'result_type'=>'recent'));
         $response = $twitter->getLastBody();
         $repeat = 2;
         if (isset($response->statuses)) {
