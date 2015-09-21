@@ -930,17 +930,21 @@ myApp.onPageInit('favourites', function (page) {
 
 // Hides and Shows filter hashtag list when appropriate
 myApp.onPageAfterAnimation('landing', function (page) {
+  $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
   $$('.navbar').addClass('hidden');
 });
 myApp.onPageAfterAnimation('home', function (page) {
+  $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
 });
 myApp.onPageAfterAnimation('event', function (page) {
+  $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').removeClass('hidden');
   $$('.navbar').removeClass('hidden');
 });
 myApp.onPageAfterAnimation('events', function (page) {
+  $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
   $$('.navbar').removeClass('hidden');
   var mySearchbar = $$('.searchbar')[0].f7Searchbar;
@@ -951,10 +955,12 @@ myApp.onPageAfterAnimation('events', function (page) {
   }
 });
 myApp.onPageAfterAnimation('favourites', function (page) {
+  $$('.relive-panel-favourites-reel').addClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
   $$('.navbar').removeClass('hidden');
 });
 myApp.onPageAfterAnimation('form', function (page) {
+  $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
   $$('.navbar').removeClass('hidden');
 });
