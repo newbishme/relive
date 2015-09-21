@@ -109,8 +109,15 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
                     } else if ($gPlusPost->object->attachments[0]->objectType === "album") {
                         $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>'photo']);
                         $thumbnails = $gPlusPost->object->attachments[0]->thumbnails;
+                        $count = 0;
                         foreach ($thumbnails as $thumbnail) {
-                            $this->saveImageUrls($media->media_id, $gPlusPost->object->attachments[0]->image);
+                            $result = $this->saveImageUrls($media->media_id, $gPlusPost->object->attachments[0]->image);
+                            if ($result) {
+                                $count++;
+                            }
+                        }
+                        if ($count === 0) {
+                            $media->delete();
                         }
                     }
                 }
@@ -151,6 +158,8 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
                 'height'=>$gPlusImage->height,
                 'sizes'=>'large'
             ]);
+            return true;
         }
+        return false;
     }
 }
