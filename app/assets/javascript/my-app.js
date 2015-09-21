@@ -744,9 +744,12 @@ myApp.onPageInit('event', function (page) {
           }
 
           if (!favouritesContainsFavourite) {
+            if (mediaURL != null) {
+              storeImgToLocalStorage(mediaURL, mediaURL);
+            }
             favourites.push(favourite);
-            storeJsonToLocalStorage(reliveFavouritesKey, favourites);
             toast.show(true);
+            storeJsonToLocalStorage(reliveFavouritesKey, favourites);
           }
         }
 
