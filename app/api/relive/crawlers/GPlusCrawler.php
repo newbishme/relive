@@ -104,10 +104,10 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
 
                 if (isset($gPlusPost->object->attachments)) {
                     if ($gPlusPost->object->attachments[0]->objectType === "photo") {
-                        $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>'photo');
+                        $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>'photo']);
                         $this->saveImageUrls($media->media_id, $gPlusPost->object->attachments[0]->fullImage);
                     } else if ($gPlusPost->object->attachments[0]->objectType === "album") {
-                        $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>'photo');
+                        $media = \relive\models\Media::create(['post_id'=>$post->post_id, 'type'=>'photo']);
                         $thumbnails = $gPlusPost->object->attachments[0]->thumbnails;
                         foreach ($thumbnails as $thumbnail) {
                             $this->saveImageUrls($media->media_id, $gPlusPost->object->attachments[0]->image);
