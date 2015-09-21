@@ -15,6 +15,21 @@
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
 
+      <div class="list-block">
+        <ul>
+          <li>
+            <a href="favourites.php" class="item-link close-panel">
+              <div class="item-content">
+                <div class="item-media"><i class="icon ion-ios-star"></i></div>
+                <div class="item-inner">
+                  <div class="item-title">View Favourites Reel</div>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
       <div class="trending-events-block">
         <div class="content-block-title">Trending events</div>
         <div class="list-block">
