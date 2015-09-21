@@ -746,6 +746,7 @@ myApp.onPageInit('event', function (page) {
           if (!favouritesContainsFavourite) {
             favourites.push(favourite);
             storeJsonToLocalStorage(reliveFavouritesKey, favourites);
+            toast.show(true);
           }
         }
 
