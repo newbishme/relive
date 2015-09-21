@@ -36,6 +36,9 @@
 		overflow: auto;
 
 	}
+	td {
+		width:500px;
+	}
 	table,tr,td {
 		padding-top:10px;
 		vertical-align: top;
