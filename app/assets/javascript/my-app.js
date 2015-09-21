@@ -1,3 +1,75 @@
+/*jslint browser: true*/
+/*global console, Framework7, alert, Dom7*/
+
+/**
+ * A plugin for Framework7 to show black little toasts
+ *
+ * @author www.timo-ernst.net
+ * @license MIT
+ */
+Framework7.prototype.plugins.toast = function (app, globalPluginParams) {
+  'use strict';
+
+  var Toast = function (text, iconhtml, options) {
+    var self = this,
+      $$ = Dom7,
+      $box;
+
+    function hideBox($curbox) {
+      if ($curbox) {
+        $curbox.removeClass('fadein').transitionEnd(function () {
+          $curbox.remove();
+        });
+      }
+    }
+
+    this.show = function (show) {
+      if (show) {
+        var clientLeft,
+          $curbox;
+
+        // Remove old toasts first if there are still any
+        $$('.toast-container').off('click').off('transitionEnd').remove();
+        $box = $$('<div class="toast-container show">');
+
+        // Add content
+        $box.html('<div class="toast-icon">' + iconhtml + '</div><div class="toast-msg">' + text + '</div>');
+
+        // Add to DOM
+        clientLeft = $box[0].clientLeft;
+        $$('body').append($box);
+
+        // Hide box on click
+        $box.click(function () {
+          hideBox($box);
+        });
+
+        // Dirty hack to cause relayout xD
+        clientLeft = $box[0].clientLeft;
+
+        // Fade in toast
+        $box.addClass('fadein');
+
+        // Automatically hide box after few seconds
+        $curbox = $box;
+        setTimeout(function () {
+          hideBox($curbox);
+        }, 1500);
+
+      } else {
+        hideBox($$('.toast-container'));
+      }
+    };
+
+    return this;
+  };
+
+  app.toast = function (text, iconhtml, options) {
+    return new Toast(text, iconhtml, options);
+  };
+
+};
+
 function sendToGoogleAnalytics(page, title) {
   if (page == null) {
     return;
@@ -326,6 +398,7 @@ myApp.onPageInit('event', function (page) {
   var eventNameKey = 'Relive-Event-ID-' + pageId;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
+  var toast = myApp.toast('Saved', '<div>☆</div>', {})
 
   if (page.query.id != null) {
     var pageId = page.query.id;
@@ -444,7 +517,7 @@ myApp.onPageInit('event', function (page) {
               '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
             '<div class="swipeout-actions-left">' +
-              '<a href="#" id="swipeToSaveFavourites" class="bg-green swipeout-close" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+              '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
             '</div>' +
           '</li>',
 
@@ -468,7 +541,7 @@ myApp.onPageInit('event', function (page) {
               storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
             });
 
-            $$('#swipeToSaveFavourites').on('click', function () {
+            $$('.swipeToSaveFavourites').on('click', function () {
               var postId = $$(this).attr('relive-post-id');
               var author = $$(this).attr('relive-post-author');
               var caption = $$(this).attr('relive-post-content');
@@ -484,10 +557,7 @@ myApp.onPageInit('event', function (page) {
               if (mediaURL != null) {
                 storeImgToLocalStorage(mediaURL, mediaURL);
               }
-              myApp.alert('', 'Saved!');
-              setTimeout(function() {
-                myApp.closeModal();
-              }, 600);
+              toast.show(true);
               favourites.push(favourite);
               storeJsonToLocalStorage(reliveFavouritesKey, favourites);
             });

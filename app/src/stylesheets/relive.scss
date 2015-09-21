@@ -1,6 +1,6 @@
 $primaryColour: #374F59;
 $linkColour: #1B5DC8;
-$linkHoverColour: #CCCCCC; 
+$linkHoverColour: #CCCCCC;
 
 $break-large: 1200px;
 $break-medium: 768px;
@@ -115,7 +115,7 @@ form .item-content {
 	-webkit-justify-content: center;
 	flex-flow: wrap column;
 	-webkit-flex-flow: wrap column;
-	
+
 	&.visually-hidden {
     	height: 0;
 		opacity: 0;
@@ -128,7 +128,7 @@ form .item-content {
 		font-weight: normal;
 		margin: 0;
 	}
-	
+
 	.landing-caption {
 		font-size: 2.5vh;
 		font-weight: 300;
@@ -145,7 +145,7 @@ form .item-content {
 		&:after {
 			display: none;
 		}
-		
+
 		.searchbar-input {
 			height: 100%;
 			input {
@@ -153,12 +153,12 @@ form .item-content {
 				background-position: 15px center;
 			}
 		}
-		
+
 		.searchbar-clear {
 			height: 100%;
 		}
 	}
-	
+
 	.discover {
 		color: white;
 		margin-top: 10vh;
@@ -167,21 +167,21 @@ form .item-content {
     	align-items: center;
 		justify-content: center;
 		flex-flow: nowrap column;
-		
+
 		display: -webkit-flex;
 		-webkit-align-items: center;
 		-webkit-justify-content: center;
 		-webkit-flex-flow: nowrap column;
-		
+
 		&:hover {
 			color: darken(white, 30%);
 		}
-		
+
 		.discover-caption {
 			font-size: 1em;
 			margin-bottom: 0.3em;
 		}
-		
+
 		i {
 			padding-left: 10px;
 			font-size: 2em;
@@ -342,4 +342,43 @@ form .item-content {
 			color: $linkHoverColour;
 		}
 	}
+}
+
+// Toast plugin
+.toast-container{
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  left: 50%;
+  top: 50%;
+  margin-top: -75px;
+  margin-left: -75px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  z-index: 11800;
+  color: #fff;
+  font-size: 20px;
+  font-weight: normal;
+  font-family: 'Helvetica-Neue', 'HelveticaNeue', arial, sans-serif;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.8s
+}
+
+.toast-container.show{
+  display: block;
+}
+
+.toast-container.fadein{
+  opacity: 1;
+}
+
+.toast-icon{
+  font-size:85px;
+  text-align:center;
+}
+
+.toast-msg{
+  text-align:center;
+  font-weight:normal;
 }
