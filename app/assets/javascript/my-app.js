@@ -47,28 +47,24 @@ function storeJsonToLocalStorage(key, jsonData) {
   }
   var dataToStore = JSON.stringify(jsonData);
   localStorage.setItem(key, dataToStore);
-  // console.log('=====STORE=====');
-  // console.log('Storing: ');
-  // console.log(localStorage.getItem(key));
-  // console.log('===============');
 }
 
 function loadJsonFromLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
-function storeImgToSessionStorage(key, imgData) {
-  if (key == null || loadImgFromSessionStorage(key) != null) {
+function storeImgToLocalStorage(key, imgData) {
+  if (key == null || loadImgFromLocalStorage(key) != null) {
     return;
   }
 
   convertImgToBase64URL(imgData, function(base64Img, url) {
-    sessionStorage.setItem(url, base64Img);
+    localStorage.setItem(url, base64Img);
   });
 }
 
-function loadImgFromSessionStorage(key) {
-  return sessionStorage.getItem(key);
+function loadImgFromLocalStorage(key) {
+  return localStorage.getItem(key);
 }
 
 function convertImgToBase64URL(url, callback, outputFormat){
@@ -89,6 +85,9 @@ function convertImgToBase64URL(url, callback, outputFormat){
 
 // Export selectors engine
 var $$ = Dom7;
+
+// Keys for localStorage/SessionStorage lookup
+var reliveFavouritesKey = 'Relive-Favourite-Events-and-Posts-Key';
 
 // Change "Through" type navbar layout to "Fixed" in Material theme for Android
 // if (isAndroid) {
@@ -114,10 +113,6 @@ var myApp = new Framework7({
 var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true,
     domCache: true
-});
-
-myApp.onPageReinit('landing', function(page) {
-  $$('.navbar').addClass('hidden');
 });
 
 myApp.onPageInit('landing', function(page) {
@@ -146,19 +141,10 @@ myApp.onPageInit('events', function (page) {
   eventsInit(page);
 });
 
-myApp.onPageAfterAnimation('events', function(page) {
-  var mySearchbar = $$('.searchbar')[0].f7Searchbar;
-
-  // Search if there's a query
-  if (page.query.q != null) {
-    mySearchbar.search(page.query.q);
-  }
-});
-
 function eventsInit(page) {
   sendToGoogleAnalytics('events.php', page.name);
+  $$('.navbar').removeClass('hidden');
 
-  // TODO Get events from local cache, if not found, get from server
   var events = [];
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
@@ -194,8 +180,6 @@ function eventsInit(page) {
         return foundItems;
       }
   });
-
-  $$('.navbar').removeClass('hidden');
 
   // Initialize Search bar
   myApp.searchbar('.searchbar', {
@@ -248,23 +232,12 @@ function eventsInit(page) {
       success:function(data){
         if (data !== '') {
           storeJsonToLocalStorage(eventIndexesKey, data);
-          // sessionStorage.clear();
-          // for (var i = 0; i < data.length; i++) {
-          //   if (data[i].image != "") {
-          //     storeImgToSessionStorage(data[i].image, data[i].image);
-          //   }
-          // }
           updateEventsList(data);
         }
       } // End ajax success
     }); // End ajax
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
-    // for (var i = 0; i < data.length; i++) {
-    //   if (data[i].image != "") {
-    //     data[i].image = loadImgFromSessionStorage(data[i].image);
-    //   }
-    // }
     updateEventsList(data);
   }
 
@@ -350,7 +323,6 @@ myApp.onPageInit('event', function (page) {
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
 
-  $$('.navbar').removeClass('hidden');
   if (page.query.id != null) {
     var pageId = page.query.id;
     var eventName = 'Event';
@@ -416,8 +388,6 @@ myApp.onPageInit('event', function (page) {
       }
 
       if (filteredHashtags.length > 0) {
-
-        console.log(filteredHashtags);
         for (var i = 0; i < posts.length; i++) {
           var currPost = posts[i];
           var isMatch = false;
@@ -469,6 +439,10 @@ myApp.onPageInit('event', function (page) {
             '<div class="swipeout-actions-right">' +
               '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
+            '<div class="swipeout-actions-left">' +
+
+              '<a href="#" id="swipeToSaveFavourites" class="bg-green swipeout-overswipe swipeout-close" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+            '</div>' +
           '</li>',
 
 
@@ -489,6 +463,30 @@ myApp.onPageInit('event', function (page) {
               });
               var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
               storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
+            });
+
+            $$('#swipeToSaveFavourites').on('click', function () {
+              var postId = $$(this).attr('relive-post-id');
+              var author = $$(this).attr('relive-post-author');
+              var caption = $$(this).attr('relive-post-content');
+              var provider = $$(this).attr('relive-post-provider');
+              var mediaURL = $$(this).attr('relive-favourite-post-img-url');
+              var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
+              var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
+
+              if (favourites == null) {
+                favourites = [];
+              }
+
+              if (mediaURL != null) {
+                storeImgToLocalStorage(mediaURL, mediaURL);
+              }
+              myApp.alert('', 'Saved!');
+              setTimeout(function() {
+                myApp.closeModal();
+              }, 600);
+              favourites.push(favourite);
+              storeJsonToLocalStorage(reliveFavouritesKey, favourites);
             });
 
             $$('.relive-photobrowser-lazy').on('click', function () {
@@ -583,18 +581,133 @@ myApp.onPageInit('event', function (page) {
   }
 });
 
+myApp.onPageInit('favourites', function (page) {
+  sendToGoogleAnalytics(page.url, 'Relive | Favourites');
+
+  var posts = [];
+  var favouritePostsList;
+  var loading = false;
+
+  function reloadFavouritePosts(favouritePostsData) {
+    if (favouritePostsData != null) {
+      posts = [];
+      favouritePostsData.forEach(function(post){
+        // FIXME not optimized, this loads every favourite posts.
+        if (post.image != "") {
+          var loadedBase64Img = loadImgFromLocalStorage(post.image);
+          if (loadedBase64Img != null) {
+            post.image = loadedBase64Img;
+          } else {
+            storeImgToLocalStorage(post.image, post.image); // Fallback in case image wasn't loaded before
+          }
+        }
+        posts.push(post);
+      });
+      $$('.relive-no-favourites-found').addClass('hidden');
+      $$('.relive-favourites-found').removeClass('hidden');
+    } else {
+      $$('.relive-no-favourites-found').removeClass('hidden');
+      $$('.relive-favourites-found').addClass('hidden');
+    }
+
+    favouritePostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+        items: posts,
+        template:
+
+        '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
+          '<div class="swipeout-content">' +
+            '{{#if media}}' +
+            '<div style="background-image: url({{media}})" class="post-img relive-photobrowser-lazy" relive-mediabrowser-url="{{media}}" relive-mediabrowser-caption="{{caption}}"></div>' +
+            '{{/if}}' +
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}</div>' +
+                '{{#if media}}' +
+                '<div class="post-content">{{caption}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{caption}}</blockquote>' +
+                '{{/if}}' +
+              '</div>' +
+              '<div class="post-origin">' +
+                '{{#if providerName}}' +
+                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                '{{else}}' +
+                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{/if}}' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="swipeout-actions-right">' +
+            '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Remove from Favourites</a>' +
+          '</div>' +
+        '</li>',
+
+
+        height: function (post) {
+          if (post.media) return 500;
+          else return 200;
+        },
+        onItemsAfterInsert: function (list, fragment) {
+          $$('.swipeout').on('deleted', function () {
+            var relivePostId = $$(this).attr('relive-post-id');
+            var newPostsAfterDelete = [];
+            for (var i = 0; i < posts.length; i++) {
+              if (posts[i].post_id !== relivePostId) {
+                newPostsAfterDelete.push(posts[i]);
+              }
+            }
+            posts = newPostsAfterDelete;
+            storeJsonToLocalStorage(reliveFavouritesKey, posts);
+          });
+        }
+    }); // End virtualList initialization
+  }
+
+  var favouritePostsData = loadJsonFromLocalStorage(reliveFavouritesKey);
+  reloadFavouritePosts(favouritePostsData);
+
+  $$('.infinite-scroll').on('infinite', function() {
+    if (loading) return;
+    loading = true;
+    var newFavouritePosts = loadPostsFromSessionStorage(key);
+    if (newFavouritePosts != null) {
+      if (posts.length !== newFavouritePosts.length) {
+        updateFavouritePosts(newFavouritePosts);
+      }
+    }
+    loading = false;
+  }); // End infinite scroll
+});
+
 // Hides and Shows filter hashtag list when appropriate
+myApp.onPageAfterAnimation('landing', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+  $$('.navbar').addClass('hidden');
+});
 myApp.onPageAfterAnimation('home', function (page) {
   $$('div.event-hashtags-block').addClass('hidden');
 });
 myApp.onPageAfterAnimation('event', function (page) {
   $$('div.event-hashtags-block').removeClass('hidden');
+  $$('.navbar').removeClass('hidden');
 });
 myApp.onPageAfterAnimation('events', function (page) {
   $$('div.event-hashtags-block').addClass('hidden');
+  $$('.navbar').removeClass('hidden');
+  var mySearchbar = $$('.searchbar')[0].f7Searchbar;
+
+  // Search if there's a query
+  if (page.query.q != null) {
+    mySearchbar.search(page.query.q);
+  }
+});
+myApp.onPageAfterAnimation('favourites', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+  $$('.navbar').removeClass('hidden');
 });
 myApp.onPageAfterAnimation('form', function (page) {
   $$('div.event-hashtags-block').addClass('hidden');
+  $$('.navbar').removeClass('hidden');
 });
 
 // Initialize form page
@@ -607,10 +720,11 @@ myApp.onPageInit('form', function (page) {
   var hashtags = [];
   var id = 1;
 
-  $$('.navbar').removeClass('hidden');
-
   $$(document).on('ajaxStart', function () {
       myApp.showIndicator();
+      setTimeout(function () {
+        myApp.hideIndicator();
+      }, 3000);
   });
   $$(document).on('ajaxComplete', function () {
       myApp.hideIndicator();
