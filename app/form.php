@@ -5,7 +5,7 @@
     <div class="left"><a href="events.php" class="back link"> <i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
     <div class="center sliding">Start a Reel</div>
     <div class="right">
-      <a href="#" class="link icon-only open-panel"><i class="icon ion-ios-more"></i></a>
+      <a href="#" class="link icon-only open-panel"><i class="icon ion-more"></i></a>
     </div>
   </div>
 </div>
