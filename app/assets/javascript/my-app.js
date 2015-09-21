@@ -342,7 +342,6 @@ function eventsInit(page) {
         $$('a.event-page-url').on('click', function (e) {
           e.preventDefault();
           var eventId = $$(this).attr('relive-event-id')
-          console.log(eventId);
           var query = {
             id: eventId
           };
@@ -541,8 +540,11 @@ myApp.onPageInit('event', function (page) {
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
-          var postTime = moment.unix(post.datetime);
-          post.datetime = postTime.fromNow();
+          if (!post.hasGeneratedTime) {
+            var postTime = moment.unix(post.datetime);
+            post.datetime = postTime.fromNow();
+            post.hasGeneratedTime = true;
+          }
           if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
             posts.push(post);
           }
@@ -612,6 +614,19 @@ myApp.onPageInit('event', function (page) {
             if (post.media) return 500;
             else return 200;
           },
+          
+          onItemsBeforeInsert: function (list, fragment) {
+            for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
+              var post = list.items[i];
+              if (!post.hasGeneratedTime) {
+                var postTime = moment.unix(post.datetime);
+                post.datetime = postTime.fromNow();
+                post.hasGeneratedTime = true;
+                list.replaceItem(i, post);
+              }
+            }  
+          },
+          
           onItemsAfterInsert: function (list, fragment) {
             $$('.swipeout').on('deleted', function () {
               var relivePostId = $$(this).attr('relive-post-id');
