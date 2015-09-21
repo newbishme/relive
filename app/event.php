@@ -1,6 +1,6 @@
 <div class="navbar">
   <div class="navbar-inner">
-    <div class="left sliding"><a href="index.php" class="back link" data-forceUrl="true"><i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
+    <div class="left sliding"><a href="events.php" class="back link" data-forceUrl="true"><i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
     <div class="center sliding title-event-name">Event name</div>
     <div class="right"><a href="#" class="open-panel link icon-only"><i class="icon ion-ios-more"></i></a></div>
   </div>

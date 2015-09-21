@@ -68,7 +68,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
                 'rankPoints'=>$rankPoints
             ]);
 
-            if (isset($status->hashtags)) {
+            if (isset($status->entities->hashtags)) {
                 $this->createHashtags($post, $status);
             }
 
@@ -88,7 +88,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
     }
 
     private function createHashtags($post, $twitterPost) {
-        $hashtags = $twitterPost->hashtags;
+        $hashtags = $twitterPost->entities->hashtags;
         foreach ($hashtags as $tag) {
             $tagText = htmlspecialchars($tag->text, ENT_QUOTES, 'UTF-8');
             $hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tagText]);
