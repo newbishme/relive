@@ -469,7 +469,11 @@ function eventsInit(page) {
 }
 
 myApp.onPageInit('event', function (page) {
-  sendToGoogleAnalytics(page.url, 'Relive | ' + page.query.name);
+  if (page.query.id == null) {
+    var options = { url: 'events.php' };
+    mainView.router.load(options);
+    return;
+  }
 
   var hashtags = [];
   var filteredHashtags = [];
@@ -478,252 +482,266 @@ myApp.onPageInit('event', function (page) {
   var loading = false;
   var lastLoadedIndex = 0;
   var timeout = 3000;
-  var eventNameKey = 'Relive-Event-ID-' + pageId;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
   var toast = myApp.toast('Saved', '<div>☆</div>', {})
+  var pageId = page.query.id;
+  var eventName = 'Event';
+  var eventNameKey = 'Relive-Event-ID-' + pageId;
 
-  if (page.query.id != null) {
-    var pageId = page.query.id;
-    var eventName = 'Event';
-
-    $$.ajax({
-      type:'GET',
-      url:'https://relive.space/api/event/'+pageId,
-      dataType:'json',
-      success:function(data) {
-        if (data.eventName != null) {
-          eventName = data.eventName;
-        }
-        if (data.hashtags != null) {
-          hashtags = data.hashtags;
-        }
-        $$('.title-event-name').html(decodeURI(eventName));
-        updateHashtagsList(hashtags);
-      } // End Success
-    }); // End ajax to get event information
-
-    // Initialize Side Nav Filter Hashtags
-    function updateHashtagsList(hashtags) {
-      var eventHashtags = [];
-      var eventHashtagHtml = '';
-
-      if (hashtags == null) {
-        return;
+  $$.ajax({
+    type:'GET',
+    url:'https://relive.space/api/event/'+pageId,
+    dataType:'json',
+    success:function(data) {
+      if (data.eventName != null) {
+        eventName = data.eventName;
       }
-
-      eventHashtags = hashtags;
-
-      for (var i = 0; i < eventHashtags.length; i++) {
-        var hashtag = {hashtag: eventHashtags[i]};
-        eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
+      if (data.hashtags != null) {
+        hashtags = data.hashtags;
       }
-      $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
-      $$('.relive-filter-hashtag').on('click', function(e) {
-        if ($$(this) != null && $$(this)[0] != null) {
-          var checked = $$(this)[0].checked;
-          var hashtag = $$(this)[0].value;
-          if (!checked && !isInArray(filteredHashtags, hashtag)) {
-            filteredHashtags.push(hashtag);
-            updateEventPosts(posts);
-          } else if (checked && isInArray(filteredHashtags, hashtag)) {
-            removeFromArray(filteredHashtags, hashtag);
-            updateEventPosts(posts);
-          }
+      $$('.title-event-name').html(decodeURI(eventName));
+      updateHashtagsList(hashtags);
+      sendToGoogleAnalytics(page.url, 'Relive | ' + eventName);
+    }, // End Success
+    error:function(data) {
+      var options = { url: 'events.php' };
+      mainView.router.load(options);
+    }
+  }); // End ajax to get event information
+
+  // Initialize Side Nav Filter Hashtags
+  function updateHashtagsList(hashtags) {
+    var eventHashtags = [];
+    var eventHashtagHtml = '';
+
+    if (hashtags == null) {
+      return;
+    }
+
+    eventHashtags = hashtags;
+
+    for (var i = 0; i < eventHashtags.length; i++) {
+      var hashtag = {hashtag: eventHashtags[i]};
+      eventHashtagHtml = eventHashtagHtml.concat(compiledEventHashtagsTemplate(hashtag));
+    }
+    $$('div#side-nav-event-hashtags').html(eventHashtagHtml);
+    $$('.relive-filter-hashtag').on('click', function(e) {
+      if ($$(this) != null && $$(this)[0] != null) {
+        var checked = $$(this)[0].checked;
+        var hashtag = $$(this)[0].value;
+        if (!checked && !isInArray(filteredHashtags, hashtag)) {
+          filteredHashtags.push(hashtag);
+          updateEventPosts(posts);
+        } else if (checked && isInArray(filteredHashtags, hashtag)) {
+          removeFromArray(filteredHashtags, hashtag);
+          updateEventPosts(posts);
+        }
+      }
+    });
+  }
+
+  function timeDifference(current, previous) {
+    var msPerMinute = 60;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+    var time = 0;
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+      return elapsed + ' seconds ago';
+
+    } else if (elapsed < msPerHour) {
+      time = Math.round(elapsed/msPerMinute);
+      return time + (time === 1 ? ' minute' : ' minutes') + ' ago';
+
+    } else if (elapsed < msPerDay ) {
+      time = Math.round(elapsed/msPerHour);
+      return time + (time === 1 ? ' hour' : ' hours') + ' ago';
+
+    } else if (elapsed < msPerMonth) {
+      time = Math.round(elapsed/msPerDay);
+      return 'around ' + time + (time === 1 ? ' day' : ' days') + ' ago';
+
+    } else if (elapsed < msPerYear) {
+      time = Math.round(elapsed/msPerMonth);
+      return 'around ' + time + (time === 1 ? ' month' : ' months') + ' ago';
+
+    } else {
+      time = Math.round(elapsed/msPerYear);
+      return 'around ' + time + (time === 1 ? ' year' : ' years') + ' ago';
+    }
+  }
+
+  function updateEventPosts(eventPostsData) {
+    var filteredPosts = [];
+
+    if (eventPostsData != null) {
+      eventPostsData.forEach(function(post){
+        var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
+        if (!post.hasGeneratedTime) {
+          post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
+          post.hasGeneratedTime = true;
+        }
+        if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
+          posts.push(post);
         }
       });
-    }
-    
-    function timeDifference(current, previous) {
-      var msPerMinute = 60;
-      var msPerHour = msPerMinute * 60;
-      var msPerDay = msPerHour * 24;
-      var msPerMonth = msPerDay * 30;
-      var msPerYear = msPerDay * 365;
-      var time = 0;
-      var elapsed = current - previous;
-
-      if (elapsed < msPerMinute) {
-        return elapsed + ' seconds ago';
-      
-      } else if (elapsed < msPerHour) {
-        time = Math.round(elapsed/msPerMinute);
-        return time + (time === 1 ? ' minute' : ' minutes') + ' ago';
-      
-      } else if (elapsed < msPerDay ) {
-        time = Math.round(elapsed/msPerHour);
-        return time + (time === 1 ? ' hour' : ' hours') + ' ago';
-      
-      } else if (elapsed < msPerMonth) {
-        time = Math.round(elapsed/msPerDay);
-        return 'around ' + time + (time === 1 ? ' day' : ' days') + ' ago';
-             
-      } else if (elapsed < msPerYear) {
-        time = Math.round(elapsed/msPerMonth);
-        return 'around ' + time + (time === 1 ? ' month' : ' months') + ' ago'; 
-      
-      } else {
-        time = Math.round(elapsed/msPerYear);
-        return 'around ' + time + (time === 1 ? ' year' : ' years') + ' ago';  
-      }
+      lastLoadedIndex += eventPostsData.length; // Count all included hidden items
     }
 
-    function updateEventPosts(eventPostsData) {
-      var filteredPosts = [];
-
-      if (eventPostsData != null) {
-        eventPostsData.forEach(function(post){
-          var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
-          if (!post.hasGeneratedTime) {
-            post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
-            post.hasGeneratedTime = true;
-          }
-          if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
-            posts.push(post);
-          }
-        });
-        lastLoadedIndex += eventPostsData.length; // Count all included hidden items
-      }
-
-      if (filteredHashtags.length > 0) {
-        for (var i = 0; i < posts.length; i++) {
-          var currPost = posts[i];
-          var isMatch = false;
-          for (var j = 0; j < filteredHashtags.length; j++) {
-            for (var k = 0; k < currPost.hashtags.length; k++) {
-              if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
-                console.log("Filter: "+filteredHashtags[j].toUpperCase());
-                console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
-                isMatch = true;
-                break;
-              }
+    if (filteredHashtags.length > 0) {
+      for (var i = 0; i < posts.length; i++) {
+        var currPost = posts[i];
+        var isMatch = false;
+        for (var j = 0; j < filteredHashtags.length; j++) {
+          for (var k = 0; k < currPost.hashtags.length; k++) {
+            if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
+              console.log("Filter: "+filteredHashtags[j].toUpperCase());
+              console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
+              isMatch = true;
+              break;
             }
           }
-          if (!isMatch) {
-            filteredPosts.push(currPost);
-          }
         }
-      } else {
-        filteredPosts = posts;
+        if (!isMatch) {
+          filteredPosts.push(currPost);
+        }
       }
+    } else {
+      filteredPosts = posts;
+    }
 
-      eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
-          items: filteredPosts,
-          template:
+    eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
+        items: filteredPosts,
+        template:
 
-          '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
-            '<div class="swipeout-content">' +
-              '{{#if media}}' +
-              '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img relive-photobrowser-lazy" relive-mediabrowser-url="{{media.data.0.mediaURL}}" relive-mediabrowser-caption="{{caption}}"></div>' +
-              '{{/if}}' +
-              '<div class="post-data-origin-wrapper">' +
-                '<div class="post-data">' +
-                  '<div class="post-author">{{author}}<span class="post-time">{{datetime}}</span></div>' +
-                  '{{#if media}}' +
-                  '<div class="post-content">{{caption}}</div>' +
-                  '{{else}}' +
-                  '<blockquote class="post-content">{{caption}}</blockquote>' +
-                  '{{/if}}' +
-                '</div>' +
-                '<div class="post-origin">' +
-                  '{{#if providerName}}' +
-                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                  '{{else}}' +
-                  '<i class="icon ion-social-twitter-outline"></i>' +
-                  '{{/if}}' +
-                '</div>' +
+        '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
+          '<div class="swipeout-content">' +
+            '{{#if media}}' +
+            '<div style="background-image: url({{media.data.0.mediaURL}})" class="post-img relive-photobrowser-lazy" relive-mediabrowser-url="{{media.data.0.mediaURL}}" relive-mediabrowser-caption="{{caption}}"></div>' +
+            '{{/if}}' +
+            '<div class="post-data-origin-wrapper">' +
+              '<div class="post-data">' +
+                '<div class="post-author">{{author}}<span class="post-time">{{datetime}}</span></div>' +
+                '{{#if media}}' +
+                '<div class="post-content">{{caption}}</div>' +
+                '{{else}}' +
+                '<blockquote class="post-content">{{caption}}</blockquote>' +
+                '{{/if}}' +
+              '</div>' +
+              '<div class="post-origin">' +
+                '{{#if providerName}}' +
+                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                '{{else}}' +
+                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{/if}}' +
               '</div>' +
             '</div>' +
-            '<div class="swipeout-actions-right">' +
-              '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
-            '</div>' +
-            '<div class="swipeout-actions-left">' +
-              '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
-            '</div>' +
-          '</li>',
+          '</div>' +
+          '<div class="swipeout-actions-right">' +
+            '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
+          '</div>' +
+          '<div class="swipeout-actions-left">' +
+            '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+          '</div>' +
+        '</li>',
 
 
-          height: function (post) {
-            if (post.media) return 500;
-            else return 200;
-          },
-          
-          onItemsBeforeInsert: function (list, fragment) {
-            for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
-              var post = list.items[i];
-              if (!post.hasGeneratedTime) {
-                console.log(Math.floor(Date.now() / 1000) + " vs " + post.datetime);
-                post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
-                post.hasGeneratedTime = true;
-                list.replaceItem(i, post);
-              }
-            }  
-          },
-          
-          onItemsAfterInsert: function (list, fragment) {
-            $$('.swipeout').on('deleted', function () {
-              var relivePostId = $$(this).attr('relive-post-id');
-              $$.ajax({
-                type:'POST',
-                url:'https://relive.space/api/event/'+pageId+'/report',
-                data:{"post_id":relivePostId},
-                dataType:'text',
-                success:function(data) {
-                } // End Success
-              });
-              var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
-              storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
+        height: function (post) {
+          if (post.media) return 500;
+          else return 200;
+        },
+
+        onItemsBeforeInsert: function (list, fragment) {
+          for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
+            var post = list.items[i];
+            if (!post.hasGeneratedTime) {
+              console.log(Math.floor(Date.now() / 1000) + " vs " + post.datetime);
+              post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
+              post.hasGeneratedTime = true;
+              list.replaceItem(i, post);
+            }
+          }
+        },
+
+        onItemsAfterInsert: function (list, fragment) {
+          $$('.swipeout').on('deleted', function () {
+            var relivePostId = $$(this).attr('relive-post-id');
+            $$.ajax({
+              type:'POST',
+              url:'https://relive.space/api/event/'+pageId+'/report',
+              data:{"post_id":relivePostId},
+              dataType:'text',
+              success:function(data) {
+              } // End Success
             });
+            var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
+            storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
+          });
 
-            $$('.swipeToSaveFavourites').on('click', function () {
-              var postId = $$(this).attr('relive-post-id');
-              var author = $$(this).attr('relive-post-author');
-              var caption = $$(this).attr('relive-post-content');
-              var provider = $$(this).attr('relive-post-provider');
-              var mediaURL = $$(this).attr('relive-favourite-post-img-url');
-              var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
-              var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
+          $$('.swipeToSaveFavourites').on('click', function () {
+            var postId = $$(this).attr('relive-post-id');
+            var author = $$(this).attr('relive-post-author');
+            var caption = $$(this).attr('relive-post-content');
+            var provider = $$(this).attr('relive-post-provider');
+            var mediaURL = $$(this).attr('relive-favourite-post-img-url');
+            var favouritesContainsFavourite = false;
+            var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
+            var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
 
-              if (favourites == null) {
-                favourites = [];
+            if (favourites == null) {
+              favourites = [];
+            }
+
+            if (mediaURL != null) {
+              storeImgToLocalStorage(mediaURL, mediaURL);
+            }
+            toast.show(true);
+
+            for (var i = 0; i < favourites.length; i++) {
+              if (favourites[i].post_id == favourite.post_id) {
+                favouritesContainsFavourite = true;
               }
+            }
 
-              if (mediaURL != null) {
-                storeImgToLocalStorage(mediaURL, mediaURL);
-              }
-              toast.show(true);
+            if (!favouritesContainsFavourite) {
               favourites.push(favourite);
               storeJsonToLocalStorage(reliveFavouritesKey, favourites);
-            });
+            }
+          });
 
-            $$('.relive-photobrowser-lazy').on('click', function () {
-                var mediaURL = $$(this).attr('relive-mediabrowser-url');
-                var mediaCaption = $$(this).attr('relive-mediabrowser-caption');
-                var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
+          $$('.relive-photobrowser-lazy').on('click', function () {
+              var mediaURL = $$(this).attr('relive-mediabrowser-url');
+              var mediaCaption = $$(this).attr('relive-mediabrowser-caption');
+              var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
 
-                // Initialize Media Browser
-                var relivePhotoBrowser = myApp.photoBrowser({
-                    photos: mediaObjects,
-                    theme: 'dark',
-                    navbar: false,
-                    toolbar: false,
-                    onTap: function (swiper, event) {
-                      relivePhotoBrowser.close();
-                    }
-                });
-                relivePhotoBrowser.open();
-            });
-          }
-      }); // End virtualList initialization
-
-      if (eventPostsData === null || eventPostsData.length <= 0) {
-        if (navigator.onLine) {
-          setTimeout(function() {
-            getPostsWithAJAX();
-          }, timeout);
-          timeout *= 2;
+              // Initialize Media Browser
+              var relivePhotoBrowser = myApp.photoBrowser({
+                  photos: mediaObjects,
+                  theme: 'dark',
+                  navbar: false,
+                  toolbar: false,
+                  onTap: function (swiper, event) {
+                    relivePhotoBrowser.close();
+                  }
+              });
+              relivePhotoBrowser.open();
+          });
         }
+    }); // End virtualList initialization
+
+    // Incrementally fetch more posts automatically if no results
+    if (eventPostsData === null || eventPostsData.length <= 0) {
+      if (navigator.onLine) {
+        setTimeout(function() {
+          getPostsWithAJAX();
+        }, timeout);
+        timeout *= 2;
       }
+    }
     }
 
     function getPostsWithAJAX() {
@@ -785,7 +803,7 @@ myApp.onPageInit('event', function (page) {
         }); // End AJAX
       }); // End infinite scroll
     }, 1000);
-  }
+
 });
 
 myApp.onPageInit('favourites', function (page) {
