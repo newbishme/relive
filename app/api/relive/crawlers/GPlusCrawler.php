@@ -143,12 +143,14 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
     }
 
     private function saveImageUrls($media_id, $gPlusImage) {
-        $media_url = \relive\models\MediaURL::firstOrCreate([
-            'media_id'=>$media_id,
-            'mediaURL'=>htmlspecialchars($gPlusImage->url, ENT_QUOTES, 'UTF-8'),
-            'width'=>$gPlusImage->width,
-            'height'=>$gPlusImage->height,
-            'sizes'=>'large'
-        ]);
+        if (isset($gPlusImage)) {
+            $media_url = \relive\models\MediaURL::firstOrCreate([
+                'media_id'=>$media_id,
+                'mediaURL'=>htmlspecialchars($gPlusImage->url, ENT_QUOTES, 'UTF-8'),
+                'width'=>$gPlusImage->width,
+                'height'=>$gPlusImage->height,
+                'sizes'=>'large'
+            ]);
+        }
     }
 }
