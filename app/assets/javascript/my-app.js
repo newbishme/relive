@@ -590,6 +590,9 @@ myApp.onPageAfterAnimation('home', function (page) {
 myApp.onPageAfterAnimation('event', function (page) {
   $$('div.event-hashtags-block').removeClass('hidden');
 });
+myApp.onPageAfterAnimation('events', function (page) {
+  $$('div.event-hashtags-block').addClass('hidden');
+});
 myApp.onPageAfterAnimation('form', function (page) {
   $$('div.event-hashtags-block').addClass('hidden');
 });
