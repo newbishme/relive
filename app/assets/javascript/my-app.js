@@ -533,6 +533,40 @@ myApp.onPageInit('event', function (page) {
         }
       });
     }
+    
+    function timeDifference(current, previous) {
+      var msPerMinute = 60;
+      var msPerHour = msPerMinute * 60;
+      var msPerDay = msPerHour * 24;
+      var msPerMonth = msPerDay * 30;
+      var msPerYear = msPerDay * 365;
+  
+      var elapsed = current - previous;
+      console.log(elapsed);
+      if (elapsed < msPerMinute) {
+          return elapsed + ' seconds ago';
+      }
+  
+      else if (elapsed < msPerHour) {
+          return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+      }
+  
+      else if (elapsed < msPerDay ) {
+          return Math.round(elapsed/msPerHour) + ' hours ago';   
+      }
+  
+      else if (elapsed < msPerMonth) {
+          return 'around ' + Math.round(elapsed/msPerDay) + ' days ago';   
+      }
+  
+      else if (elapsed < msPerYear) {
+          return 'around ' + Math.round(elapsed/msPerMonth) + ' months ago';   
+      }
+  
+      else {
+          return 'around ' + Math.round(elapsed/msPerYear) + ' years ago';   
+      }
+    }
 
     function updateEventPosts(eventPostsData) {
       var filteredPosts = [];
@@ -541,8 +575,7 @@ myApp.onPageInit('event', function (page) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
           if (!post.hasGeneratedTime) {
-            var postTime = moment.unix(post.datetime);
-            post.datetime = postTime.fromNow();
+            post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
             post.hasGeneratedTime = true;
           }
           if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
@@ -619,8 +652,8 @@ myApp.onPageInit('event', function (page) {
             for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
               var post = list.items[i];
               if (!post.hasGeneratedTime) {
-                var postTime = moment.unix(post.datetime);
-                post.datetime = postTime.fromNow();
+                console.log(Math.floor(Date.now() / 1000) + " vs " + post.datetime);
+                post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
                 post.hasGeneratedTime = true;
                 list.replaceItem(i, post);
               }
