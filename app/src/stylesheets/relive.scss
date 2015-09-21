@@ -276,6 +276,7 @@ form .item-content {
 .image.post {
 	@extend .post;
 	.post-img {
+		cursor: pointer; 
 		@media (min-width: $break-medium) {
 			height: 400px;
 		}
@@ -316,6 +317,10 @@ form .item-content {
 			}
 		}
 	}
+}
+
+.photo-browser-swiper-wrapper {
+	cursor: pointer;
 }
 
 .infinite-scroll-preloader {
