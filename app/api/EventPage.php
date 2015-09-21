@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/vendor/autoload.php';
+require_once '/Users/quanyang/BitBucket/relive/vendor/autoload.php';
 
 if (isset($_GET['event_id'])) {
     $event = \relive\models\SearchIndex::find($_GET['event_id']);
@@ -14,6 +14,12 @@ if($event) {
         array_push($tags,$hashtag->hashtag);
     }
     $keyword = join(',',$tags);
+
+    $posts = \relive\models\Post::whereIn('post_id', function($query) use ($event) {
+            $query->select('post_id')->from('posteventrelationships')->where('event_id','=',$event->event_id)->where('isFiltered',False);
+        })->orderBy('datetime','desc')->offset(0)->limit(15)->get();
+
+
 } else {
     header("Location: http://relive.space/");
 }
@@ -31,14 +37,22 @@ if($event) {
     <meta property="og:title" content="<?php echo $event->eventName; ?>" />
     <meta property="og:description" content="<?php echo $event->eventName." ".$event->caption; ?>" />
     <meta name="og:keywords" content="<?php echo $keyword;?>">
-    <meta property="Description" content="<?php echo $event->eventName." ".$event->caption; ?>" />
+    <meta property="Description" content="<?php echo $event->eventName." ".$event->caption." ".$posts->first()->caption; ?>" />
     <meta name="Keywords" content="<?php echo $keyword;?>">
-    <!--<meta http-equiv="refresh" content="0; url=https://relive.space/#!/event.php?id=<?php echo $event->event_id;?>&name=<?php echo rawurlencode($event->eventName); ?>" />-->
+    <!--<meta http-equiv="refresh" content="0; url=https://relive.space/#!/event.php?id=<?php echo $event->event_id;?>" />-->
 </head>
 <FRAMESET rows="*,0">
-    <FRAME src="https://relive.space/#!/event.php?id=<?php echo $event->event_id;?>&name=<?php echo rawurlencode($event->eventName); ?>" frameborder="0" noresize>
+    <FRAME src="https://relive.space/#!/event.php?id=<?php echo $event->event_id;?>" frameborder="0" noresize>
     <NOFRAMES>
        Your browser does not support frames.
+       <?php
+           foreach ($posts as $post) {
+                print $post->author."\n";
+                print date('d-m-Y H:i:s',$post->datetime)."\n";
+                print join(',',$post->hashtags)."\n";
+                print $post->caption."\n\n";                
+            }
+       ?>
     </NOFRAMES>
 </FRAMESET>
 </html>
