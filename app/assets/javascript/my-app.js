@@ -342,7 +342,6 @@ function eventsInit(page) {
         $$('a.event-page-url').on('click', function (e) {
           e.preventDefault();
           var eventId = $$(this).attr('relive-event-id')
-          console.log(eventId);
           var query = {
             id: eventId
           };
