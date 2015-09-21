@@ -9,7 +9,7 @@
     <div class="panel-overlay"></div>
 
     <!-- Panel View Left -->
-    <div class="panel panel-left panel-cover layout-dark">
+    <div class="panel panel-right panel-reveal layout-dark">
       <div class="content-block-title">Relive</div>
       <div class="content-block">
         <p>The most convenient space to find, create, and view past events.</a></p>
@@ -29,7 +29,7 @@
           </li>
         </ul>
       </div>
-      
+
       <div class="trending-events-block">
         <div class="content-block-title">Trending events</div>
         <div class="list-block">
@@ -37,7 +37,7 @@
             <div id="side-nav-trending-events"></div>
             <script id="sideNavTrendingEventTemplate" type="text/template7">
               <li>
-                <a href="event.php?id={{event_id}}" class="item-link close-panel" id="eventPageURL" relive-event-id="{{event_id}}">
+                <a href="event.php?id={{event_id}}" class="item-link close-panel event-page-url" relive-event-id="{{event_id}}">
                   <div class="item-content">
                     <div class="item-media"><i class="icon ion-arrow-graph-up-right"></i></div>
                     <div class="item-inner">

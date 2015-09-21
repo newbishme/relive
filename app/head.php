@@ -3,6 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script type="text/javascript" src="assets/javascript/main.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Patua+One|Oxygen:400,300,700' rel='stylesheet' type='text/css'>
     <title>relive</title>
     <link rel="stylesheet" href="assets/stylesheets/ionicons.min.css">

@@ -1,3 +1,157 @@
+/**
+ * Framework7 3D Panels 1.0.0
+ * Framework7 plugin to add 3d effect for side panels
+ *
+ * http://www.idangero.us/framework7/plugins/
+ *
+ * Copyright 2015, Vladimir Kharlampidi
+ * The iDangero.us
+ * http://www.idangero.us/
+ *
+ * Licensed under MIT
+ *
+ * Released on: August 22, 2015
+ */
+Framework7.prototype.plugins.panels3d = function (app, params) {
+'use strict';
+    params = params || {enabled: true};
+var $ = window.Dom7;
+    app.panels3d = {
+enable: function () {
+            $('body').addClass('panels-3d');
+            params.enabled = true;
+        },
+disable: function () {
+            $('body').removeClass('panels-3d');
+            params.enabled = false;
+        },
+    };
+if (params.enabled) $('body').addClass('panels-3d');
+var leftPanelWidth, rightPanelWidth, leftPanel, rightPanel, views;
+function leftPanelOpen() {
+if (!params.enabled) return;
+        views.css({
+'-webkit-transform-origin': '100% center',
+'transform-origin': '100% center',
+        });
+    }
+function rightPanelOpen() {
+if (!params.enabled) return;
+        views.css({
+'-webkit-transform-origin': '0% center',
+'transform-origin': '0% center',
+        });
+    }
+function appInit() {
+        views = $('.views');
+        leftPanel = $('.panel-left.panel-reveal');
+        rightPanel = $('.panel-right.panel-reveal');
+        leftPanel.on('open', leftPanelOpen);
+        rightPanel.on('open', rightPanelOpen);
+    }
+function setPanelTransform(viewsContainer, panel, perc) {
+if (!params.enabled) return;
+        panel = $(panel);
+if (!panel.hasClass('panel-reveal')) return;
+if (panel.hasClass('panel-left')) {
+if (!leftPanelWidth) leftPanelWidth = panel[0].offsetWidth;
+            views.transform('translate3d(' + (leftPanelWidth * perc) + 'px,0,0) rotateY(' + (-30 * perc) + 'deg)');
+            views.css({
+'-webkit-transform-origin': '100% center',
+'transform-origin': '100% center',
+            });
+            panel.transform('translate3d(' + (-leftPanelWidth * (1 - perc)) + 'px,0,0)');
+        }
+if (panel.hasClass('panel-right')) {
+if (!rightPanelWidth) rightPanelWidth = panel[0].offsetWidth;
+            views.transform('translate3d(' + (-rightPanelWidth * perc) + 'px,0,0) rotateY(' + (30 * perc) + 'deg)');
+            views.css({
+'-webkit-transform-origin': '0% center',
+'transform-origin': '0% center',
+            });
+            panel.transform('translate3d(' + (rightPanelWidth * (1 - perc)) + 'px,0,0)');
+        }
+    }
+return {
+        hooks : {
+            appInit: appInit,
+            swipePanelSetTransform: setPanelTransform,
+        }
+    };
+};
+
+/*jslint browser: true*/
+/*global console, Framework7, alert, Dom7*/
+
+/**
+ * A plugin for Framework7 to show black little toasts
+ *
+ * @author www.timo-ernst.net
+ * @license MIT
+ */
+Framework7.prototype.plugins.toast = function (app, globalPluginParams) {
+  'use strict';
+
+  var Toast = function (text, iconhtml, options) {
+    var self = this,
+      $$ = Dom7,
+      $box;
+
+    function hideBox($curbox) {
+      if ($curbox) {
+        $curbox.removeClass('fadein').transitionEnd(function () {
+          $curbox.remove();
+        });
+      }
+    }
+
+    this.show = function (show) {
+      if (show) {
+        var clientLeft,
+          $curbox;
+
+        // Remove old toasts first if there are still any
+        $$('.toast-container').off('click').off('transitionEnd').remove();
+        $box = $$('<div class="toast-container show">');
+
+        // Add content
+        $box.html('<div class="toast-icon">' + iconhtml + '</div><div class="toast-msg">' + text + '</div>');
+
+        // Add to DOM
+        clientLeft = $box[0].clientLeft;
+        $$('body').append($box);
+
+        // Hide box on click
+        $box.click(function () {
+          hideBox($box);
+        });
+
+        // Dirty hack to cause relayout xD
+        clientLeft = $box[0].clientLeft;
+
+        // Fade in toast
+        $box.addClass('fadein');
+
+        // Automatically hide box after few seconds
+        $curbox = $box;
+        setTimeout(function () {
+          hideBox($curbox);
+        }, 1500);
+
+      } else {
+        hideBox($$('.toast-container'));
+      }
+    };
+
+    return this;
+  };
+
+  app.toast = function (text, iconhtml, options) {
+    return new Toast(text, iconhtml, options);
+  };
+
+};
+
 function sendToGoogleAnalytics(page, title) {
   if (page == null) {
     return;
@@ -160,12 +314,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event/{{event_id}}" class="link" id="eventPageURL" relive-event-id="{{event_id}}">' +
+        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event/{{event_id}}" class="link right" id="eventPageURL" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -182,6 +336,24 @@ function eventsInit(page) {
           $$('.landing-what-is-relive').addClass('searchbar-not-found');
         }
         return foundItems;
+      },
+      onItemsAfterInsert: function (list, fragment) {
+        // Allow offline a href clicks to still load the linked page
+        $$('a.event-page-url').on('click', function (e) {
+          e.preventDefault();
+          var eventId = $$(this).attr('relive-event-id')
+          var query = {
+            id: eventId
+          };
+          var options = {
+              url: 'event.php?id='+eventId,
+              query: query,
+              pushState: true
+          };
+          myApp.closePanel();
+          mainView.router.load(options);
+          return false;
+        });
       }
   });
 
@@ -207,23 +379,6 @@ function eventsInit(page) {
     eventsList.appendItems(eventsData);
     eventsList.update();
     lastEventId += eventsData.length;
-
-    // Allow offline a href clicks to still load the linked page
-    $$('a#eventPageURL').on('click', function (e) {
-      e.preventDefault();
-      var eventId = $$(this).attr('relive-event-id')
-      var query = {
-        id: eventId
-      };
-      var options = {
-          url: 'event.php?id='+eventId,
-          query: query,
-          pushState: true
-      };
-      myApp.closePanel();
-      mainView.router.load(options);
-      return false;
-    });
   }
 
   if (navigator.onLine) {
@@ -326,6 +481,7 @@ myApp.onPageInit('event', function (page) {
   var eventNameKey = 'Relive-Event-ID-' + pageId;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
+  var toast = myApp.toast('Saved', '<div>☆</div>', {})
 
   if (page.query.id != null) {
     var pageId = page.query.id;
@@ -384,6 +540,11 @@ myApp.onPageInit('event', function (page) {
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
+          if (!post.hasGeneratedTime) {
+            var postTime = moment.unix(post.datetime);
+            post.datetime = postTime.fromNow();
+            post.hasGeneratedTime = true;
+          }
           if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
             posts.push(post);
           }
@@ -424,7 +585,7 @@ myApp.onPageInit('event', function (page) {
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
-                  '<div class="post-author">{{author}}</div>' +
+                  '<div class="post-author">{{author}}<span class="post-time">{{datetime}}</span></div>' +
                   '{{#if media}}' +
                   '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
@@ -444,7 +605,7 @@ myApp.onPageInit('event', function (page) {
               '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
             '<div class="swipeout-actions-left">' +
-              '<a href="#" id="swipeToSaveFavourites" class="bg-green swipeout-close" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+              '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
             '</div>' +
           '</li>',
 
@@ -453,6 +614,19 @@ myApp.onPageInit('event', function (page) {
             if (post.media) return 500;
             else return 200;
           },
+          
+          onItemsBeforeInsert: function (list, fragment) {
+            for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
+              var post = list.items[i];
+              if (!post.hasGeneratedTime) {
+                var postTime = moment.unix(post.datetime);
+                post.datetime = postTime.fromNow();
+                post.hasGeneratedTime = true;
+                list.replaceItem(i, post);
+              }
+            }  
+          },
+          
           onItemsAfterInsert: function (list, fragment) {
             $$('.swipeout').on('deleted', function () {
               var relivePostId = $$(this).attr('relive-post-id');
@@ -468,7 +642,7 @@ myApp.onPageInit('event', function (page) {
               storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
             });
 
-            $$('#swipeToSaveFavourites').on('click', function () {
+            $$('.swipeToSaveFavourites').on('click', function () {
               var postId = $$(this).attr('relive-post-id');
               var author = $$(this).attr('relive-post-author');
               var caption = $$(this).attr('relive-post-content');
@@ -484,10 +658,7 @@ myApp.onPageInit('event', function (page) {
               if (mediaURL != null) {
                 storeImgToLocalStorage(mediaURL, mediaURL);
               }
-              myApp.alert('', 'Saved!');
-              setTimeout(function() {
-                myApp.closeModal();
-              }, 600);
+              toast.show(true);
               favourites.push(favourite);
               storeJsonToLocalStorage(reliveFavouritesKey, favourites);
             });
