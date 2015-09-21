@@ -759,10 +759,9 @@ myApp.onPageInit('event', function (page) {
             var relivePhotoBrowser = myApp.photoBrowser({
                 photos: mediaObjects,
                 theme: 'dark',
-                navbar: false,
+                navbar: true,
                 toolbar: false,
-                onTap: function (swiper, event) {
-                  relivePhotoBrowser.close();
+                onClose: function (photobrowser) {
                   post[0].hasPhotoHandler = false;
                 }
             });
