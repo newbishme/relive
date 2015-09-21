@@ -30,13 +30,17 @@ if (isset($_GET)) {
 			$post->isFiltered = 1;
 			$post->save();
 
-			$report = \relive\models\Report::where('post_id','=',$_GET['post_id'])->first();
-			$report->isSettled = 1;
-			$report->save();
+			$report = \relive\models\Report::where('post_id','=',$_GET['post_id'])->get();
+			foreach ($report as $rep) {
+				$rep->isSettled = 1;
+				$rep->save();
+			}
 		} else if (isset($_GET['settle'])) {
-			$report = \relive\models\Report::where('post_id','=',$_GET['post_id'])->first();
-			$report->isSettled = 1;
-			$report->save();
+			$report = \relive\models\Report::where('post_id','=',$_GET['post_id'])->get();
+			foreach ($report as $rep) {
+				$rep->isSettled = 1;
+				$rep->save();
+			}
 		}
 	}
 }
