@@ -496,6 +496,9 @@ myApp.onPageInit('event', function (page) {
     success:function(data) {
       if (data.eventName != null) {
         eventName = data.eventName;
+      } else {
+        var options = { url: 'events.php' };
+        mainView.router.load(options);
       }
       if (data.hashtags != null) {
         hashtags = data.hashtags;
