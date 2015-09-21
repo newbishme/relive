@@ -1,5 +1,5 @@
 <?php
-require_once '/Users/quanyang/BitBucket/relive/vendor/autoload.php';
+require_once '/var/www/vendor/autoload.php';
 
 if (isset($_GET['event_id'])) {
     $event = \relive\models\SearchIndex::find($_GET['event_id']);
