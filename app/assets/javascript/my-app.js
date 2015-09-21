@@ -307,6 +307,7 @@ function eventsInit(page) {
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
   var runOnceKey = 'reliveRunOnceKey';
+  var timeout = 2000;
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -376,13 +377,19 @@ function eventsInit(page) {
   }
 
   function updateEventsList(eventsData) {
+    if (eventsData == null) {
+      setTimeout(function (){
+        getEventsListWithAJAX();
+      }, timeout);
+      timeout *= 2;
+      return;
+    }
     eventsList.appendItems(eventsData);
     eventsList.update();
     lastEventId += eventsData.length;
   }
 
-  if (navigator.onLine) {
-    // Load more events if connected to internet
+  function getEventsListWithAJAX() {
     $$.ajax({
       type:'GET',
       url:'https://relive.space/api/event/indexes',
@@ -392,15 +399,22 @@ function eventsInit(page) {
         if (data !== '') {
           storeJsonToLocalStorage(eventIndexesKey, data);
           updateEventsList(data);
+          timeout = 2000;
         }
-      } // End ajax success
+      }, // End ajax success
+      error:function(data){
+        updateEventsList(null);
+      }
     }); // End ajax
+  }
+
+  if (navigator.onLine) {
+    // Load more events if connected to internet
+    getEventsListWithAJAX();
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
     updateEventsList(data);
   }
-
-
 
   // Initialize Side Nav Trending events
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
@@ -408,6 +422,13 @@ function eventsInit(page) {
   var trendingEventsKey = 'trendingEventsIndexes';
 
   function updateTrendingList(events) {
+    if (events == null) {
+      setTimeout(function() {
+        getTrendingListWithAJAX();
+      }, timeout);
+      return;
+    }
+
     var trendingEvents = [];
     var trendingHtml = '';
 
@@ -423,7 +444,7 @@ function eventsInit(page) {
     $$('div#side-nav-trending-events').html(trendingHtml);
   }
 
-  if (navigator.onLine) {
+  function getTrendingListWithAJAX() {
     $$.ajax({
       type:'GET',
       url:'https://relive.space/api/event/trending',
@@ -432,9 +453,17 @@ function eventsInit(page) {
         if (data !== '') {
           storeJsonToLocalStorage(trendingEventsKey, data);
           updateTrendingList(data);
+          timeout = 2000;
         }
-      } // End ajax success
+      }, // End ajax success
+      error:function(data){
+        updateTrendingList(null);
+      }
     }); // End ajax
+  }
+
+  if (navigator.onLine) {
+    getTrendingListWithAJAX();
   } else {
       var data = loadJsonFromLocalStorage(trendingEventsKey);
       updateTrendingList(data);

@@ -2,7 +2,7 @@
   <div class="navbar-inner">
     <div class="left sliding"><a href="events.php" class="back link"><i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
     <div class="center sliding title-event-name">Favourites</div>
-    <div class="right"><a href="#" class="open-panel link icon-only"><i class="icon ion-ios-more"></i></a></div>
+    <div class="right"><a href="#" class="open-panel link icon-only"><i class="icon ion-more"></i></a></div>
   </div>
 </div>
 
