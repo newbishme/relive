@@ -652,16 +652,20 @@ myApp.onPageInit('event', function (page) {
             for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
               var post = list.items[i];
               if (!post.hasGeneratedTime) {
-                console.log(Math.floor(Date.now() / 1000) + " vs " + post.datetime);
                 post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
                 post.hasGeneratedTime = true;
                 list.replaceItem(i, post);
               }
             }  
           },
-          
+                  
           onItemsAfterInsert: function (list, fragment) {
-            $$('.swipeout').on('deleted', function () {
+
+            $$('.swipeout').on('deleted', deletePost);
+            $$('.swipeToSaveFavourites').on('click', savePost);
+            $$('.relive-photobrowser-lazy').on('click', openPhoto);
+            
+            function deletePost() {
               var relivePostId = $$(this).attr('relive-post-id');
               $$.ajax({
                 type:'POST',
@@ -673,14 +677,16 @@ myApp.onPageInit('event', function (page) {
               });
               var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
               storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
-            });
-
-            $$('.swipeToSaveFavourites').on('click', function () {
-              var postId = $$(this).attr('relive-post-id');
-              var author = $$(this).attr('relive-post-author');
-              var caption = $$(this).attr('relive-post-content');
-              var provider = $$(this).attr('relive-post-provider');
-              var mediaURL = $$(this).attr('relive-favourite-post-img-url');
+            }
+            
+            function savePost() {
+              var post = $$(this);
+            
+              var postId = post.attr('relive-post-id');
+              var author = post.attr('relive-post-author');
+              var caption = post.attr('relive-post-content');
+              var provider = post.attr('relive-post-provider');
+              var mediaURL = post.attr('relive-favourite-post-img-url');
               var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
               var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
 
@@ -694,13 +700,15 @@ myApp.onPageInit('event', function (page) {
               toast.show(true);
               favourites.push(favourite);
               storeJsonToLocalStorage(reliveFavouritesKey, favourites);
-            });
-
-            $$('.relive-photobrowser-lazy').on('click', function () {
-                var mediaURL = $$(this).attr('relive-mediabrowser-url');
-                var mediaCaption = $$(this).attr('relive-mediabrowser-caption');
+            }
+            
+            function openPhoto() {
+              var post = $$(this);
+              if (!post[0].hasPhotoHandler) {
+                var mediaURL = post.attr('relive-mediabrowser-url');
+                var mediaCaption = post.attr('relive-mediabrowser-caption');
                 var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
-
+  
                 // Initialize Media Browser
                 var relivePhotoBrowser = myApp.photoBrowser({
                     photos: mediaObjects,
@@ -709,10 +717,14 @@ myApp.onPageInit('event', function (page) {
                     toolbar: false,
                     onTap: function (swiper, event) {
                       relivePhotoBrowser.close();
+                      post[0].hasPhotoHandler = false;
                     }
                 });
+                post[0].hasPhotoHandler = true;
                 relivePhotoBrowser.open();
-            });
+              }
+            }
+            
           }
       }); // End virtualList initialization
 
