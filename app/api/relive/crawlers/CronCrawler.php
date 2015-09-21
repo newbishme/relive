@@ -4,9 +4,11 @@ require_once '/var/www/vendor/autoload.php';
 
 use \relive\Crawlers\TwitterCrawler;
 use \relive\Crawlers\InstagramCrawler;
+use \relive\Crawlers\GPlusCrawler;
 
 $twitter = TwitterCrawler::getInstance();
 $instagram = InstagramCrawler::getInstance();
+$gplus = GPlusCrawler::getInstance();
 
 $jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->get();
 $startTime = time();
@@ -18,5 +20,6 @@ foreach ($jobs as $job) {
 		$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
 		$twitter->recentCrawl($startTime, $event, $hashtag->hashtag);
 		$instagram->recentCrawl($startTime, $event, $hashtag->hashtag);
+		$gplus->recentCrawl($event, $hashtag->hashtag);
 	}
 }
