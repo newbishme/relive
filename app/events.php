@@ -4,7 +4,7 @@
     <div class="left sliding"><a href="index.php" class="back link" data-forceUrl="true"><i class="icon ion-ios-arrow-back"></i><span>Back</span></a></div>
     <div class="center sliding" id="page-title">relive</div>
     <div class="right">
-      <a href="#" class="link icon-only open-panel"><i class="icon ion-ios-more"></i></a>
+      <a href="#" class="link icon-only open-panel"><i class="icon ion-more"></i></a>
     </div>
 
     <!-- Sub navbar -->
