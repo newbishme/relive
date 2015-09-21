@@ -444,7 +444,7 @@ myApp.onPageInit('event', function (page) {
               '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
             '</div>' +
             '<div class="swipeout-actions-left">' +
-              '<a href="#" id="swipeToSaveFavourites" class="bg-green swipeout-close" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+              '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
             '</div>' +
           '</li>',
 
@@ -468,7 +468,7 @@ myApp.onPageInit('event', function (page) {
               storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
             });
 
-            $$('#swipeToSaveFavourites').on('click', function () {
+            $$('.swipeToSaveFavourites').on('click', function () {
               var postId = $$(this).attr('relive-post-id');
               var author = $$(this).attr('relive-post-author');
               var caption = $$(this).attr('relive-post-content');
