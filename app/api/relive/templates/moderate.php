@@ -80,7 +80,7 @@
 						$hashtags = join(', ',$post->hashtags);
 						$image = '';
 						if ($post->media) {
-							$image = "<img src='".$post->media->data[0]->mediaURL."'/>";
+							$image = "<img width='400' src='".$post->media->data[0]->mediaURL."'/>";
 						}
 						$card = "
 						<div class='card'>
