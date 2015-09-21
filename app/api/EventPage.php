@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/vendor/autoload.php';
+require_once '/Users/quanyang/BitBucket/relive/vendor/autoload.php';
 
 if (isset($_GET['event_id'])) {
     $event = \relive\models\SearchIndex::find($_GET['event_id']);
@@ -48,6 +48,9 @@ if($event) {
        <?php
            foreach ($posts as $post) {
                 print $post->author."\n";
+                if ($post->media) {
+                    print $post->media->data[0]->mediaURL;
+                }
                 print date('d-m-Y H:i:s',$post->datetime)."\n";
                 print join(',',$post->hashtags)."\n";
                 print $post->caption."\n\n";                
