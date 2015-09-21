@@ -673,7 +673,7 @@ myApp.onPageInit('event', function (page) {
             '</div>' +
           '</div>' +
           '<div class="swipeout-actions-right">' +
-            '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide and Report Post</a>' +
+            '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
           '</div>' +
           '<div class="swipeout-actions-left">' +
             '<a href="#" class="bg-green swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
@@ -685,7 +685,7 @@ myApp.onPageInit('event', function (page) {
         if (post.media) return 500;
         else return 200;
       },
-        
+
       onItemsBeforeInsert: function (list, fragment) {
         for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
           var post = list.items[i];
@@ -694,17 +694,22 @@ myApp.onPageInit('event', function (page) {
             post.hasGeneratedTime = true;
             list.replaceItem(i, post);
           }
-        }  
+        }
       },
-                
+
       onItemsAfterInsert: function (list, fragment) {
 
         $$('.swipeout').on('deleted', deletePost);
         $$('.swipeToSaveFavourites').on('click', savePost);
         $$('.relive-photobrowser-lazy').on('click', openPhoto);
-        
+
         function deletePost() {
           var relivePostId = $$(this).attr('relive-post-id');
+          var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
+
+          if (isPostHiddenInLocalStorage(hiddenPostIdKey)) {
+            return;
+          }
           $$.ajax({
             type:'POST',
             url:'https://relive.space/api/event/'+pageId+'/report',
@@ -713,13 +718,12 @@ myApp.onPageInit('event', function (page) {
             success:function(data) {
             } // End Success
           });
-          var hiddenPostIdKey = "relive-hidden-post-id-" + relivePostId;
           storeHiddenPostsToLocalStorage(hiddenPostIdKey, relivePostId);
         }
-        
+
         function savePost() {
           var post = $$(this);
-        
+
           var postId = post.attr('relive-post-id');
           var author = post.attr('relive-post-author');
           var caption = post.attr('relive-post-content');
@@ -743,14 +747,14 @@ myApp.onPageInit('event', function (page) {
             storeJsonToLocalStorage(reliveFavouritesKey, favourites);
           }
         }
-        
+
         function openPhoto() {
           var post = $$(this);
           if (!post[0].hasPhotoHandler) {
             var mediaURL = post.attr('relive-mediabrowser-url');
             var mediaCaption = post.attr('relive-mediabrowser-caption');
             var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
-      
+
             // Initialize Media Browser
             var relivePhotoBrowser = myApp.photoBrowser({
                 photos: mediaObjects,
