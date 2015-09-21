@@ -15,7 +15,7 @@
         <p>The most convenient space to find, create, and view past events.</a></p>
       </div>
 
-      <div class="list-block">
+      <div class="list-block relive-panel-favourites-reel">
         <ul>
           <li>
             <a href="favourites.php" class="item-link close-panel">
