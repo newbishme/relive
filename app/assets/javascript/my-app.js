@@ -541,6 +541,8 @@ myApp.onPageInit('event', function (page) {
       if (eventPostsData != null) {
         eventPostsData.forEach(function(post){
           var hiddenPostIdKey = "relive-hidden-post-id-" + post.post_id;
+          var postTime = moment.unix(post.datetime);
+          post.datetime = postTime.fromNow();
           if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
             posts.push(post);
           }
@@ -581,7 +583,7 @@ myApp.onPageInit('event', function (page) {
               '{{/if}}' +
               '<div class="post-data-origin-wrapper">' +
                 '<div class="post-data">' +
-                  '<div class="post-author">{{author}}</div>' +
+                  '<div class="post-author">{{author}}<span class="post-time">{{datetime}}</span></div>' +
                   '{{#if media}}' +
                   '<div class="post-content">{{caption}}</div>' +
                   '{{else}}' +
