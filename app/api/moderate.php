@@ -31,7 +31,7 @@ if (isset($_GET)) {
 		$event->save();
 	}
 	if (isset($_GET['deleteevent'])) {
-		$event_id = $_GET['eventid'];
+		$event_id = $_GET['event_id'];
 		\relive\models\Event::find($event_id)->delete();
 		\relive\models\Post::whereNotIn('post_id', function($query) {
 			$query->select('post_id')->from('posteventrelationships');
@@ -56,6 +56,24 @@ if (isset($_GET)) {
 				$rep->isSettled = 1;
 				$rep->save();
 			}
+		}
+	}
+	if (isset($_GET['updateevent'])) {
+		$event_id = $_GET['eventid'];
+		$event = \relive\models\Event::find($event_id);
+		$event->eventName = $_GET['eventName'];
+		$event->startDate = strtotime($_GET['startDate']);
+		$event->endDate = strtotime($_GET['endDate']);
+		$event->save();
+
+		\relive\models\EventHashtagRelationship::where('event_id', '=', $event_id)->delete();
+		$hashtags = array();
+		if (isset($_GET['hashtag1']) && $_GET['hashtag1'] !== '') $hashtags[] = $_GET['hashtag1'];
+		if (isset($_GET['hashtag2']) && $_GET['hashtag2'] !== '') $hashtags[] = $_GET['hashtag2'];
+		if (isset($_GET['hashtag3']) && $_GET['hashtag3'] !== '') $hashtags[] = $_GET['hashtag3'];
+		foreach ($hashtags as $tag) {
+			$hashtag = \relive\models\Hashtag::firstOrCreate(['hashtag' => $tag]);
+			$eventhashtagrelationship = \relive\models\EventHashtagRelationship::firstOrCreate(['event_id'=>$event_id, 'hashtag_id' => $hashtag->hashtag_id]);
 		}
 	}
 }

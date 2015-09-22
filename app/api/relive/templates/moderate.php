@@ -74,7 +74,7 @@
 						Hashtags: $hashtags</br>
 						</br>
 						<form onsubmit='return confirm(\"Confirm?\");'>
-						<input type='hidden' name='eventid' value='$event->event_id'>
+						<input type='hidden' name='event_id' value='$event->event_id'>
 						Start date:<input class='startdate' type='text' name='start'>
 						End date:<input class='enddate' type='text' name='end'>
 						<input type='submit' name='publish' value='PUBLISH!'>
@@ -144,6 +144,7 @@
 					$row = "
 					<tr>
 					<form onsubmit='return confirm(\"Update event?\");'>
+					<input type='hidden' name='event_id' value='$event->event_id'>
 					<td>$event->event_id</td>
 					<td><input name='eventName' value='$event->eventName'></td>
 					<td>$dateAdded</td>
@@ -153,7 +154,7 @@
 					<td><input name='hashtag1' value='$hashtag1'></td>
 					<td><input name='hashtag2' value='$hashtag2'></td>
 					<td><input name='hashtag3' value='$hashtag3'></td>
-					<td><input type='submit' name='update' value='UPDATE'>or<input type='submit' name='delete' value='DELETE'></td>
+					<td><input type='submit' name='updateevent' value='UPDATE'>or<input type='submit' name='deleteevent' value='DELETE'></td>
 					</form>
 					</tr>
 					";
