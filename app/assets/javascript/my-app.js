@@ -243,7 +243,7 @@ function convertImgToBase64URL(url, callback, outputFormat){
 
 // Export selectors engine
 var $$ = Dom7;
-
+var isIos = Framework7.prototype.device.ios === true;
 // Keys for localStorage/SessionStorage lookup
 var reliveFavouritesKey = 'Relive-Favourite-Events-and-Posts-Key';
 
@@ -713,8 +713,17 @@ myApp.onPageInit('event', function (page) {
 
         $$('a.relive-external-post-url').on('click', function(e) {
           e.preventDefault();
-          var externalURL = $$(this).attr('href');
-          window.open(externalURL, '_blank');
+          var post = $$(this);
+
+          if (!post[0].hasExternalURLHandler) {
+            post[0].hasExternalURLHandler = true;
+            var externalURL = post.attr('href');
+            window.open(externalURL, "_blank");
+            setTimeout(function(){
+              post[0].hasExternalURLHandler = false;
+            }, 1000);
+          }
+
           return false;
         });
 
