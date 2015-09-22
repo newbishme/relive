@@ -1,6 +1,5 @@
 <?php
-require_once '/Users/quanyang/BitBucket/relive/vendor/autoload.php';
-//require_once '/var/www/vendor/autoload.php';
+require_once '/var/www/vendor/autoload.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
