@@ -59,7 +59,7 @@ if (isset($_GET)) {
 		}
 	}
 	if (isset($_GET['updateevent'])) {
-		$event_id = $_GET['eventid'];
+		$event_id = $_GET['event_id'];
 		$event = \relive\models\Event::find($event_id);
 		$event->eventName = $_GET['eventName'];
 		$event->startDate = strtotime($_GET['startDate']);
