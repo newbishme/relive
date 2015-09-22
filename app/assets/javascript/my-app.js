@@ -630,6 +630,7 @@ myApp.onPageInit('event', function (page) {
   if (page.query.name != null) {
     eventName = page.query.name;
     $$('.title-event-name').html(decodeURI(eventName));
+    window.history.replaceState(page.container.outerHTML, 'Relive | ' + eventName, '/event/'+page.query.id);
   }
 
   $$.ajax({
@@ -1354,7 +1355,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   var options = {
       url: 'event.php?id='+query.id,
       query: query,
-      pushState: false
+      pushState: true
   };
   mainView.router.load(options);
 });
