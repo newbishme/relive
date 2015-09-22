@@ -869,12 +869,12 @@ myApp.onPageInit('favourites', function (page) {
       posts = [];
       favouritePostsData.forEach(function(post){
         // FIXME not optimized, this loads every favourite posts.
-        if (post.media != "") {
-          var loadedBase64Img = loadImgFromLocalStorage(post.media);
-          if (loadedBase64Img != null) {
-            post.media = loadedBase64Img;
-          } else {
-            storeImgToLocalStorage(post.media, post.media); // Fallback in case image wasn't loaded before
+        if (!navigator.onLine) {
+          if (post.media != "") {
+            var loadedBase64Img = loadImgFromLocalStorage(post.media);
+            if (loadedBase64Img != null) {
+              post.media = loadedBase64Img;
+            }
           }
         }
         posts.push(post);
