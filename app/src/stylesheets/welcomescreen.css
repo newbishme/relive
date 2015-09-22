@@ -21,6 +21,36 @@
   cursor: pointer;
 }
 
+@media (max-width: 1200px) {
+  .welcomescreen-right, .welcomescreen-left {
+    display: none;
+  }
+} 
+
+@media (min-width: 1200px) {
+  .welcomescreen-right {
+    cursor: pointer;
+    top: 45vh;
+    right: 5vw;
+    position: absolute;
+    z-index: 9998;
+    font-size: 30px;
+  }
+  
+  .welcomescreen-left {
+    cursor: pointer;
+    top: 45vh;
+    left: 5vw;
+    position: absolute;
+    z-index: 9998;
+    font-size: 30px;
+  }
+  
+  .welcomescreen-right.swiper-button-disabled, .welcomescreen-left.swiper-button-disabled {
+    color: #666;
+  }
+}
+
 .welcomescreen-swiper {
   position:relative;
   width: 100%;

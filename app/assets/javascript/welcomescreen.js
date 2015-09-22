@@ -58,6 +58,8 @@ Framework7.prototype.plugins.welcomescreen = function (app, globalPluginParams) 
         loop: options.loop,
         pagination: options.pagination ? swiperContainer.find('.swiper-pagination') : undefined,
         paginationClickable: true,
+        nextButton: '.welcomescreen-right',
+        prevButton: '.welcomescreen-left'
       });
     }
     
@@ -84,6 +86,8 @@ Framework7.prototype.plugins.welcomescreen = function (app, globalPluginParams) 
       defaultTemplate = '<div class="welcomescreen-container {{#if options.cssClass}}{{options.cssClass}}{{/if}}">' +
           '{{#if options.closeButton}}' +
           '<div class="welcomescreen-closebtn close-welcomescreen">{{options.closeButtonText}}</div>' +
+          '<div class="welcomescreen-right"><i class="icon ion-chevron-right"></i></div>' +
+          '<div class="welcomescreen-left"><i class="icon ion-chevron-left"></i></div>' +
           '{{/if}}' +
           '<div class="welcomescreen-swiper swiper-container">' +
             '<div class="swiper-wrapper">' +
