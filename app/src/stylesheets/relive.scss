@@ -379,6 +379,14 @@ form .item-content {
 	}
 }
 
+.swipeout-actions-right a.swipeout-delete {
+	background-color: #FF5757;
+}
+
+.swipeout-close.swipeout-overswipe.swipeToSaveFavourites {
+	background-color: #57C161;
+}
+
 // Toast plugin
 .toast-container{
   position: fixed;
