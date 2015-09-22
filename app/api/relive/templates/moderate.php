@@ -118,6 +118,44 @@
 			</tr>
 		</table>
 	</div>
+	<div class="container">
+		<h1>Published Events</h1>
+		<table border="1">
+			<tr>
+				<td>ID</td>
+				<td>Name</td>
+				<td>Date Added</td>
+				<td>Start Date</td>
+				<td>End Date</td>
+				<td>Rank Points</td>
+				<td>Hashtag1</td>
+				<td>Hashtag2</td>
+				<td>Hashtag3</td>
+			</tr>
+			<?php
+				foreach ($publishedEvents as $event) {
+					$dateAdded = date("D M j Y H:i:s O",$event->dateAdded);
+					$startDate = date("D M j Y H:i:s O",$event->startDate);
+					$endDate = date("D M j Y H:i:s O",$event->endDate);
+					$hashtag1 = isset($event->hashtags[0]) ? $event->hashtags[0] : '';
+					$hashtag2 = isset($event->hashtags[1]) ? $event->hashtags[1] : '';
+					$hashtag3 = isset($event->hashtags[2]) ? $event->hashtags[2] : '';
+					$row = "
+					<td>$event->event_id</td>
+					<td>$event->eventName</td>
+					<td>$dateAdded</td>
+					<td>$startDate</td>
+					<td>$endDate</td>
+					<td>$event->rankPoints</td>
+					<td>$hashtag1</td>
+					<td>$hashtag2</td>
+					<td>$hashtag3</td>
+					";
+					print $row;
+				}
+			?>
+		</table>
+	</div>
 	<script type="text/javascript">
 		$(function() {
 			$( ".startdate" ).datepicker({
