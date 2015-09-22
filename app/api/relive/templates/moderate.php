@@ -144,8 +144,8 @@
 					$row = "
 					<tr>
 					<form onsubmit='return confirm(\"Update event?\");'>
-					<td><input name='event_id' value='$event->event_id'></td>
-					<td><input name='eventName value='$event->eventName'></td>
+					<td>$event->event_id</td>
+					<td><input name='eventName' value='$event->eventName'></td>
 					<td>$dateAdded</td>
 					<td><input class='startdate' name='startDate' value='$startDate'</td>
 					<td><input class='enddate' name='endDate' value='$endDate'</td>
