@@ -73,11 +73,12 @@
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
 						</br>
-						<form onsubmit='return confirm(\"Confirm publish?\");'>
-						<input type='hidden' name='publish' value='$event->event_id'>
-						Start date:<input class='calendar' type='text' name='start'>
-						End date:<input class='calendar' type='text' name='end'>
-						<input type='submit' value='PUBLISH!'>
+						<form onsubmit='return confirm(\"Confirm?\");'>
+						<input type='hidden' name='event_id' value='$event->event_id'>
+						Start date:<input class='startdate' type='text' name='start'>
+						End date:<input class='enddate' type='text' name='end'>
+						<input type='submit' name='publish' value='PUBLISH!'>
+						<input type='submit' name='deleteevent' value='DELETE'>
 						</form>
 						</div>";
 						print $card;
@@ -117,9 +118,65 @@
 			</tr>
 		</table>
 	</div>
+	<div class="container">
+		<h1>Published Events</h1>
+		<table border="1">
+			<tr>
+				<td>ID</td>
+				<td>Name</td>
+				<td>Date Added</td>
+				<td>Start Date</td>
+				<td>End Date</td>
+				<td>Rank Points</td>
+				<td>Hashtag1</td>
+				<td>Hashtag2</td>
+				<td>Hashtag3</td>
+				<td>Update/Delete</td>
+			</tr>
+			<?php
+				foreach ($publishedEvents as $event) {
+					$dateAdded = date("D M j Y H:i:s O",$event->dateAdded);
+					$startDate = date("D M j Y H:i:s O",$event->startDate);
+					$endDate = date("D M j Y H:i:s O",$event->endDate);
+					$hashtag1 = isset($event->hashtags[0]) ? $event->hashtags[0] : '';
+					$hashtag2 = isset($event->hashtags[1]) ? $event->hashtags[1] : '';
+					$hashtag3 = isset($event->hashtags[2]) ? $event->hashtags[2] : '';
+					$row = "
+					<tr>
+					<form onsubmit='return confirm(\"Update event?\");'>
+					<input type='hidden' name='event_id' value='$event->event_id'>
+					<td>$event->event_id</td>
+					<td><input name='eventName' value='$event->eventName'></td>
+					<td>$dateAdded</td>
+					<td><input class='startdate' name='startDate' value='$startDate'</td>
+					<td><input class='enddate' name='endDate' value='$endDate'</td>
+					<td>$event->rankPoints</td>
+					<td><input name='hashtag1' value='$hashtag1'></td>
+					<td><input name='hashtag2' value='$hashtag2'></td>
+					<td><input name='hashtag3' value='$hashtag3'></td>
+					<td><input type='submit' name='updateevent' value='UPDATE'>or<input type='submit' name='deleteevent' value='DELETE'></td>
+					</form>
+					</tr>
+					";
+					print $row;
+				}
+			?>
+		</table>
+	</div>
 	<script type="text/javascript">
 		$(function() {
-			$( ".calendar" ).datepicker();
+			$( ".startdate" ).datepicker({
+				dateFormat: 'D M d yy',
+				onSelect: function(dateText) {
+					$(this).val(dateText + " 00:00:00 +0800");
+				}
+			});
+			$( ".enddate" ).datepicker({
+				dateFormat: 'D M d yy',
+				onSelect: function(dateText) {
+					$(this).val(dateText + " 23:59:59 +0800");
+				}
+			});
 		});
 	</script>
 </body>

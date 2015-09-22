@@ -19,7 +19,7 @@ class FacebookPagePoster {
 
 				$fbPageId = getenv('FACEBOOK_PAGE_ID');
 
-				$sourceLink = "https://relive.space/#!/event.php?id=" . $event->event_id . "&name=" . rawurlencode($event->eventName);
+				$sourceLink = "https://relive.space/event/" . $event->event_id;
 				$fbPostMessage = "The event \"" . $event->eventName . "\" was just added to relive.space!\n\n" . $sourceLink;
 
 				$response = $fb->post('/' . $fbPageId . '/feed', ['message' => $fbPostMessage]);
