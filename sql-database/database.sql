@@ -59,9 +59,21 @@ CREATE TABLE `events` (
   `longitude` decimal(10,6) DEFAULT NULL,
   `latitude` decimal(10,6) DEFAULT NULL,
   `rankPoints` int(11) DEFAULT '0',
+  `isPublished` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`event_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+DROP TABLE IF EXISTS `reports`;
+
+CREATE TABLE `reports` (
+  `report_id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_id` int(11) NOT NULL,
+  `report_time` int(11) NOT NULL,
+  `isSettled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`report_id`),
+  KEY `reports_constraint` (`post_id`),
+  CONSTRAINT `reports_constraint` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8
 --
 -- Table structure for table `hashtags`
 --
@@ -220,6 +232,18 @@ CREATE TABLE `searchentries` (
   `searchKey` varchar(255) NOT NULL,
   PRIMARY KEY (`search_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 ALTER TABLE eventhashtagrelationships ADD UNIQUE( `event_id`, `hashtag_id`);
 

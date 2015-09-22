@@ -26,7 +26,7 @@ class EventController extends Controller {
 			$orderBy = "startDate";
 		}
 
-		$event = \relive\models\Event::orderBy($orderBy,'desc')->skip($startAt)->take($limit)->get()->toArray();
+		$event = \relive\models\Event::orderBy($orderBy,'desc')->where('isPublished','=','1')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($event, JSON_UNESCAPED_SLASHES);
 	}
 
@@ -109,7 +109,7 @@ class EventController extends Controller {
 			return;
 		}
 
-		$events = \relive\models\SearchIndex::orderBy('rankPoints','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		$events = \relive\models\SearchIndex::orderBy('rankPoints','desc')->where('isPublished','=','1')->take($limit)->select('event_id','eventName')->get()->toArray();
 		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
@@ -123,7 +123,7 @@ class EventController extends Controller {
 			return;
 		}
 
-		$events = \relive\models\SearchIndex::orderBy('dateAdded','desc')->take($limit)->select('event_id','eventName')->get()->toArray();
+		$events = \relive\models\SearchIndex::orderBy('dateAdded','desc')->where('isPublished','=','1')->take($limit)->select('event_id','eventName')->get()->toArray();
 		echo json_encode($events, JSON_UNESCAPED_SLASHES);
 	}
 
@@ -140,7 +140,7 @@ class EventController extends Controller {
 			return;
 		}
 		$limit = $count-$startAt;
-		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->orderBy('event_id','desc')->skip($startAt)->take($limit)->get()->toArray();
+		$indexes = \relive\models\SearchIndex::select('event_id','eventName')->where('isPublished','=','1')->orderBy('event_id','desc')->skip($startAt)->take($limit)->get()->toArray();
 		echo json_encode($indexes, JSON_UNESCAPED_SLASHES);
 	}
 
