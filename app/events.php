@@ -10,7 +10,7 @@
     <!-- Sub navbar -->
     <div class="subnavbar">
       <div class="subnavbar-search">
-        <form class="searchbar">
+        <form class="searchbar relive-events-searchbar">
           <div class="searchbar-input">
             <input id="search-input-box" type="search" placeholder="Look for an event to relive">
             <a href="#" class="searchbar-clear"></a>

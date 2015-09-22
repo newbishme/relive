@@ -290,9 +290,10 @@ myApp.onPageInit('landing', function(page) {
   });
 });
 
-myApp.onPageReinit('events', function (page) {
-  eventsInit(page);
-});
+//  TODO remove this code after we confirm that it is not needed
+// myApp.onPageReinit('events', function (page) {
+//   eventsInit(page);
+// });
 
 // Callbacks to run specific code for specific pages, for example for events data page:
 myApp.onPageInit('events', function (page) {
@@ -315,12 +316,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}">' +
+        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}" relive-event-name="{{eventName}}">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}} relive-event-name="{{eventName}}"">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -333,21 +334,24 @@ function eventsInit(page) {
             foundItems.push(i);
           }
         }
-        if (foundItems.length > 0) {
-          $$('.landing-what-is-relive').addClass('searchbar-not-found');
-        }
         return foundItems;
       },
       onItemsAfterInsert: function (list, fragment) {
         // Allow offline a href clicks to still load the linked page
         $$('a.event-page-url').on('click', function (e) {
           e.preventDefault();
-          var eventId = $$(this).attr('relive-event-id')
+          var eventId = $$(this).attr('relive-event-id');
+          var eventName = $$(this).attr('relive-event-name');
+          var url = 'event.php?id='+eventId;
+          if (!navigator.onLine) {
+            url = 'event.php';
+          }
           var query = {
-            id: eventId
+            id: eventId,
+            name: eventName
           };
           var options = {
-              url: 'event.php?id='+eventId,
+              url: url,
               query: query,
               pushState: true
           };
@@ -359,7 +363,7 @@ function eventsInit(page) {
   });
 
   // Initialize Search bar
-  myApp.searchbar('.searchbar', {
+  var reliveEventsSearchBar = myApp.searchbar('.relive-events-searchbar', {
     searchList: '.list-block-search',
     searchIn: '.card-header'
   });
@@ -465,8 +469,8 @@ function eventsInit(page) {
   if (navigator.onLine) {
     getTrendingListWithAJAX();
   } else {
-      var data = loadJsonFromLocalStorage(trendingEventsKey);
-      updateTrendingList(data);
+    var data = loadJsonFromLocalStorage(trendingEventsKey);
+    updateTrendingList(data);
   }
 
 
@@ -513,10 +517,15 @@ myApp.onPageInit('event', function (page) {
   var timeout = 3000;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
-  var toast = myApp.toast('Saved', '<div>☆</div>', {})
+  var toast = myApp.toast('Saved', '<div>☆</div>', {});
   var pageId = page.query.id;
   var eventName = 'Event';
   var eventNameKey = 'Relive-Event-ID-' + pageId;
+
+  if (page.query.name != null) {
+    eventName = page.query.name;
+    $$('.title-event-name').html(decodeURI(eventName));
+  }
 
   $$.ajax({
     type:'GET',
@@ -631,8 +640,6 @@ myApp.onPageInit('event', function (page) {
         for (var j = 0; j < filteredHashtags.length; j++) {
           for (var k = 0; k < currPost.hashtags.length; k++) {
             if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
-              console.log("Filter: "+filteredHashtags[j].toUpperCase());
-              console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
               isMatch = true;
               break;
             }
@@ -862,12 +869,12 @@ myApp.onPageInit('favourites', function (page) {
       posts = [];
       favouritePostsData.forEach(function(post){
         // FIXME not optimized, this loads every favourite posts.
-        if (post.image != "") {
-          var loadedBase64Img = loadImgFromLocalStorage(post.image);
+        if (post.media != "") {
+          var loadedBase64Img = loadImgFromLocalStorage(post.media);
           if (loadedBase64Img != null) {
-            post.image = loadedBase64Img;
+            post.media = loadedBase64Img;
           } else {
-            storeImgToLocalStorage(post.image, post.image); // Fallback in case image wasn't loaded before
+            storeImgToLocalStorage(post.media, post.media); // Fallback in case image wasn't loaded before
           }
         }
         posts.push(post);
@@ -917,21 +924,51 @@ myApp.onPageInit('favourites', function (page) {
           else return 200;
         },
         onItemsAfterInsert: function (list, fragment) {
-          $$('.swipeout').on('deleted', function () {
+          $$('.swipeout').on('deleted', deleteFavouritePost);
+          $$('.relive-photobrowser-lazy').on('click', openPhoto);
+
+          function deleteFavouritePost() {
             var relivePostId = $$(this).attr('relive-post-id');
             var newPostsAfterDelete = [];
+            var isDeleted = false;
+
             for (var i = 0; i < posts.length; i++) {
               if (posts[i].post_id !== relivePostId) {
                 newPostsAfterDelete.push(posts[i]);
               } else {
+                isDeleted = true;
                 if (posts[i].media != null) {
                   removeItemFromLocalStorage(posts[i].media);
                 }
               }
             }
-            posts = newPostsAfterDelete;
-            storeJsonToLocalStorage(reliveFavouritesKey, posts);
-          });
+            if (isDeleted) {
+              posts = newPostsAfterDelete;
+              storeJsonToLocalStorage(reliveFavouritesKey, posts);
+            }
+          }
+
+          function openPhoto() {
+            var post = $$(this);
+            if (!post[0].hasPhotoHandler) {
+              var mediaURL = post.attr('relive-mediabrowser-url');
+              var mediaCaption = post.attr('relive-mediabrowser-caption');
+              var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
+
+              // Initialize Media Browser
+              var relivePhotoBrowser = myApp.photoBrowser({
+                  photos: mediaObjects,
+                  theme: 'dark',
+                  navbar: true,
+                  toolbar: false,
+                  onClose: function (photobrowser) {
+                    post[0].hasPhotoHandler = false;
+                  }
+              });
+              post[0].hasPhotoHandler = true;
+              relivePhotoBrowser.open();
+            }
+          }
         }
     }); // End virtualList initialization
   }
@@ -1153,10 +1190,22 @@ function showUserNotification(title, message) {
   });
 }
 
+function showNoConnectionToast() {
+  var noConnectionToast = myApp.toast('No Connection', '<div>✘</div>', {});
+  noConnectionToast.show(true);
+}
+
+function showHasConnectionToast() {
+  var hasConnectionToast = myApp.toast('Connected', '<div>✔</div>', {});
+  hasConnectionToast.show(true);
+}
+
 window.addEventListener('online', function (event) {
-  showUserNotification('Connected to the Internet','All features are available.');
+  //showUserNotification('Connected to the Internet','All features are available.');
+  showHasConnectionToast();
 }, false);
 
 window.addEventListener('offline', function (event) {
-  showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+  // showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+  showNoConnectionToast();
 }, false);
