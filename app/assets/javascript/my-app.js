@@ -184,6 +184,16 @@ function removeFromArray(arr) {
     return arr;
 }
 
+function storeRunOnceValueToLocalStorage() {
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
+  localStorage.setItem(reliveRunOnboardingOnceKey, true);
+}
+
+function loadRunOnceValueFromLocalStorage() {
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
+  return localStorage.getItem(reliveRunOnboardingOnceKey);
+}
+
 function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
   if (key == null) {
     return;
@@ -319,11 +329,19 @@ myApp.onPageInit('landing', function(page) {
   sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
 
-  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
-  var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
-  $$('#onboarding-close-btn').on('mouseup', welcomescreen.close);
+  if (loadRunOnceValueFromLocalStorage() == null) {
+    var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
+    $$('#onboarding-close-btn').on('mouseup', function () {
+      storeRunOnceValueToLocalStorage();
+      welcomescreen.close();
+    });
+    $$('.welcomescreen-closebtn').on('mouseup', function () {
+      storeRunOnceValueToLocalStorage();
+    });
+  } else {
+    $$('#landing-searchbar-input').focus();
+  }
 
-  $$('#landing-searchbar-input').focus();
   $$('.landing-searchbar').on('submit', function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -777,7 +795,7 @@ myApp.onPageInit('event', function (page) {
             '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
           '</div>' +
           '<div class="swipeout-actions-left">' +
-            '<a href="#" class="bg-green swipeout-close swipeout-overswipe swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" relive-post-url="{{postURL}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+            '<a href="#" class="swipeout-close swipeout-overswipe swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
           '</div>' +
         '</li>',
 
