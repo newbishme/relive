@@ -630,7 +630,6 @@ myApp.onPageInit('event', function (page) {
   if (page.query.name != null) {
     eventName = page.query.name;
     $$('.title-event-name').html(decodeURI(eventName));
-    window.history.replaceState(page.container.outerHTML, 'Relive | ' + eventName, '/event/'+page.query.id);
   }
 
   $$.ajax({
