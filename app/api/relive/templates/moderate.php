@@ -131,6 +131,7 @@
 				<td>Hashtag1</td>
 				<td>Hashtag2</td>
 				<td>Hashtag3</td>
+				<td>Update/Delete</td>
 			</tr>
 			<?php
 				foreach ($publishedEvents as $event) {
@@ -142,15 +143,18 @@
 					$hashtag3 = isset($event->hashtags[2]) ? $event->hashtags[2] : '';
 					$row = "
 					<tr>
-					<td>$event->event_id</td>
-					<td>$event->eventName</td>
+					<form onsubmit='return confirm(\"Update event?\");'>
+					<td><input name='event_id' value='$event->event_id'></td>
+					<td><input name='eventName value='$event->eventName'></td>
 					<td>$dateAdded</td>
-					<td>$startDate</td>
-					<td>$endDate</td>
+					<td><input class='startdate' name='startDate' value='$startDate'</td>
+					<td><input class='enddate' name='endDate' value='$endDate'</td>
 					<td>$event->rankPoints</td>
-					<td>$hashtag1</td>
-					<td>$hashtag2</td>
-					<td>$hashtag3</td>
+					<td><input name='hashtag1' value='$hashtag1'></td>
+					<td><input name='hashtag2' value='$hashtag2'></td>
+					<td><input name='hashtag3' value='$hashtag3'></td>
+					<td><input type='submit' name='update' value='UPDATE'>or<input type='submit' name='delete' value='DELETE'></td>
+					</form>
 					</tr>
 					";
 					print $row;
