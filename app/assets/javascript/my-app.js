@@ -316,10 +316,10 @@ var mainView = myApp.addView('.view-main', {
 });
 
 myApp.onPageInit('landing', function(page) {
-  
   sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
-  
+
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
   var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
   $$('#onboarding-close-btn').on('mouseup', welcomescreen.close);
 
@@ -354,7 +354,6 @@ function eventsInit(page) {
   var events = [];
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
-  var runOnceKey = 'reliveRunOnceKey';
   var timeout = 2000;
 
   // Initialize Virtual List
