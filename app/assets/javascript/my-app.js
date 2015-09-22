@@ -338,7 +338,7 @@ myApp.onPageInit('landing', function(page) {
     $$('.welcomescreen-closebtn').on('click', function () {
       storeRunOnceValueToLocalStorage();
     });
-  } else {
+  } else if (!isIOS) {
     $$('#landing-searchbar-input').focus();
   }
 
@@ -765,8 +765,6 @@ myApp.onPageInit('event', function (page) {
 
     eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
       items: filteredPosts,
-      rowsBefore: 10,
-      rowsAfter: 10,
       template:
 
       '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
