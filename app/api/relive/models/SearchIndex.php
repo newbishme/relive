@@ -33,7 +33,7 @@ class SearchIndex extends \Illuminate\Database\Eloquent\Model {
 		$count = 0;
 
 		$media = \relive\models\Media::whereIn('post_id', function($query) {
-            $query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id);
+            $query->select('post_id')->from('posteventrelationships')->where('event_id','=',$this->event_id)->where('isFiltered','=','0');
           })->orderByRaw("RAND()")->first();
 
 		if ($media) {
