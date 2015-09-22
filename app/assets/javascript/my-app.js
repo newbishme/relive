@@ -765,6 +765,8 @@ myApp.onPageInit('event', function (page) {
 
     eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
       items: filteredPosts,
+      rowsBefore: 10,
+      rowsAfter: 10,
       template:
 
       '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
@@ -801,8 +803,32 @@ myApp.onPageInit('event', function (page) {
 
 
       height: function (post) {
-        if (post.media) return 500;
-        else return 200;
+        var baseHeight = 110;
+        var mediaHeight = 350;
+        var postRows = 1;
+        var captionWithMediaRowHeight = 19;
+        var captionWithoutMediaRowHeight = 27;
+        var charactersWithMediaPerRow = 40;
+        var charactersWithoutMediaPerRow = 27;
+
+        if (post.media) {
+          if (post.caption) {
+            if (post.caption.length > charactersWithMediaPerRow) {
+              postRows = post.caption.length / charactersWithMediaPerRow;
+            }
+          }
+          baseHeight += mediaHeight;
+          baseHeight += (postRows * captionWithMediaRowHeight);
+        } else {
+          if (post.caption) {
+            if (post.caption.length > charactersWithoutMediaPerRow) {
+              postRows = post.caption.length / charactersWithoutMediaPerRow;
+            }
+            baseHeight += (postRows * captionWithoutMediaRowHeight);
+          }
+        }
+
+        return baseHeight;
       },
 
       onItemsBeforeInsert: function (list, fragment) {
