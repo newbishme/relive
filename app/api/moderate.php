@@ -18,7 +18,7 @@ if (isset($_POST)) {
 
 if (isset($_GET)) {
 	if (isset($_GET['publish'])) {
-		$event = \relive\models\Event::find($_GET['publish']);
+		$event = \relive\models\Event::find($_GET['eventid']);
 		$event->isPublished = 1;
 		if (isset($_GET['start'])) {
 			$event->startDate = strtotime($_GET['start']);
@@ -29,6 +29,13 @@ if (isset($_GET)) {
 		\relive\misc\FacebookPagePoster::post($event->event_id);
 		\relive\models\CrawlJob::create(['event_id'=>$event->event_id]);
 		$event->save();
+	}
+	if (isset($_GET['deleteevent'])) {
+		$event_id = $_GET['eventid'];
+		\relive\models\Event::find($event_id)->delete();
+		\relive\models\Post::whereNotIn('post_id', function($query) {
+			$query->select('post_id')->from('posteventrelationships');
+		})->delete();
 	}
 	if (isset($_GET['post_id'])) {
 		if (isset($_GET['filter'])) {

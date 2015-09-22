@@ -73,11 +73,12 @@
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
 						</br>
-						<form onsubmit='return confirm(\"Confirm publish?\");'>
-						<input type='hidden' name='publish' value='$event->event_id'>
+						<form onsubmit='return confirm(\"Confirm?\");'>
+						<input type='hidden' name='eventid' value='$event->event_id'>
 						Start date:<input class='startdate' type='text' name='start'>
 						End date:<input class='enddate' type='text' name='end'>
-						<input type='submit' value='PUBLISH!'>
+						<input type='submit' name='publish' value='PUBLISH!'>
+						<input type='submit' name='deleteevent' value='DELETE'>
 						</form>
 						</div>";
 						print $card;
