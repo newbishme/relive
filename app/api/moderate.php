@@ -1,4 +1,5 @@
 <?php
+//require_once '/Users/quanyang/BitBucket/relive/vendor/autoload.php';
 require_once '/var/www/vendor/autoload.php';
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -51,9 +52,6 @@ if (!isset($_SESSION['login'])) {
 	include './relive/templates/login.php';
 } else {
 	$unpublishedEvents = \relive\models\Event::where('isPublished','=','0')->get();
-	$reportedPosts = \relive\models\Post::whereIn('post_id', function($query) {
-			$query->select('post_id')->from('reports')->where('isSettled','=','0');
-		})->orderBy('datetime','desc')->get();
-
+	$reportedPosts = \relive\models\Post::join('reports','posts.post_id','=','reports.post_id')->groupBy('posts.post_id')->selectRaw('*,count(*) as `count`	')->orderBy('datetime','desc')->get();
 	include './relive/templates/moderate.php';
 }
