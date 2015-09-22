@@ -290,9 +290,10 @@ myApp.onPageInit('landing', function(page) {
   });
 });
 
-myApp.onPageReinit('events', function (page) {
-  eventsInit(page);
-});
+//  TODO remove this code after we confirm that it is not needed
+// myApp.onPageReinit('events', function (page) {
+//   eventsInit(page);
+// });
 
 // Callbacks to run specific code for specific pages, for example for events data page:
 myApp.onPageInit('events', function (page) {
@@ -639,8 +640,6 @@ myApp.onPageInit('event', function (page) {
         for (var j = 0; j < filteredHashtags.length; j++) {
           for (var k = 0; k < currPost.hashtags.length; k++) {
             if (currPost.hashtags[k].toUpperCase() === filteredHashtags[j].toUpperCase()) {
-              console.log("Filter: "+filteredHashtags[j].toUpperCase());
-              console.log("Current post hashtag: " + currPost.hashtags[k].toUpperCase());
               isMatch = true;
               break;
             }
@@ -870,12 +869,12 @@ myApp.onPageInit('favourites', function (page) {
       posts = [];
       favouritePostsData.forEach(function(post){
         // FIXME not optimized, this loads every favourite posts.
-        if (post.image != "") {
-          var loadedBase64Img = loadImgFromLocalStorage(post.image);
+        if (post.media != "") {
+          var loadedBase64Img = loadImgFromLocalStorage(post.media);
           if (loadedBase64Img != null) {
-            post.image = loadedBase64Img;
+            post.media = loadedBase64Img;
           } else {
-            storeImgToLocalStorage(post.image, post.image); // Fallback in case image wasn't loaded before
+            storeImgToLocalStorage(post.media, post.media); // Fallback in case image wasn't loaded before
           }
         }
         posts.push(post);
