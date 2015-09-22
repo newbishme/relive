@@ -34,7 +34,7 @@
 	}
 	.card {
 		background-color: white;
-		width:500px;
+		width:90%;
 		padding:5px 20px;
 		margin:10px 0px;
 		box-shadow: 0px 1px 0px #333;
@@ -42,7 +42,8 @@
 
 	}
 	td {
-		width:500px;
+		width:50%;
+		overflow:auto;
 	}
 	table,tr,td {
 		padding-top:10px;
@@ -67,6 +68,7 @@
 						$hashtags = join(', ',$event->hashtags);
 						$card = "
 						<div class='card'>
+						<h3 style='float:right'>$event->event_id</h3>
 						<h2>$event->eventName</h2>
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
@@ -95,7 +97,9 @@
 						$card = "
 						<div class='card'>
 						$image
+						<h3 style='float:right'>$post->post_id</h3></br>
 						<h3>$post->author</h3>
+						Report Count: $post->count</br>
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
 						$post->caption</br>
@@ -103,7 +107,7 @@
 						<form onsubmit='return confirm(\"Confirm?\");'>
 						<input type='hidden' name='post_id' value='$post->post_id'>
 						<input type='submit' name='filter' value='FILTER'> or 
-						<input type='submit' name='settle' value='CLEAR'>
+						<input type='submit' name='settle' value='IGNORE'>
 						</form>
 						</div>";
 						print $card;
