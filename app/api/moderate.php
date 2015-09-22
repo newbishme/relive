@@ -20,7 +20,8 @@ if (isset($_GET)) {
 	if (isset($_GET['publish'])) {
 		$event = \relive\models\Event::find($_GET['publish']);
 		$event->isPublished = 1;
-		passthru("php /var/www/app/api/relive/misc/FacebookPagePoster.php ".$event->event_id. "> /dev/null &");
+		exec("php /var/www/app/api/relive/misc/FacebookPagePoster.php " . $event->event_id . " &");
+		\relive\models\CrawlJob::create(['event_id'=>$event->event_id]);
 		$event->save();
 	}
 	if (isset($_GET['post_id'])) {
