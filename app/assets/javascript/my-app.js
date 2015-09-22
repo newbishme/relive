@@ -917,21 +917,51 @@ myApp.onPageInit('favourites', function (page) {
           else return 200;
         },
         onItemsAfterInsert: function (list, fragment) {
-          $$('.swipeout').on('deleted', function () {
+          $$('.swipeout').on('deleted', deleteFavouritePost);
+          $$('.relive-photobrowser-lazy').on('click', openPhoto);
+
+          function deleteFavouritePost() {
             var relivePostId = $$(this).attr('relive-post-id');
             var newPostsAfterDelete = [];
+            var isDeleted = false;
+
             for (var i = 0; i < posts.length; i++) {
               if (posts[i].post_id !== relivePostId) {
                 newPostsAfterDelete.push(posts[i]);
               } else {
+                isDeleted = true;
                 if (posts[i].media != null) {
                   removeItemFromLocalStorage(posts[i].media);
                 }
               }
             }
-            posts = newPostsAfterDelete;
-            storeJsonToLocalStorage(reliveFavouritesKey, posts);
-          });
+            if (isDeleted) {
+              posts = newPostsAfterDelete;
+              storeJsonToLocalStorage(reliveFavouritesKey, posts);
+            }
+          }
+
+          function openPhoto() {
+            var post = $$(this);
+            if (!post[0].hasPhotoHandler) {
+              var mediaURL = post.attr('relive-mediabrowser-url');
+              var mediaCaption = post.attr('relive-mediabrowser-caption');
+              var mediaObjects = [{url: mediaURL, caption: mediaCaption}];
+
+              // Initialize Media Browser
+              var relivePhotoBrowser = myApp.photoBrowser({
+                  photos: mediaObjects,
+                  theme: 'dark',
+                  navbar: true,
+                  toolbar: false,
+                  onClose: function (photobrowser) {
+                    post[0].hasPhotoHandler = false;
+                  }
+              });
+              post[0].hasPhotoHandler = true;
+              relivePhotoBrowser.open();
+            }
+          }
         }
     }); // End virtualList initialization
   }
