@@ -52,6 +52,6 @@ if (!isset($_SESSION['login'])) {
 	include './relive/templates/login.php';
 } else {
 	$unpublishedEvents = \relive\models\Event::where('isPublished','=','0')->get();
-	$reportedPosts = \relive\models\Post::join('reports','posts.post_id','=','reports.post_id')->groupBy('posts.post_id')->selectRaw('*,count(*) as `count`	')->orderBy('datetime','desc')->get();
+	$reportedPosts = \relive\models\Post::join('reports','posts.post_id','=','reports.post_id')->groupBy('posts.post_id')->selectRaw('*,(select count(*) from reports c where c.post_id = posts.post_id) as `count`	')->orderBy('datetime','desc')->get();
 	include './relive/templates/moderate.php';
 }
