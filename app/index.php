@@ -117,6 +117,7 @@
       </div>
     </div>
     <script type="text/javascript" src="assets/javascript/framework7.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/welcomescreen.js"></script>
     <script type="text/javascript" src="assets/javascript/my-app.js"></script>
   </body>
 </html>

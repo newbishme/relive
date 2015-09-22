@@ -271,6 +271,44 @@ var myApp = new Framework7({
     pushState: true
 });
 
+var options = {
+  'bgcolor': '#374F59',
+  'fontcolor': 'white'
+}
+
+var welcomescreen_slides = [
+  {
+    id: 'onboarding1',
+    picture: '<img src="assets/img/onboarding1.png">',
+    text: 'For the best experience, add relive to your homescreen.'
+  },
+  {
+    id: 'onboarding2',
+    picture: '<img src="assets/img/onboarding2.png">',
+    text: 'Discover events to relive.'
+  },
+  {
+    id: 'onboarding3',
+    picture: '<img src="assets/img/onboarding3.png">',
+    text: 'Tap this menu icon to see trending events, create new reels and view your favourites.'
+  },
+  {
+    id: 'onboarding4',
+    picture: '<img src="assets/img/onboarding4.png">',
+    text: 'Like what you see?<br>Swipe a post to the right to save it.'
+  },
+  {
+    id: 'onboarding5',
+    picture: '<img src="assets/img/onboarding5.png">',
+    text: "Don't want to see a post ever again?<br>Swipe it to the left to hide it."
+  },
+  {
+    id: 'onboarding6',
+    picture: '<img src="assets/img/onboarding6.png">',
+    text: 'View your favourite posts<br>even when offline<br><br><a id="onboarding-close-btn" href="#">Start using relive!</a>'
+  }
+];
+
 // Add view
 var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true,
@@ -278,8 +316,13 @@ var mainView = myApp.addView('.view-main', {
 });
 
 myApp.onPageInit('landing', function(page) {
+  
   sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
+  
+  var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
+  $$('#onboarding-close-btn').on('mouseup', welcomescreen.close);
+
   $$('#landing-searchbar-input').focus();
   $$('.landing-searchbar').on('submit', function(e) {
     e.preventDefault();

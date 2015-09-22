@@ -59,6 +59,23 @@ a {
 	background: none;
 }
 
+#onboarding-close-btn {
+	display: block;
+	color: $primaryColour;
+	background-color: white;
+	max-width: 500px;
+	margin: 20px auto;
+	padding: 10px 20px;
+	border-radius: 5px;
+	box-shadow: 0 5px darken(white, 20%);
+
+	&:active {
+		background-color: darken(white, 5%);
+		box-shadow: 0 2px darken(white, 20%);
+  		transform: translateY(3px);
+	}
+}
+
 .list-block ul {
 	background-color: #EFEFF4;
 	&:after {

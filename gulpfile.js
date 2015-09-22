@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
     input = {
       'images': 'app/src/images/**/*',
-      'stylesheets': 'app/src/stylesheets/**/*.scss',
+      'stylesheets': 'app/src/stylesheets/**/*',
       'javascript': 'app/src/javascript/**/*.js'
     },
 
