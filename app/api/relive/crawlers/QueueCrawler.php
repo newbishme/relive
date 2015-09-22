@@ -18,7 +18,6 @@ class PQCrawlJob extends SplPriorityQueue
     } 
 } 
 
-$crawling = [];
 $objPQ = new PQCrawlJob(); 
 $objPQ->setExtractFlags(PQCrawlJob::EXTR_BOTH); 
 
@@ -43,14 +42,15 @@ while(true) {
 				$job->delay = $job->delay*2;
 				$job->save();
 			}
-			unset($crawling[$job->crawler_id]);
 			$top = $objPQ->top();
 		}
 	}
-	$jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->where('delay','<',1440)->whereNotIn('event_id', $crawling)->get();
+
+	$objPQ = new PQCrawlJob(); 
+	$objPQ->setExtractFlags(PQCrawlJob::EXTR_BOTH); 
+	$jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->where('delay','<',1440)->get();
 	$currentTime = time();
 	foreach ($jobs as $job) {
-		$crawling[$job->crawler_id]=$job->event_id;
 		$objPQ->insert($job,$currentTime+($job->delay*60));
 	}
 	print "Sleep for 1 minute\n";
