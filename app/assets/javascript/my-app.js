@@ -331,11 +331,11 @@ myApp.onPageInit('landing', function(page) {
 
   if (loadRunOnceValueFromLocalStorage() == null) {
     var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
-    $$('#onboarding-close-btn').on('mouseup', function () {
+    $$('#onboarding-close-btn').on('click', function () {
       storeRunOnceValueToLocalStorage();
       welcomescreen.close();
     });
-    $$('.welcomescreen-closebtn').on('mouseup', function () {
+    $$('.welcomescreen-closebtn').on('click', function () {
       storeRunOnceValueToLocalStorage();
     });
   } else {
