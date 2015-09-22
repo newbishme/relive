@@ -61,7 +61,6 @@ if($event) {
     <link href="apple-touch-startup-image-640x1096.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <link href="apple-touch-startup-image-640x920.png" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
     <link href="apple-touch-startup-image-320x460.png" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" rel="apple-touch-startup-image">
-    <meta property="fb:app_id" content="1162812327066502" />
     <meta property="og:image"  content="<?php echo $event->image; ?>" />  
     <meta property="og:url" content="https://relive.space/event/<?php echo $event->event_id;?>" />
     <meta property="og:title" content="<?php echo $event->eventName; ?>" />
