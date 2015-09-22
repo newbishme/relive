@@ -1,5 +1,10 @@
 <html>
 <head>
+	<link rel="stylesheet" href="/jquery-ui.min.css">
+	<link rel="stylesheet" href="/jquery-ui.structure.min.css">
+	<link rel="stylesheet" href="/jquery-ui.theme.min.css">
+  <script src="/jquery.js"></script>
+  <script src="/jquery-ui.min.js"></script>
 	<style>
 	body{
 		background-color: #efeff4;
@@ -70,6 +75,8 @@
 						</br>
 						<form onsubmit='return confirm(\"Confirm publish?\");'>
 						<input type='hidden' name='publish' value='$event->event_id'>
+						Start date:<input class='calendar' type='text' name='start'>
+						End date:<input class='calendar' type='text' name='end'>
 						<input type='submit' value='PUBLISH!'>
 						</form>
 						</div>";
@@ -110,5 +117,10 @@
 			</tr>
 		</table>
 	</div>
+	<script type="text/javascript">
+		$(function() {
+			$( ".calendar" ).datepicker();
+		});
+	</script>
 </body>
 </html>
