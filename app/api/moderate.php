@@ -20,6 +20,12 @@ if (isset($_GET)) {
 	if (isset($_GET['publish'])) {
 		$event = \relive\models\Event::find($_GET['publish']);
 		$event->isPublished = 1;
+		if (isset($_GET['start'])) {
+			$event->startDate = strtotime($_GET['start']);
+		} 
+		if (isset($_GET['end'])) {
+			$event->endDate = strtotime($_GET['end']);
+		}
 		\relive\misc\FacebookPagePoster::post($event->event_id);
 		\relive\models\CrawlJob::create(['event_id'=>$event->event_id]);
 		$event->save();

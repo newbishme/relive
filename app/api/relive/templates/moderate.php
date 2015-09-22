@@ -75,8 +75,8 @@
 						</br>
 						<form onsubmit='return confirm(\"Confirm publish?\");'>
 						<input type='hidden' name='publish' value='$event->event_id'>
-						Start date:<input class='calendar' type='text' name='start'>
-						End date:<input class='calendar' type='text' name='end'>
+						Start date:<input class='startdate' type='text' name='start'>
+						End date:<input class='enddate' type='text' name='end'>
 						<input type='submit' value='PUBLISH!'>
 						</form>
 						</div>";
@@ -119,7 +119,18 @@
 	</div>
 	<script type="text/javascript">
 		$(function() {
-			$( ".calendar" ).datepicker();
+			$( ".startdate" ).datepicker({
+				dateFormat: 'D M d yy',
+				onSelect: function(dateText) {
+					$(this).val(dateText + " 00:00:00 +0800");
+				}
+			});
+			$( ".enddate" ).datepicker({
+				dateFormat: 'D M d yy',
+				onSelect: function(dateText) {
+					$(this).val(dateText + " 23:59:59 +0800");
+				}
+			});
 		});
 	</script>
 </body>
