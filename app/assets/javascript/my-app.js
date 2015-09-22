@@ -184,6 +184,16 @@ function removeFromArray(arr) {
     return arr;
 }
 
+function storeRunOnceValueToLocalStorage() {
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
+  localStorage.setItem(reliveRunOnboardingOnceKey, true);
+}
+
+function loadRunOnceValueFromLocalStorage() {
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
+  return localStorage.getItem(reliveRunOnboardingOnceKey);
+}
+
 function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
   if (key == null) {
     return;
@@ -319,11 +329,19 @@ myApp.onPageInit('landing', function(page) {
   sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
 
-  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
-  var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
-  $$('#onboarding-close-btn').on('mouseup', welcomescreen.close);
+  if (loadRunOnceValueFromLocalStorage() == null) {
+    var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
+    $$('#onboarding-close-btn').on('mouseup', function () {
+      storeRunOnceValueToLocalStorage();
+      welcomescreen.close();
+    });
+    $$('.welcomescreen-closebtn').on('mouseup', function () {
+      storeRunOnceValueToLocalStorage();
+    });
+  } else {
+    $$('#landing-searchbar-input').focus();
+  }
 
-  $$('#landing-searchbar-input').focus();
   $$('.landing-searchbar').on('submit', function(e) {
     e.preventDefault();
     e.stopPropagation();
