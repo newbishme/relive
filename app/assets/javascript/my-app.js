@@ -243,7 +243,11 @@ function convertImgToBase64URL(url, callback, outputFormat){
 
 // Export selectors engine
 var $$ = Dom7;
-var isIos = Framework7.prototype.device.ios === true;
+
+// For modifying Twitter/Instagram/G+ URL Schema to iOS supported schemas
+var isIOS = Framework7.prototype.device.ios === true;
+var regexToGetLastField = new RegExp("/\/([^\/]*)$/");
+
 // Keys for localStorage/SessionStorage lookup
 var reliveFavouritesKey = 'Relive-Favourite-Events-and-Posts-Key';
 
@@ -626,6 +630,10 @@ myApp.onPageInit('event', function (page) {
           post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
           post.hasGeneratedTime = true;
         }
+        if (!post.hasModifiedURL) {
+          post.postURL = modifyURLSchema(post.postURL, post.author);
+          post.hasModifiedURL = true;
+        }
         if (!isPostHiddenInLocalStorage(hiddenPostIdKey)) {
           posts.push(post);
         }
@@ -633,6 +641,49 @@ myApp.onPageInit('event', function (page) {
       lastLoadedIndex += eventPostsData.length; // Count all included hidden items
     }
 
+    // For iOS users, replace URL with the respective application URL Schemas
+    function modifyURLSchema(url, author) {
+      var parsedURL = url;
+      if (isIOS) {
+        // console.log(post.postURL);
+        // console.log(parse("https://twitter.com/statuses/646194650668212224"));
+        // console.log(parse("https://instagram.com/p/769K3qmHFG/"));
+        // console.log(parse("https://plus.google.com/104469092035219220936/posts/ArjyCZn153A"));
+        parsedURL = parse(parsedURL, author);
+      }
+      return parsedURL;
+    }
+
+    function parse(url, author) {
+      if (url == null || url.length < 4) {
+        return;
+      }
+
+      if (url.substring(url.length-1) == "/") {
+          url = url.substring(0, url.length-1);
+      }
+
+      var twitterRe = /twitter.*\/([^\/]*)$/;
+      var instagramRe = /instagram.*\/([^\/]*)$/;
+      var googleRe = /plus.google.*\/([^\/]*)$/;
+      
+      var twitterMatch = url.match(twitterRe);
+      var instagramMatch = url.match(instagramRe);
+      var googleMatch = url.match(googleRe);
+      
+      if (twitterMatch) {
+          var parsedURL = "twitter://status?id="+twitterMatch[1];
+          return parsedURL;
+      } else if (instagramMatch) {
+          var parsedURL = "instagram://user?username="+author; // FIXME: Should replace with media?id=MEDIA_ID
+          return parsedURL;
+      } else if (googleMatch) {
+          var parsedURL = "gplus://"+googleMatch[0];
+          return parsedURL;
+      }
+    }
+
+    // Filter posts based on what the user has chose to hide
     if (filteredHashtags.length > 0) {
       for (var i = 0; i < posts.length; i++) {
         var currPost = posts[i];
@@ -698,9 +749,15 @@ myApp.onPageInit('event', function (page) {
       onItemsBeforeInsert: function (list, fragment) {
         for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
           var post = list.items[i];
-          if (!post.hasGeneratedTime) {
-            post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
-            post.hasGeneratedTime = true;
+          if (!post.hasGeneratedTime || !post.hasModifiedURL) {
+            if (!post.hasGeneratedTime) {
+              post.datetime = timeDifference(Math.floor(Date.now() / 1000), post.datetime);
+              post.hasGeneratedTime = true;
+            }
+            if (!post.hasModifiedURL) {
+              post.postURL = modifyURLSchema(post.postURL, post.author);
+              post.hasModifiedURL = true;
+            }
             list.replaceItem(i, post);
           }
         }
