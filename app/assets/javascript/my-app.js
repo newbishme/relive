@@ -672,11 +672,13 @@ myApp.onPageInit('event', function (page) {
               '{{/if}}' +
             '</div>' +
             '<div class="post-origin">' +
-              '{{#if providerName}}' +
-              '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-              '{{else}}' +
-              '<i class="icon ion-social-twitter-outline"></i>' +
-              '{{/if}}' +
+              '<a href="{{postURL}}" target="_blank" class="relive-external-post-url">' +
+                '{{#if providerName}}' +
+                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                '{{else}}' +
+                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{/if}}' +
+              '</a>' +
             '</div>' +
           '</div>' +
           '<div class="swipeout-actions-right">' +
@@ -705,10 +707,16 @@ myApp.onPageInit('event', function (page) {
       },
 
       onItemsAfterInsert: function (list, fragment) {
-
         $$('.swipeout').on('deleted', deletePost);
         $$('.swipeToSaveFavourites').on('click', savePost);
         $$('.relive-photobrowser-lazy').on('click', openPhoto);
+
+        $$('a.relive-external-post-url').on('click', function(e) {
+          e.preventDefault();
+          var externalURL = $$(this).attr('href');
+          window.open(externalURL, '_blank');
+          return false;
+        });
 
         function deletePost() {
           var relivePostId = $$(this).attr('relive-post-id');
