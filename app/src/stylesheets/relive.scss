@@ -319,9 +319,9 @@ form .item-content {
 				margin: 1em 10px;
 				quotes: "\201C""\201D""\2018""\2019";
 				&:before, &:after {
-					font-family: cursive;
+					font-family: 'Patua One', serif;
 					color: $linkHoverColour;
-					font-size: 4em;
+					font-size: 3em;
 					line-height: 0.1em;
 				}
 				&:before {
