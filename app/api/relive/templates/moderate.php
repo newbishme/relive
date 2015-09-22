@@ -63,6 +63,7 @@
 						$card = "
 						<div class='card'>
 						<h2>$event->eventName</h2>
+						<h3 style='float:right'>$event->event_id</h3>
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
 						</br>
