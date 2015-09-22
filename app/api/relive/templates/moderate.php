@@ -90,6 +90,7 @@
 						<div class='card'>
 						$image
 						<h3>$post->author</h3>
+						<h3 style='float:right'>$post->post_id</h3>
 						Date added: $date</br>
 						Hashtags: $hashtags</br>
 						$post->caption</br>
