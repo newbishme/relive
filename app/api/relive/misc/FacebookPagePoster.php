@@ -26,6 +26,6 @@ if (isset($event_id)) {
 
 		echo json_encode($response);
 	} catch (ModelNotFoundException $e) {
-		echo "event not found!";
+		echo "event ".$event_id." not found!";
 	}
 }

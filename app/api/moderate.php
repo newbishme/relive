@@ -20,6 +20,7 @@ if (isset($_GET)) {
 	if (isset($_GET['publish'])) {
 		$event = \relive\models\Event::find($_GET['publish']);
 		$event->isPublished = 1;
+		passthru("php /var/www/app/api/relive/misc/FacebookPagePoster.php ".$event->event_id. "> /dev/null &");
 		$event->save();
 	}
 	if (isset($_GET['post_id'])) {
