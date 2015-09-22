@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 1.0.6.3.1
+# version 1.0.6.3.3
 
 CACHE:
 # Pages
@@ -23,6 +23,7 @@ mstile-144x144.png
 assets/javascript/framework7.min.js
 assets/javascript/framework7.min.js.map
 assets/javascript/my-app.js
+assets/javascript/welcomescreen.js
 
 # Stylesheets
 assets/stylesheets/relive.min.css
@@ -31,6 +32,7 @@ assets/stylesheets/framework7.ios.min.css
 assets/stylesheets/framework7.ios.colors.min.css
 assets/stylesheets/ionicons.min.css
 assets/stylesheets/my-app.ios.css
+assets/stylesheets/welcomescreen.min.css
 https://fonts.googleapis.com/css?family=Patua+One%7COxygen:400,300,700
 https://fonts.googleapis.com/css?family=Patua+One|Oxygen:400,300,700
 

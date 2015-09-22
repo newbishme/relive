@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/stylesheets/framework7.ios.colors.min.css">
     <link rel="stylesheet" href="assets/stylesheets/my-app.ios.css">
     <link rel="stylesheet" href="assets/stylesheets/relive.min.css">
+    <link rel="stylesheet" href="assets/stylesheets/welcomescreen.min.css">
     <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="apple-touch-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png">
