@@ -316,10 +316,10 @@ var mainView = myApp.addView('.view-main', {
 });
 
 myApp.onPageInit('landing', function(page) {
-  
   sendToGoogleAnalytics('index.php', page.name);
   $$('.navbar').addClass('hidden');
-  
+
+  var reliveRunOnboardingOnceKey = 'Relive-Run-Onboarding-Once-Key';
   var welcomescreen = myApp.welcomescreen(welcomescreen_slides, options);
   $$('#onboarding-close-btn').on('mouseup', welcomescreen.close);
 
@@ -354,7 +354,6 @@ function eventsInit(page) {
   var events = [];
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
-  var runOnceKey = 'reliveRunOnceKey';
   var timeout = 2000;
 
   // Initialize Virtual List
@@ -548,6 +547,47 @@ function eventsInit(page) {
 
 }
 
+
+// Methods for iOS users: replaces URL with the respective application URL Schemas
+function modifyURLSchema(url, author) {
+  var parsedURL = url;
+  if (isIOS) {
+    parsedURL = parseURLToSchema(parsedURL, author);
+  }
+  return parsedURL;
+}
+
+function parseURLToSchema(url, author) {
+  if (url == null || url.length < 4) {
+    return;
+  }
+
+  if (url.substring(url.length-1) == "/") {
+      url = url.substring(0, url.length-1);
+  }
+
+    var twitterRe = /twitter.*\/([^\/]*)$/;
+    var instagramRe = /instagram.*\/([^\/]*)$/;
+    var googleRe = /plus.google.*\/([^\/]*)$/;
+    
+    var twitterMatch = url.match(twitterRe);
+    var instagramMatch = url.match(instagramRe);
+    var googleMatch = url.match(googleRe);
+    
+    if (twitterMatch) {
+        var parsedURL = "twitter://status?id="+twitterMatch[1];
+        return parsedURL;
+    } else if (instagramMatch) {
+        var parsedURL = "instagram://user?username="+author; // FIXME: Should replace with media?id=MEDIA_ID
+        return parsedURL;
+    } else if (googleMatch) {
+        var parsedURL = "gplus://"+googleMatch[0];
+        return parsedURL;
+    }
+}
+
+
+// Initialization for event page
 myApp.onPageInit('event', function (page) {
   if (page.query.id == null) {
     var options = { url: 'events.php' };
@@ -684,48 +724,6 @@ myApp.onPageInit('event', function (page) {
       lastLoadedIndex += eventPostsData.length; // Count all included hidden items
     }
 
-    // For iOS users, replace URL with the respective application URL Schemas
-    function modifyURLSchema(url, author) {
-      var parsedURL = url;
-      if (isIOS) {
-        // console.log(post.postURL);
-        // console.log(parse("https://twitter.com/statuses/646194650668212224"));
-        // console.log(parse("https://instagram.com/p/769K3qmHFG/"));
-        // console.log(parse("https://plus.google.com/104469092035219220936/posts/ArjyCZn153A"));
-        parsedURL = parse(parsedURL, author);
-      }
-      return parsedURL;
-    }
-
-    function parse(url, author) {
-      if (url == null || url.length < 4) {
-        return;
-      }
-
-      if (url.substring(url.length-1) == "/") {
-          url = url.substring(0, url.length-1);
-      }
-
-      var twitterRe = /twitter.*\/([^\/]*)$/;
-      var instagramRe = /instagram.*\/([^\/]*)$/;
-      var googleRe = /plus.google.*\/([^\/]*)$/;
-      
-      var twitterMatch = url.match(twitterRe);
-      var instagramMatch = url.match(instagramRe);
-      var googleMatch = url.match(googleRe);
-      
-      if (twitterMatch) {
-          var parsedURL = "twitter://status?id="+twitterMatch[1];
-          return parsedURL;
-      } else if (instagramMatch) {
-          var parsedURL = "instagram://user?username="+author; // FIXME: Should replace with media?id=MEDIA_ID
-          return parsedURL;
-      } else if (googleMatch) {
-          var parsedURL = "gplus://"+googleMatch[0];
-          return parsedURL;
-      }
-    }
-
     // Filter posts based on what the user has chose to hide
     if (filteredHashtags.length > 0) {
       for (var i = 0; i < posts.length; i++) {
@@ -852,10 +850,11 @@ myApp.onPageInit('event', function (page) {
           var author = post.attr('relive-post-author');
           var caption = post.attr('relive-post-content');
           var provider = post.attr('relive-post-provider');
+          var postURL = post.attr('relive-post-url');
           var mediaURL = post.attr('relive-favourite-post-img-url');
           var favourites = loadJsonFromLocalStorage(reliveFavouritesKey);
           var favouritesContainsFavourite = false;
-          var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL};
+          var favourite = {post_id: postId, author: author, caption: caption, providerName: provider, media: mediaURL, postURL: postURL};
 
           if (favourites == null) {
             favourites = [];
@@ -994,6 +993,10 @@ myApp.onPageInit('favourites', function (page) {
             }
           }
         }
+        if (!post.hasModifiedURL) {
+          post.postURL = modifyURLSchema(post.postURL, post.author);
+          post.hasModifiedURL = true;
+        }
         posts.push(post);
       });
       $$('.relive-no-favourites-found').addClass('hidden');
@@ -1022,10 +1025,16 @@ myApp.onPageInit('favourites', function (page) {
                 '{{/if}}' +
               '</div>' +
               '<div class="post-origin">' +
-                '{{#if providerName}}' +
-                '<i class="icon ion-social-{{providerName}}-outline"></i>' +
-                '{{else}}' +
-                '<i class="icon ion-social-twitter-outline"></i>' +
+                '{{#if postURL}}' +
+                '<a href="{{postURL}}" target="_blank" class="relive-external-post-url">' +
+                '{{/if}}' +
+                  '{{#if providerName}}' +
+                  '<i class="icon ion-social-{{providerName}}-outline"></i>' +
+                  '{{else}}' +
+                  '<i class="icon ion-social-twitter-outline"></i>' +
+                  '{{/if}}' +
+                '{{#if postURL}}' +
+                '</a>' +
                 '{{/if}}' +
               '</div>' +
             '</div>' +
@@ -1040,9 +1049,34 @@ myApp.onPageInit('favourites', function (page) {
           if (post.media) return 500;
           else return 200;
         },
+        onItemsBeforeInsert: function (list, fragment) {
+          for (var i = list.currentFromIndex; i <= list.currentToIndex; i++) {
+            var post = list.items[i];
+            if (!post.hasModifiedURL && post.postURL != null) {
+              post.postURL = modifyURLSchema(post.postURL, post.author);
+              post.hasModifiedURL = true;
+              list.replaceItem(i, post);
+            }
+          }
+        },
         onItemsAfterInsert: function (list, fragment) {
           $$('.swipeout').on('deleted', deleteFavouritePost);
           $$('.relive-photobrowser-lazy').on('click', openPhoto);
+          $$('a.relive-external-post-url').on('click', function(e) {
+            e.preventDefault();
+            var post = $$(this);
+
+            if (!post[0].hasExternalURLHandler) {
+              post[0].hasExternalURLHandler = true;
+              var externalURL = post.attr('href');
+              window.open(externalURL, "_blank");
+              setTimeout(function(){
+                post[0].hasExternalURLHandler = false;
+              }, 1000);
+            }
+
+            return false;
+          });
 
           function deleteFavouritePost() {
             var relivePostId = $$(this).attr('relive-post-id');
