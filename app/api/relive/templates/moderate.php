@@ -52,9 +52,6 @@
 			<h1 class="landing-title">moderator panel</h1>
 		</div>
 	</header>
-	<pre>
-		<?php print_r($reportedPosts); ?>
-	</pre>
 	<div class="container">
 		<table>
 			<tr>
