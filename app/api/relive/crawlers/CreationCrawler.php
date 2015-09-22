@@ -18,6 +18,3 @@ foreach ($hashtagRelationships as $hashtagRelationship) {
 	$instagramCrawler->initialCrawl($event, $hashtag->hashtag);
 	$gPlusCrawler->initialCrawl($event, $hashtag->hashtag);
 }
-\relive\models\CrawlJob::create([
-		'event_id'=>$event->event_id
-]);
