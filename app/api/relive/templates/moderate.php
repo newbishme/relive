@@ -141,6 +141,7 @@
 					$hashtag2 = isset($event->hashtags[1]) ? $event->hashtags[1] : '';
 					$hashtag3 = isset($event->hashtags[2]) ? $event->hashtags[2] : '';
 					$row = "
+					<tr>
 					<td>$event->event_id</td>
 					<td>$event->eventName</td>
 					<td>$dateAdded</td>
@@ -150,6 +151,7 @@
 					<td>$hashtag1</td>
 					<td>$hashtag2</td>
 					<td>$hashtag3</td>
+					</tr>
 					";
 					print $row;
 				}
