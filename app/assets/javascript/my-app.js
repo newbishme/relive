@@ -779,7 +779,7 @@ myApp.onPageInit('event', function (page) {
             '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
           '</div>' +
           '<div class="swipeout-actions-left">' +
-            '<a href="#" class="bg-green swipeout-close swipeout-overswipe swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+            '<a href="#" class="swipeout-close swipeout-overswipe swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
           '</div>' +
         '</li>',
 
