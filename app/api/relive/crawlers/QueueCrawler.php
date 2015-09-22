@@ -40,6 +40,9 @@ while(true) {
 					$instagram->recentCrawl($currentTime, $event, $hashtag->hashtag);
 					$gplus->recentCrawl($event, $hashtag->hashtag);
 				}
+				if ($event->endDate + 86400 < $currentTime){
+					$job->isActive = 0;
+				}
 				$job->delay = $job->delay*2;
 				$job->save();
 			}
