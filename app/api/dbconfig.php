@@ -7,7 +7,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
 $capsule->addConnection(array(
     'driver'    => 'mysql',
-    'host'      => 'localhost',
+    'host'      => '127.0.0.1',
     'database'  => 'relive',
     'username'  => 'root',
     'password'  => getenv('MYSQL_PASSWORD'),

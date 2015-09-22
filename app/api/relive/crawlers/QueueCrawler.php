@@ -18,6 +18,7 @@ class PQCrawlJob extends SplPriorityQueue
     } 
 } 
 
+$crawling = [];
 $objPQ = new PQCrawlJob(); 
 $objPQ->setExtractFlags(PQCrawlJob::EXTR_BOTH); 
 
@@ -42,16 +43,33 @@ while(true) {
 				$job->delay = $job->delay*2;
 				$job->save();
 			}
-			$top = $objPQ->top();
+			unset($crawling[$job->crawler_id]);
+			if ($objPQ->valid()) {
+				$top = $objPQ->top();
+			} else {
+				break;
+			}
 		}
 	}
-
-	$objPQ = new PQCrawlJob(); 
-	$objPQ->setExtractFlags(PQCrawlJob::EXTR_BOTH); 
 	$jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->where('delay','<',1440)->get();
 	$currentTime = time();
 	foreach ($jobs as $job) {
-		$objPQ->insert($job,$currentTime+($job->delay*60));
+		if (!@$crawling[$job->crawler_id]) {
+			$crawling[$job->crawler_id]=$job->delay;
+			$objPQ->insert($job,$currentTime+($job->delay*60));
+		} else if ($crawling[$job->crawler_id] > $job->delay) {
+			$newObjPQ = new PQCrawlJob();
+			$newObjPQ->setExtractFlags(PQCrawlJob::EXTR_BOTH); 
+			foreach ($objPQ as $obj) {
+				if ($obj['data']->event_id == $job->event_id) {
+					$crawling[$job->crawler_id]=$job->delay;
+					$newObjPQ->insert($job,$currentTime+($job->delay*60));
+				} else {
+					$newObjPQ->insert($obj['data'],$obj['priority']);
+				}
+			}
+			$objPQ = $newObjPQ;
+		}
 	}
 	print "Sleep for 1 minute\n";
 	sleep(60);
