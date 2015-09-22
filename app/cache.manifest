@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 1.0.6.2.5.dev
+# version 1.0.6.2.6
 
 CACHE:
 # Pages
@@ -22,7 +22,7 @@ mstile-144x144.png
 # Scripts
 assets/javascript/framework7.min.js
 assets/javascript/framework7.min.js.map
-#assets/javascript/my-app.js
+assets/javascript/my-app.js
 
 # Stylesheets
 assets/stylesheets/relive.min.css

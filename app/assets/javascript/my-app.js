@@ -315,12 +315,12 @@ function eventsInit(page) {
       template:
       // event card template
       '<li class="event-card">' +
-        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}">' +
+        '<a href="event/{{event_id}}" class="link event-page-url" relive-event-id="{{event_id}}" relive-event-name="{{eventName}}">' +
           '<div style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url({{image}})" class="event-card-header-img">' +
             '<h1>{{eventName}}</h1>' +
           '</div>' +
           '<div class="event-card-footer">' +
-            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}}">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
+            '<a href="event/{{event_id}}" class="link right event-page-url" relive-event-id="{{event_id}} relive-event-name="{{eventName}}"">View Event<i class="icon ion-ios-arrow-forward"></i></a>' +
           '</div>' +
         '</a>' +
       '</li>',
@@ -333,21 +333,24 @@ function eventsInit(page) {
             foundItems.push(i);
           }
         }
-        if (foundItems.length > 0) {
-          $$('.landing-what-is-relive').addClass('searchbar-not-found');
-        }
         return foundItems;
       },
       onItemsAfterInsert: function (list, fragment) {
         // Allow offline a href clicks to still load the linked page
         $$('a.event-page-url').on('click', function (e) {
           e.preventDefault();
-          var eventId = $$(this).attr('relive-event-id')
+          var eventId = $$(this).attr('relive-event-id');
+          var eventName = $$(this).attr('relive-event-name');
+          var url = 'event.php?id='+eventId;
+          if (!navigator.onLine) {
+            url = 'event.php';
+          }
           var query = {
-            id: eventId
+            id: eventId,
+            name: eventName
           };
           var options = {
-              url: 'event.php?id='+eventId,
+              url: url,
               query: query,
               pushState: true
           };
@@ -359,7 +362,7 @@ function eventsInit(page) {
   });
 
   // Initialize Search bar
-  myApp.searchbar('.searchbar', {
+  var reliveEventsSearchBar = myApp.searchbar('.relive-events-searchbar', {
     searchList: '.list-block-search',
     searchIn: '.card-header'
   });
@@ -465,8 +468,8 @@ function eventsInit(page) {
   if (navigator.onLine) {
     getTrendingListWithAJAX();
   } else {
-      var data = loadJsonFromLocalStorage(trendingEventsKey);
-      updateTrendingList(data);
+    var data = loadJsonFromLocalStorage(trendingEventsKey);
+    updateTrendingList(data);
   }
 
 
@@ -513,10 +516,15 @@ myApp.onPageInit('event', function (page) {
   var timeout = 3000;
   var eventHashtagsTemplate = $$('#sideNavEventHashtagsTemplate').html();
   var compiledEventHashtagsTemplate = Template7.compile(eventHashtagsTemplate);
-  var toast = myApp.toast('Saved', '<div>☆</div>', {})
+  var toast = myApp.toast('Saved', '<div>☆</div>', {});
   var pageId = page.query.id;
   var eventName = 'Event';
   var eventNameKey = 'Relive-Event-ID-' + pageId;
+
+  if (page.query.name != null) {
+    eventName = page.query.name;
+    $$('.title-event-name').html(decodeURI(eventName));
+  }
 
   $$.ajax({
     type:'GET',
@@ -1183,10 +1191,22 @@ function showUserNotification(title, message) {
   });
 }
 
+function showNoConnectionToast() {
+  var noConnectionToast = myApp.toast('No Connection', '<div>✘</div>', {});
+  noConnectionToast.show(true);
+}
+
+function showHasConnectionToast() {
+  var hasConnectionToast = myApp.toast('Connected', '<div>✔</div>', {});
+  hasConnectionToast.show(true);
+}
+
 window.addEventListener('online', function (event) {
-  showUserNotification('Connected to the Internet','All features are available.');
+  //showUserNotification('Connected to the Internet','All features are available.');
+  showHasConnectionToast();
 }, false);
 
 window.addEventListener('offline', function (event) {
-  showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+  // showUserNotification('No internet connectivity','Some features and functionalities will be restricted.');
+  showNoConnectionToast();
 }, false);
