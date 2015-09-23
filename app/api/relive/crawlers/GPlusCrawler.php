@@ -40,15 +40,19 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
                     "pageToken"     =>  $nextPageToken
                 );
             }
-            $response = $this->gplus->activities->search($keyword, $params);
-            $items = $response->getItems();
-            foreach ($items as $gPlusPost) {
-                $this->createPost($event, $gPlusPost);
+            try {
+                $response = $this->gplus->activities->search($keyword, $params);
+                $items = $response->getItems();
+                foreach ($items as $gPlusPost) {
+                    $this->createPost($event, $gPlusPost);
+                }
+                if (is_null($response->getNextPageToken())) {
+                    return;
+                }
+                $nextPageToken = $response->getNextPageToken();
+            } catch (\Exception $e) {
+                print "an error occurred in g+ crawler\n";
             }
-            if (is_null($response->getNextPageToken())) {
-                return;
-            }
-            $nextPageToken = $response->getNextPageToken();
             $repeat--;
         }
 	}
@@ -69,15 +73,19 @@ class GPlusCrawler extends \relive\Crawlers\Crawler {
                     "pageToken"     =>  $nextPageToken
                 );
             }
-            $response = $this->gplus->activities->search($keyword, $params);
-            $items = $response->getItems();
-            foreach ($items as $gPlusPost) {
-                $this->createPost($event, $gPlusPost);
+            try {
+                $response = $this->gplus->activities->search($keyword, $params);
+                $items = $response->getItems();
+                foreach ($items as $gPlusPost) {
+                    $this->createPost($event, $gPlusPost);
+                }
+                if (is_null($response->getNextPageToken())) {
+                    return;
+                }
+                $nextPageToken = $response->getNextPageToken();
+            } catch (\Exception $e) {
+                print "an error occurred in g+ crawler\n";
             }
-            if (is_null($response->getNextPageToken())) {
-                return;
-            }
-            $nextPageToken = $response->getNextPageToken();
             $repeat--;
         }
     }
