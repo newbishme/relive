@@ -338,7 +338,7 @@ myApp.onPageInit('landing', function(page) {
     $$('.welcomescreen-closebtn').on('click', function () {
       storeRunOnceValueToLocalStorage();
     });
-  } else {
+  } else if (!isIOS) {
     $$('#landing-searchbar-input').focus();
   }
 
@@ -353,6 +353,59 @@ myApp.onPageInit('landing', function(page) {
     mainView.router.load(options);
     return false;
   });
+
+  // Initialize Side Nav Trending events
+  var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
+  var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
+  var trendingEventsKey = 'trendingEventsIndexes';
+
+  function updateTrendingList(events) {
+    if (events == null) {
+      setTimeout(function() {
+        getTrendingListWithAJAX();
+      }, timeout);
+      return;
+    }
+
+    var trendingEvents = [];
+    var trendingHtml = '';
+
+    if (events == null) {
+      return;
+    }
+
+    trendingEvents = events;
+
+    for (var i = 0; i < trendingEvents.length; i++) {
+      trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
+    }
+    $$('div#side-nav-trending-events').html(trendingHtml);
+  }
+
+  function getTrendingListWithAJAX() {
+    $$.ajax({
+      type:'GET',
+      url:'https://relive.space/api/event/trending',
+      dataType:'json',
+      success:function(data){
+        if (data !== '') {
+          storeJsonToLocalStorage(trendingEventsKey, data);
+          updateTrendingList(data);
+          timeout = 2000;
+        }
+      }, // End ajax success
+      error:function(data){
+        updateTrendingList(null);
+      }
+    }); // End ajax
+  }
+
+  if (navigator.onLine) {
+    getTrendingListWithAJAX();
+  } else {
+    var data = loadJsonFromLocalStorage(trendingEventsKey);
+    updateTrendingList(data);
+  }
 });
 
 //  TODO remove this code after we confirm that it is not needed
@@ -482,59 +535,6 @@ function eventsInit(page) {
   } else {
     var data = loadJsonFromLocalStorage(eventIndexesKey);
     updateEventsList(data);
-  }
-
-  // Initialize Side Nav Trending events
-  var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
-  var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
-  var trendingEventsKey = 'trendingEventsIndexes';
-
-  function updateTrendingList(events) {
-    if (events == null) {
-      setTimeout(function() {
-        getTrendingListWithAJAX();
-      }, timeout);
-      return;
-    }
-
-    var trendingEvents = [];
-    var trendingHtml = '';
-
-    if (events == null) {
-      return;
-    }
-
-    trendingEvents = events;
-
-    for (var i = 0; i < trendingEvents.length; i++) {
-      trendingHtml = trendingHtml.concat(compiledTrendingEventTemplate(trendingEvents[i]));
-    }
-    $$('div#side-nav-trending-events').html(trendingHtml);
-  }
-
-  function getTrendingListWithAJAX() {
-    $$.ajax({
-      type:'GET',
-      url:'https://relive.space/api/event/trending',
-      dataType:'json',
-      success:function(data){
-        if (data !== '') {
-          storeJsonToLocalStorage(trendingEventsKey, data);
-          updateTrendingList(data);
-          timeout = 2000;
-        }
-      }, // End ajax success
-      error:function(data){
-        updateTrendingList(null);
-      }
-    }); // End ajax
-  }
-
-  if (navigator.onLine) {
-    getTrendingListWithAJAX();
-  } else {
-    var data = loadJsonFromLocalStorage(trendingEventsKey);
-    updateTrendingList(data);
   }
 
 
@@ -765,8 +765,6 @@ myApp.onPageInit('event', function (page) {
 
     eventPostsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
       items: filteredPosts,
-      rowsBefore: 10,
-      rowsAfter: 10,
       template:
 
       '<li class="{{#if media}}image{{else}}text{{/if}} post swipeout" relive-post-id="{{post_id}}">' +
@@ -1354,7 +1352,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
   var options = {
       url: 'event.php?id='+query.id,
       query: query,
-      pushState: false
+      pushState: true
   };
   mainView.router.load(options);
 });
