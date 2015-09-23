@@ -32,7 +32,7 @@ while(true) {
 			$job = $queueObj['data'];
 			$event = \relive\models\Event::find($job->event_id);
 			if ($event) {
-				print "Crawling for event:".$event->event_id."->".$event->eventName." with Delay:".$job->delay."\n";
+				print "[".date('c')."]\t"."Crawling for event:".$event->event_id."->".$event->eventName." with Delay:".$job->delay."\n";
 				$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
 				foreach ($hashtagRelationships as $hashtagRelationship) {
 					$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
@@ -41,6 +41,7 @@ while(true) {
 					$gplus->recentCrawl($event, $hashtag->hashtag);
 				}
 				if ($event->endDate + 86400 < $currentTime){
+					print "[".date('c')."]\t"."Setting isActive to false for event:".$event->event_id."->".$event->eventName."\n";
 					$job->isActive = 0;
 				}
 				$job->delay = $job->delay*2;
@@ -74,7 +75,7 @@ while(true) {
 			$objPQ = $newObjPQ;
 		}
 	}
-	print "Sleep for 1 minute\n";
+	print "[".date('c')."]\t"."Sleep for 1 minute\n";
 	sleep(60);
 } 
 
