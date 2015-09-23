@@ -21,7 +21,7 @@ if (!isset($_SESSION['login'])) {
 } else {
 	if (isset($_GET)) {
 		if (isset($_GET['publish'])) {
-			$event = \relive\models\Event::find($_GET['eventid']);
+			$event = \relive\models\Event::find($_GET['event_id']);
 			$event->isPublished = 1;
 			if (isset($_GET['start'])) {
 				$event->startDate = strtotime($_GET['start']);
