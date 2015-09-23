@@ -11,15 +11,14 @@ $instagram = InstagramCrawler::getInstance();
 $gplus = GPlusCrawler::getInstance();
 
 $jobs = \relive\models\CrawlJob::where('isActive', '=', 1)->get();
-$startTime = time();
 
 foreach ($jobs as $job) {
 	$event = \relive\models\Event::find($job->event_id);
 	$hashtagRelationships = \relive\models\EventHashtagRelationship::where('event_id', '=', $job->event_id)->get();
 	foreach ($hashtagRelationships as $hashtagRelationship) {
 		$hashtag = \relive\models\Hashtag::find($hashtagRelationship->hashtag_id);
-		$twitter->recentCrawl($startTime, $event, $hashtag->hashtag);
-		$instagram->recentCrawl($startTime, $event, $hashtag->hashtag);
+		$twitter->recentCrawl($event, $hashtag->hashtag);
+		$instagram->recentCrawl($event, $hashtag->hashtag);
 		$gplus->recentCrawl($event, $hashtag->hashtag);
 	}
 }

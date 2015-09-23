@@ -28,7 +28,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
         return $instance;
     }
 
-	public function recentCrawl($startTime, $event, $keyword){
+	public function recentCrawl($event, $keyword){
         $response = $this->instagram->searchTags($keyword);
         $tags = $response->data;
         if (count($tags) != 0) {
@@ -37,11 +37,7 @@ class InstagramCrawler extends \relive\Crawlers\Crawler {
             $count = 2;
             while (count($media->data)) {
                 foreach ($media->data as $instaPost) {
-                    if ($instaPost->created_time > $startTime - 600) {
                         $this->createPost($event, $instaPost);
-                    } else {
-                        return;
-                    }
                 }
                 if ($count <= 0)
                     return;

@@ -156,7 +156,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
         return $seventyPercent + $thirtyPercent;
     }
 
-    public function recentCrawl($startTime, $event, $keyword){
+    public function recentCrawl($event, $keyword){
         $twitter = $this->twitter;
         $twitter->get("search/tweets", array('q' => '#' . $keyword, 'count' => 100, 'result_type'=>'recent'));
         $response = $twitter->getLastBody();
@@ -165,7 +165,7 @@ class TwitterCrawler extends \relive\Crawlers\Crawler {
             $statuses = $response->statuses;
             while ($twitter->getLastHttpCode() == 200 && count($statuses) > 0 && $repeat > 0) {
                 foreach ($statuses as $status)
-                    if (strtotime($status->created_at) >= $startTime - 600) $this->createPost($event, $status);
+                    $this->createPost($event, $status);
                 $twitter->get("search/tweets", array(
                     'q' => $keyword,
                     'count' => 100,
