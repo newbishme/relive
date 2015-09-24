@@ -194,6 +194,49 @@ function loadRunOnceValueFromLocalStorage() {
   return localStorage.getItem(reliveRunOnboardingOnceKey);
 }
 
+function storeUserCreatedReelToLocalStorage(eventId, eventName) {
+  if (eventId == null || eventName == null) {
+    return;
+  }
+  var userCreatedReels = [];
+  var userCreatedReel = {event_id: eventId, eventName: eventName};
+
+  if (loadUserCreatedReelsFromLocalStorage()) {
+    userCreatedReels = loadUserCreatedReelsFromLocalStorage();
+  }
+
+  userCreatedReels.push(userCreatedReel);
+  storeUserCreatedReelsToLocalStorage(userCreatedReels);
+}
+
+function storeUserCreatedReelsToLocalStorage(reels) {
+  var reliveUserCreatedReelsKey = 'Relive-User-Created-Reels-Key';
+  localStorage.setItem(reliveUserCreatedReelsKey, JSON.stringify(reels));
+}
+
+function loadUserCreatedReelsFromLocalStorage() {
+  var reliveUserCreatedReelsKey = 'Relive-User-Created-Reels-Key';
+  var userCreatedReels = JSON.parse(localStorage.getItem(reliveUserCreatedReelsKey));
+  return userCreatedReels;
+}
+
+function deleteUserCreatedReelFromLocalStorage(eventId) {
+  var userCreatedReels = loadUserCreatedReelsFromLocalStorage();
+  var notDeletedReels = [];
+
+  if (userCreatedReels == null) {
+    return;
+  }
+
+  for (var i = 0; i < userCreatedReels.length; i++) {
+    if (userCreatedReels[i].event_id != eventId) {
+      notDeletedReels.push(userCreatedReels[i]);
+    }
+  }
+
+  storeUserCreatedReelsToLocalStorage(notDeletedReels);
+}
+
 function storeHiddenPostsToLocalStorage(key, hiddenPostId) {
   if (key == null) {
     return;
@@ -358,6 +401,7 @@ myApp.onPageInit('landing', function(page) {
   var trendingEventTemplate = $$('#sideNavTrendingEventTemplate').html();
   var compiledTrendingEventTemplate = Template7.compile(trendingEventTemplate);
   var trendingEventsKey = 'trendingEventsIndexes';
+  var timeout = 2000;
 
   function updateTrendingList(events) {
     if (events == null) {
@@ -426,6 +470,35 @@ function eventsInit(page) {
   var eventIndexesKey = 'eventIndexes';
   var lastEventId = 0;
   var timeout = 2000;
+
+  if (loadUserCreatedReelsFromLocalStorage()) {
+    events = loadUserCreatedReelsFromLocalStorage();
+
+    for (var i = 0; i < events.length; i++) {
+      if (events[i].event_id == null) {
+        break;
+      }
+      var userCreatedEventId = events[i].event_id;
+      var ajaxURL = 'https://relive.space/api/event/' + userCreatedEventId;
+      $$.ajax({
+        type:'GET',
+        url:ajaxURL,
+        dataType:'json',
+        success:function(data){
+          if (data !== '') {
+            if (data.event_id == userCreatedEventId) {
+              deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
+            }
+          }
+        }, // End ajax success
+        error:function(e){
+          if (e.response == '["Status","Event not found."]') {
+            deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
+          }
+        }
+      }); // End ajax
+    }
+  }
 
   // Initialize Virtual List
   var eventsList = myApp.virtualList($$(page.container).find('.virtual-list'), {
@@ -504,6 +577,23 @@ function eventsInit(page) {
       }, timeout);
       timeout *= 2;
       return;
+    }
+    if (loadUserCreatedReelsFromLocalStorage()) {
+      var loadedReels = loadUserCreatedReelsFromLocalStorage();
+      var filteredPosts = [];
+
+      for (var i = 0; i < eventsData.length; i++) {
+        for (var j = 0; j < loadedReels.length; j++) {
+          if (eventsData[i].event_id == loadedReels[j].event_id) {
+            deleteUserCreatedReelFromLocalStorage(loadedReels[j].event_id);
+          } else {
+            filteredPosts.push(eventsData[i]);
+          }
+        }
+      }
+      if (filteredPosts.length > 0) {
+        eventsData = filteredPosts;
+      }
     }
     eventsList.appendItems(eventsData);
     eventsList.update();
@@ -794,10 +884,10 @@ myApp.onPageInit('event', function (page) {
             '</div>' +
           '</div>' +
           '<div class="swipeout-actions-right">' +
-            '<a href="#" id="swipeToHideURL" class="swipeout-delete swipeout-overswipe">Hide Post</a>' +
+            '<a href="#" id="swipeToHideURL" class="swipeout-delete">Hide Post</a>' +
           '</div>' +
           '<div class="swipeout-actions-left">' +
-            '<a href="#" class="swipeout-close swipeout-overswipe swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
+            '<a href="#" class="swipeout-close swipeToSaveFavourites" relive-post-id="{{post_id}}" relive-post-content="{{caption}}" relive-post-author="{{author}}" relive-post-provider="{{providerName}}" {{#if media}}relive-favourite-post-img-url="{{media.data.0.mediaURL}}"{{/if}}>Save to Favourites</a>' +
           '</div>' +
         '</li>',
 
@@ -1177,6 +1267,17 @@ myApp.onPageAfterAnimation('landing', function (page) {
   $$('.relive-panel-favourites-reel').removeClass('hidden');
   $$('div.event-hashtags-block').addClass('hidden');
   $$('.navbar').addClass('hidden');
+  $$('.landing-searchbar').on('submit', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var searchText = e.srcElement[0].value;
+    var options = {
+      url: 'events.php',
+      query: { q: searchText }
+    };
+    mainView.router.load(options);
+    return false;
+  });
 });
 myApp.onPageAfterAnimation('home', function (page) {
   $$('.relive-panel-favourites-reel').removeClass('hidden');
@@ -1356,6 +1457,7 @@ $$(document).on('submitted', 'form.ajax-submit', function (e) {
       query: query,
       pushState: true
   };
+  storeUserCreatedReelToLocalStorage(eventDetails.event_id, eventDetails.eventName);
   mainView.router.load(options);
 });
 
