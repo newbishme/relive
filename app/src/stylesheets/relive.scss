@@ -270,7 +270,7 @@ form .item-content {
     -webkit-flex-flow: nowrap row;
     justify-content: space-between;
     -webkit-justify-content: space-between;
-    
+
     .post-data {
       padding: 15px;
       font-size: 14px;
@@ -298,7 +298,7 @@ form .item-content {
 .image.post {
   @extend .post;
   .post-img {
-    cursor: pointer; 
+    cursor: pointer;
     @media (min-width: $break-medium) {
       height: 400px;
     }
@@ -385,7 +385,7 @@ form .item-content {
   background-color: #FF5757;
 }
 
-.swipeout-close.swipeout-overswipe.swipeToSaveFavourites {
+.swipeout-close.swipeToSaveFavourites {
   background-color: #57C161;
 }
 
