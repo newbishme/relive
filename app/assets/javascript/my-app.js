@@ -570,7 +570,9 @@ function eventsInit(page) {
 function modifyURLSchema(url, author) {
   var parsedURL = url;
   if (isIOS) {
-    parsedURL = parseURLToSchema(parsedURL, author);
+    if (("standalone" in window.navigator) && window.navigator.standalone) {
+      parsedURL = parseURLToSchema(parsedURL, author);
+    }
   }
   return parsedURL;
 }
