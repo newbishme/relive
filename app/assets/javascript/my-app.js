@@ -199,7 +199,8 @@ function storeUserCreatedReelToLocalStorage(eventId, eventName) {
     return;
   }
   var userCreatedReels = [];
-  var userCreatedReel = {event_id: eventId, eventName: eventName};
+  var pendingImageFilename = 'assets/img/pending-reel.png';
+  var userCreatedReel = {event_id: eventId, eventName: eventName, image: pendingImageFilename};
 
   if (loadUserCreatedReelsFromLocalStorage()) {
     userCreatedReels = loadUserCreatedReelsFromLocalStorage();
@@ -476,7 +477,7 @@ function eventsInit(page) {
 
     for (var i = 0; i < events.length; i++) {
       if (events[i].event_id == null) {
-        break;
+        continue;
       }
       var userCreatedEventId = events[i].event_id;
       var ajaxURL = 'https://relive.space/api/event/' + userCreatedEventId;
@@ -484,13 +485,6 @@ function eventsInit(page) {
         type:'GET',
         url:ajaxURL,
         dataType:'json',
-        success:function(data){
-          if (data !== '') {
-            if (data.event_id == userCreatedEventId) {
-              deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
-            }
-          }
-        }, // End ajax success
         error:function(e){
           if (e.response == '["Status","Event not found."]') {
             deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
