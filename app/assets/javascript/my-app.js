@@ -485,13 +485,6 @@ function eventsInit(page) {
         type:'GET',
         url:ajaxURL,
         dataType:'json',
-        success:function(data){
-          if (data !== '') {
-            if (data.event_id == userCreatedEventId) {
-              deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
-            }
-          }
-        }, // End ajax success
         error:function(e){
           if (e.response == '["Status","Event not found."]') {
             deleteUserCreatedReelFromLocalStorage(userCreatedEventId);
